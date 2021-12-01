@@ -1,4 +1,5 @@
 import { getConn } from './conn'
+import { Payout } from './components/Payout'
 import { useEffect, useState } from "react";
 
 function App() {
@@ -23,7 +24,7 @@ function App() {
 
   return (
     <div className="container">
-      <h1>Hello FLEX-DAO</h1>
+      <Payout conn={conn}></Payout>
     </div>
   );
 }

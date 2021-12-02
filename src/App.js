@@ -1,7 +1,8 @@
-import { getConn, getDailyPayout, getVeFlex, getDistributor } from './conn';
+import { getConn, getDailyPayout, getVeFlex, getDistributor, getFlex } from './conn';
 import { Payout } from './components/Payout';
 import { VeFLEX } from './components/VeFLEX';
 import { Distributor } from './components/Distributor';
+import { FLEX } from "./components/FLEX";
 import { useEffect, useState } from "react";
 import { errorHandle } from "./utils";
 
@@ -10,6 +11,7 @@ function App() {
   const [dailyPayout, setDailyPayout] = useState();
   const [veFlex, setVeFlex] = useState();
   const [distributor, setDistributor] = useState();
+  const [flex, setFlex] = useState();
 
   useEffect(() => {
     async function fetchData() {
@@ -22,6 +24,8 @@ function App() {
           if (_veFlex) setVeFlex(_veFlex);
           const _distributor = getDistributor(_conn);
           if (_distributor) setDistributor(_distributor);
+          const _flex = getFlex(_conn);
+          if (_flex) setFlex(_flex);
         }
       } catch (err) {
         errorHandle('init connection with blockchain', err);
@@ -35,6 +39,7 @@ function App() {
       <Payout payout={dailyPayout}></Payout>
       <VeFLEX veflex={veFlex}></VeFLEX>
       <Distributor distributor={distributor}></Distributor>
+      <FLEX flex={flex}></FLEX>
     </div>
   );
 }

@@ -29,7 +29,7 @@ export const getFlex = ( conn ) => {
 export const getVeFlex = ( conn ) => {
   return new Contract(config.contracts_addr.veFLEX, veFlex.abi, conn)
 }
-export const getPayout = ( conn ) => {
+export const getDailyPayout = ( conn ) => {
   return new Contract(config.contracts_addr.daily_payout, dailyPayout.abi, conn)
 }
 export const getDistributor = ( conn ) => {

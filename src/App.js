@@ -1,30 +1,28 @@
-import { getConn } from './conn'
-import { Payout } from './components/Payout'
+import { getConn, getDailyPayout } from './conn';
+import { Payout } from './components/Payout';
 import { useEffect, useState } from "react";
+import { errorHandle } from "./utils";
 
 function App() {
 
-  const [conn, setConn] = useState();
+  const [dailyPayout, setDailyPayout] = useState();
   
   useEffect( () => {
     async function fetchData() {
       try {
         const _conn = await getConn();
-        setConn(_conn);
+        const _dailyPayout = getDailyPayout(_conn);
+        setDailyPayout(_dailyPayout);
       } catch (err) {
-        if (err.data && err.data.message) {
-          window.alert(err.data.message);
-        } else {
-          window.alert(err);
-        }
+        errorHandle('getConn', err);
       } 
     }
     fetchData();
-  }, [conn]);
+  }, []);
 
   return (
     <div className="container">
-      <Payout conn={conn}></Payout>
+      <Payout payout={dailyPayout}></Payout>
     </div>
   );
 }

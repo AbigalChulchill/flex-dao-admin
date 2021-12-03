@@ -1,6 +1,14 @@
 import { useEffect, useState } from "react";
 import { errorHandle } from "../utils";
 
+async function getAdmin(distributor) {
+  try {
+    return await distributor.admin();
+  } catch (err) {
+    errorHandle('getAdmin', err);
+  }
+}
+
 async function getName(distributor) {
   try {
     return await distributor.name();
@@ -40,6 +48,7 @@ export function Distributor({ distributor }) {
 
   const [name, setName] = useState();
   const [addr, setAddr] = useState();
+  const [admin, setAdmin] = useState();
 
   const [token, setToken] = useState();
   const [payout, setPayout] = useState();
@@ -53,6 +62,9 @@ export function Distributor({ distributor }) {
         if (_name) setName(_name);
 
         setAddr(distributor.address);
+
+        const _admin = await getAdmin(distributor);
+        if (_admin) setAdmin(_admin);
 
         const _token = await getToken(distributor);
         if (_token) setToken(_token);
@@ -85,6 +97,7 @@ export function Distributor({ distributor }) {
         <ul>
           <li>Contract Name: {name}</li>
           <li>Contract Addr: {addr}</li>
+          <li>Contract Admin: {admin}</li>
           <li>FLEX Addr: {token}</li>
           <li>Payout Addr: {payout} FLEX</li>
         </ul>
@@ -98,7 +111,7 @@ export function Distributor({ distributor }) {
             <label>
               Is Distributor:
             </label>
-            <input type="text" onChange={onIsDistributor} />
+            <input type="text" placeholder="address" onChange={onIsDistributor} />
             {isDistributor}
           </li>
         </ul>

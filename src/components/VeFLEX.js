@@ -2,6 +2,14 @@ import { useEffect, useState } from "react";
 import { utils } from "ethers";
 import { errorHandle } from "../utils";
 
+async function getAdmin(veflex) {
+  try {
+    return await veflex.admin();
+  } catch (err) {
+    errorHandle('getAdmin', err);
+  }
+}
+
 async function getToken(veflex) {
   try {
     return await veflex.token();
@@ -65,6 +73,7 @@ export function VeFLEX({ veflex }) {
 
   const [name, setName] = useState();
   const [addr, setAddr] = useState();
+  const [admin, setAdmin] = useState();
 
   const [token, setToken] = useState();
   const [supply, setSupply] = useState();
@@ -82,8 +91,10 @@ export function VeFLEX({ veflex }) {
     async function fetchData() {
       if (veflex) {
         setName('veFlex');
-
         setAddr(veflex.address);
+
+        const _admin = await getAdmin(veflex);
+        if (_admin) setAdmin(_admin);
 
         const _token = await getToken(veflex);
         if (_token) setToken(_token);
@@ -160,6 +171,7 @@ export function VeFLEX({ veflex }) {
         <ul>
           <li>Contract Name: {name}</li>
           <li>Contract Addr: {addr}</li>
+          <li>Contract Admin: {admin}</li>
           <li>FLEX Addr: {token}</li>
           <li>Supply: {supply} FLEX</li>
           <li>Total Supply: {totalSupply} veFLEX</li>
@@ -174,29 +186,29 @@ export function VeFLEX({ veflex }) {
             <label>
               Stake Detail For Address:
             </label>
-            <input type="text" onChange={onLocked} />
+            <input type="text" placeholder="address" onChange={onLocked} />
             {locked ? `staked ${locked[0]} FLEX, end at: ${new Date(locked[1] * 1000).toLocaleString()} Local Time` : ""}
           </li>
           <li>
             <label>
               Account Latest Balance:
             </label>
-            <input type="text" onChange={onBalanceOf} />
+            <input type="text" placeholder="address" onChange={onBalanceOf} />
             {balanceOf} veFLEX
           </li>
           <li>
             <label>
               History Total Supply At Block Height:
             </label>
-            <input type="text" onChange={onTotalSupplyAt} />
+            <input type="text" placeholder="block height (uint)" onChange={onTotalSupplyAt} />
             {totalSupplyAt} veFLEX
           </li>
           <li>
             <label>
               History Account Balance At Block Height:
             </label>
-            <input type="text" onChange={onBalanceOfAtAddr} />
-            <input type="text" onChange={onBalanceOfAt} />
+            <input type="text" placeholder="address" onChange={onBalanceOfAtAddr} />
+            <input type="text" placeholder="block height (uint)" onChange={onBalanceOfAt} />
             {balanceOfAt} veFLEX
           </li>
         </ul>

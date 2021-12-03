@@ -2,6 +2,22 @@ import { useEffect, useState } from "react";
 import { utils } from 'ethers';
 import { errorHandle } from "../utils";
 
+async function getAdmin(flex) {
+  try {
+    return await flex.owner();
+  } catch (err) {
+    errorHandle('getAdmin', err);
+  }
+}
+
+async function getTotalSupply(flex) {
+  try {
+    return await flex.totalSupply();
+  } catch (err) {
+    errorHandle('getTotalSupply', err);
+  }
+}
+
 async function getBalanceOf(flex, value) {
   try {
     return await flex.balanceOf(value);
@@ -16,6 +32,8 @@ export function FLEX({ flex }) {
 
   const [name, setName] = useState();
   const [addr, setAddr] = useState();
+  const [admin, setAdmin] = useState();
+  const [totalSupply, setTotalSupply] = useState();
 
   const [balanceOf, setBalanceOf] = useState();
 
@@ -23,8 +41,13 @@ export function FLEX({ flex }) {
     async function fetchData() {
       if (flex) {
         setName('FLEX');
-
         setAddr(flex.address);
+
+        const _admin = await getAdmin(flex);
+        if (_admin) setAdmin(_admin);
+
+        const _totalSupply = await getTotalSupply(flex);
+        if (_totalSupply) setTotalSupply(utils.formatEther(_totalSupply));
       }
     }
     fetchData();
@@ -51,6 +74,8 @@ export function FLEX({ flex }) {
         <ul>
           <li>Contract Name: {name}</li>
           <li>Contract Addr: {addr}</li>
+          <li>Contract Admin: {admin}</li>
+          <li>Total Supply: {totalSupply} FLEX</li>
         </ul>
       </div>
       <div className="query">
@@ -62,7 +87,7 @@ export function FLEX({ flex }) {
             <label>
               Account Balance Of:
             </label>
-            <input type="text" onChange={onBalanceOf} />
+            <input type="text" placeholder="address" onChange={onBalanceOf} />
             {balanceOf} FLEX
           </li>
         </ul>

@@ -2,6 +2,14 @@ import { useEffect, useState } from "react";
 import { utils } from "ethers";
 import {errorHandle } from "../utils";
 
+async function getAdmin(payout) {
+  try {
+    return await payout.owner();
+  } catch(err) {
+    errorHandle('getAdmin', err);
+  }
+}
+
 async function getToken(payout) {
   try {
     return await payout.token();
@@ -105,6 +113,7 @@ export function Payout({payout}) {
 
   const [name, setName] = useState();
   const [addr, setAddr] = useState();
+  const [admin, setAdmin] = useState();
   const [token, setToken] = useState();
   const [veFlex, setVeFlex] = useState();
   const [epochLen, setEpochLen] = useState();
@@ -121,32 +130,27 @@ export function Payout({payout}) {
     async function fetchData() {
       if (payout) {
         setName('Daily Payout');
-
-        // console.log(payout.address);
         setAddr(payout.address);
+
+        const _admin = await getAdmin(payout);
+        if (_admin) setAdmin(_admin);
         
         const _token = await getToken(payout);
-        // console.log(_token);
         if (_token) setToken(_token);
   
         const _veFlex = await getVested(payout);
-        // console.log(_veFlex);
         if (_veFlex) setVeFlex(_veFlex);
   
         const _epochLen = await getEpochLen(payout);
-        // console.log(_epochLen);
         if (_epochLen) setEpochLen(_epochLen);
   
         const _startBlockHeight = await getStartBlockHeight(payout);
-        // console.log(_startBlockHeight);
         if (_startBlockHeight) setStartBlockHeight(_startBlockHeight);
   
         const _currentEpoch = await getCurrentEpoch(payout);
-        // console.log(_currentEpoch);
         if(_currentEpoch) setCurrentEpoch(_currentEpoch);
   
         const _currentActiveEpoch = await getCurrentActiveEpoch(payout);
-        // console.log(_currentActiveEpoch);
         if(_currentActiveEpoch) setCurrentActiveEpoch(_currentActiveEpoch);
       }
     }
@@ -222,6 +226,7 @@ export function Payout({payout}) {
         <ul>
           <li>Contract Name: {name}</li>
           <li>Contract Addr: {addr}</li>
+          <li>Contract Admin: {admin}</li>
           <li>FLEX Addr: {token}</li>
           <li>VeFLEX Addr: {veFlex}</li>
           <li>Epoch Length: {epochLen}</li>
@@ -239,35 +244,35 @@ export function Payout({payout}) {
             <label>
               History Epoch Reward:
             </label>
-            <input type="text" onChange={onHistoryEpochReward} />
+            <input type="text" placeholder="epoch index (uint)" onChange={onHistoryEpochReward} />
             {historyReward} FLEX
           </li>
           <li>
             <label>
               Epoch Start Block Height:
             </label>
-            <input type="text" onChange={onEpochStartBlockHeight} />
+            <input type="text" placeholder="epoch index (uint)" onChange={onEpochStartBlockHeight} />
             {epochStartBlockHeight}
           </li>
           <li>
             <label>
               Claimable Amount:
             </label>
-            <input type="text" onChange={onClaimable} />
+            <input type="text" placeholder="address" onChange={onClaimable} />
             {claimable} FLEX
           </li>
           <li>
             <label>
               Is Distributor:
             </label>
-            <input type="text" onChange={onIsDistributor} />
+            <input type="text" placeholder="address" onChange={onIsDistributor} />
             {isDistributor}
           </li>
           <li>
             <label>
               Is Operator:
             </label>
-            <input type="text" onChange={onIsOperator} />
+            <input type="text" placeholder="address" onChange={onIsOperator} />
             {isOperator}
           </li>
         </ul>

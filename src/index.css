@@ -1,8 +1,5 @@
-html, body {
-  display: flex;
-  margin: 10px auto;
-  font-size: 18px;
-  width: auto;
+h1 {
+  text-align: center;
 }
 
 .container {

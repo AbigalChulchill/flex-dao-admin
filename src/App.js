@@ -35,12 +35,15 @@ function App() {
   }, []);
 
   return (
-    <div className="container">
-      <Payout payout={dailyPayout}></Payout>
-      <VeFLEX veflex={veFlex}></VeFLEX>
-      <Distributor distributor={distributor}></Distributor>
-      <FLEX flex={flex}></FLEX>
-    </div>
+    <>
+      <h1>FLEX DAO Admin Page</h1>
+      <div className="container">
+        <FLEX flex={flex}></FLEX>
+        <VeFLEX veflex={veFlex}></VeFLEX>
+        <Payout payout={dailyPayout}></Payout>
+        <Distributor distributor={distributor}></Distributor>
+      </div>
+    </>
   );
 }
 

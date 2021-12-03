@@ -1,4 +1,37 @@
 html, body {
   display: flex;
-  margin: 0 auto;
+  margin: 10px auto;
+  font-size: 18px;
+  width: auto;
+}
+
+.container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.box {
+  margin: 20px;
+  border: solid 1px;
+  border-radius: 5px;
+}
+
+.info {
+  margin: 5px;
+}
+
+.query {
+  margin: 5px;
+  padding-top: 10px;
+
+  border-top: dotted 1px;
+}
+
+input {
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+li {
+  margin-top: 5px;
 }

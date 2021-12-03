@@ -18,6 +18,14 @@ async function getSupply(veflex) {
   }
 }
 
+async function getTotalSupply(veflex) {
+  try {
+    return await veflex.totalSupply()
+  } catch (err) {
+    errorHandle('getTotalSupply', err);
+  }
+}
+
 async function getLocked(veflex, value) {
   try {
     return await veflex.locked(value);
@@ -26,25 +34,10 @@ async function getLocked(veflex, value) {
   }
 }
 
-async function getTotalSupply(veflex, value) {
-  try {
-    if (value === -1) {
-      return await veflex.totalSupply();
-    } else {
-      return await veflex.totalSupply(Number(value));
-    }
-  } catch (err) {
-    errorHandle('getTotalSupply', err);
-  }
-}
 
 async function getBalanceOf(veflex, value) {
   try {
-    if (value === -1) {
-      return await veflex.balanceOf();
-    } else {
-      return await veflex.balanceOf(Number(value));
-    }
+    return await veflex.balanceOf(value);
   } catch (err) {
     errorHandle('getBalanceOf', err);
   }
@@ -58,9 +51,9 @@ async function getTotalSupplyAt(veflex, value) {
   }
 }
 
-async function getBalanceOfAt(veflex, value) {
+async function getBalanceOfAt(veflex, address, height) {
   try {
-    return await veflex.balanceOfAt(Number(value));
+    return await veflex.balanceOfAt(address, Number(height));
   } catch (err) {
     errorHandle('getBalanceOfAt', err);
   }
@@ -75,13 +68,15 @@ export function VeFLEX({ veflex }) {
 
   const [token, setToken] = useState();
   const [supply, setSupply] = useState();
+  const [totalSupply, setTotalSupply] = useState();
 
   const [locked, setLocked] = useState();
 
-  const [totalSupply, setTotalSupply] = useState();
   const [balanceOf, setBalanceOf] = useState();
   const [totalSupplyAt, setTotalSupplyAt] = useState();
   const [balanceOfAt, setBalanceOfAt] = useState();
+
+  const [balanceOfAtAddr, setBalanceOfAtAddr] = useState();
 
   useEffect(() => {
     async function fetchData() {
@@ -95,6 +90,9 @@ export function VeFLEX({ veflex }) {
 
         const _supply = await getSupply(veflex);
         if (_supply) setSupply(utils.formatEther(_supply));
+
+        const _totalSupply = await getTotalSupply(veflex);
+        if (_totalSupply) setTotalSupply(utils.formatEther(_totalSupply));
       }
     }
     fetchData();
@@ -108,18 +106,6 @@ export function VeFLEX({ veflex }) {
     if (veflex && value) {
       const _locked = await getLocked(veflex, value);
       if (_locked) setLocked([utils.formatEther(_locked.amount), _locked.end.toString()]);
-    }
-    setQuerying(false);
-  }
-
-  const onTotalSupply = async (e) => {
-    setTotalSupply(undefined);
-    if (querying) return;
-    setQuerying(true);
-    const value = e.target.value;
-    if (veflex && value) {
-      const _totalSupply = await getTotalSupply(veflex, value);
-      if (_totalSupply) setTotalSupply(utils.formatEther(_totalSupply));
     }
     setQuerying(false);
   }
@@ -153,11 +139,16 @@ export function VeFLEX({ veflex }) {
     if (querying) return;
     setQuerying(true);
     const value = e.target.value;
-    if (veflex && value) {
-      const _balanceOfAt = await getBalanceOfAt(veflex, value);
+    if (veflex && value && balanceOfAtAddr) {
+      const _balanceOfAt = await getBalanceOfAt(veflex, balanceOfAtAddr, value);
       if (_balanceOfAt) setBalanceOfAt(utils.formatEther(_balanceOfAt));
     }
     setQuerying(false);
+  }
+
+  const onBalanceOfAtAddr = async (e) => {
+    setBalanceOfAt(undefined);
+    setBalanceOfAtAddr(e.target.value);
   }
 
   return (
@@ -169,8 +160,9 @@ export function VeFLEX({ veflex }) {
         <ul>
           <li>Contract Name: {name}</li>
           <li>Contract Addr: {addr}</li>
-          <li>FLEX addr: {token}</li>
+          <li>FLEX Addr: {token}</li>
           <li>Supply: {supply} FLEX</li>
+          <li>Total Supply: {totalSupply} veFLEX</li>
         </ul>
       </div>
       <div className="query">
@@ -180,36 +172,30 @@ export function VeFLEX({ veflex }) {
         <ul>
           <li>
             <label>
-              Stake Detail for address:
+              Stake Detail For Address:
             </label>
             <input type="text" onChange={onLocked} />
             {locked ? `staked ${locked[0]} FLEX, end at: ${new Date(locked[1] * 1000).toLocaleString()} Local Time` : ""}
           </li>
           <li>
             <label>
-              Total supply at timestamp (-1 return the latest total supply):
-            </label>
-            <input type="text" onChange={onTotalSupply} />
-            {totalSupply} veFLEX
-          </li>
-          <li>
-            <label>
-              Account balance at timestamp (-1 return the latest account balance):
+              Account Latest Balance:
             </label>
             <input type="text" onChange={onBalanceOf} />
             {balanceOf} veFLEX
           </li>
           <li>
             <label>
-              Total supply at block height:
+              History Total Supply At Block Height:
             </label>
             <input type="text" onChange={onTotalSupplyAt} />
             {totalSupplyAt} veFLEX
           </li>
           <li>
             <label>
-              Account balance at block height:
+              History Account Balance At Block Height:
             </label>
+            <input type="text" onChange={onBalanceOfAtAddr} />
             <input type="text" onChange={onBalanceOfAt} />
             {balanceOfAt} veFLEX
           </li>

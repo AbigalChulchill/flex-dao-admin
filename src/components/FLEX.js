@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
+import { utils } from 'ethers';
 import { errorHandle } from "../utils";
 
 async function getBalanceOf(flex, value) {
   try {
-    return await flex.balanceOf(Number(value));
+    return await flex.balanceOf(value);
   } catch (err) {
     errorHandle('getBalanceOf', err);
   }
@@ -59,7 +60,7 @@ export function FLEX({ flex }) {
         <ul>
           <li>
             <label>
-              account balance of:
+              Account Balance Of:
             </label>
             <input type="text" onChange={onBalanceOf} />
             {balanceOf} FLEX

@@ -85,8 +85,8 @@ export function Distributor({ distributor }) {
         <ul>
           <li>Contract Name: {name}</li>
           <li>Contract Addr: {addr}</li>
-          <li>FLEX addr: {token}</li>
-          <li>Payout addr: {payout} FLEX</li>
+          <li>FLEX Addr: {token}</li>
+          <li>Payout Addr: {payout} FLEX</li>
         </ul>
       </div>
       <div className="query">
@@ -96,7 +96,7 @@ export function Distributor({ distributor }) {
         <ul>
           <li>
             <label>
-              Is distributor:
+              Is Distributor:
             </label>
             <input type="text" onChange={onIsDistributor} />
             {isDistributor}

@@ -1,5 +1,40 @@
-h1 {
-  text-align: center;
+.layout {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.sidebar {
+  padding: 15px;
+  flex-basis: 20flex;
+  flex-grow: 1;
+}
+
+.sidebar .menu {
+  margin-top: 10px;
+}
+
+.sidebar .menu .item {
+  margin: 3px 1px;
+}
+
+a {
+  text-decoration: none;
+  color: black;  
+}
+
+.content {
+  flex-basis: 0;
+  flex-grow: 999;
+  min-width: 50%;
+  padding: 15px;
+}
+
+.topbar {
+  display: flex;
+}
+
+.topbar .item {
+  margin-right: 25px;
 }
 
 .container {

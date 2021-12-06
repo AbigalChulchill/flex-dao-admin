@@ -1,32 +1,23 @@
-import { getConn, getDailyPayout, getVeFlex, getDistributor, getFlex } from './conn';
-import { Payout } from './components/Payout';
-import { VeFLEX } from './components/VeFLEX';
-import { Distributor } from './components/Distributor';
-import { FLEX } from "./components/FLEX";
-import { useEffect, useState } from "react";
+import { Route, Switch, Redirect } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+
+import { SideNav } from './components/layout/SideNav';
+import { FlexPage } from './pages/FlexPage';
+import { FlexUsdPage } from './pages/FlexUsdPage';
+import { FlexDaoPage } from './pages/FlexDaoPage';
+import { getConn } from './conn';
 import { errorHandle } from "./utils";
+
 
 function App() {
 
-  const [dailyPayout, setDailyPayout] = useState();
-  const [veFlex, setVeFlex] = useState();
-  const [distributor, setDistributor] = useState();
-  const [flex, setFlex] = useState();
+  const [conn, setConn] = useState();
 
   useEffect(() => {
     async function fetchData() {
       try {
         const _conn = await getConn();
-        if (_conn) {
-          const _dailyPayout = getDailyPayout(_conn);
-          if (_dailyPayout) setDailyPayout(_dailyPayout);
-          const _veFlex = getVeFlex(_conn);
-          if (_veFlex) setVeFlex(_veFlex);
-          const _distributor = getDistributor(_conn);
-          if (_distributor) setDistributor(_distributor);
-          const _flex = getFlex(_conn);
-          if (_flex) setFlex(_flex);
-        }
+        if (_conn) setConn(_conn);
       } catch (err) {
         errorHandle('init connection with blockchain', err);
       }
@@ -35,16 +26,26 @@ function App() {
   }, []);
 
   return (
-    <>
-      <h1>FLEX DAO Admin Page</h1>
-      <div className="container">
-        <FLEX flex={flex}></FLEX>
-        <VeFLEX veflex={veFlex}></VeFLEX>
-        <Payout payout={dailyPayout}></Payout>
-        <Distributor distributor={distributor}></Distributor>
+    <div className='layout'>
+      <SideNav />
+      <div className="content">
+        <Switch>
+          <Route path='/' exact>
+            <Redirect to='/flex-dao' />
+          </Route>
+          <Route path='/flex'>
+            <FlexPage />
+          </Route>
+          <Route path='/flex-usd'>
+            <FlexUsdPage />
+          </Route>
+          <Route path='/flex-dao'>
+            <FlexDaoPage conn={conn}/>
+          </Route>
+        </Switch>
       </div>
-    </>
+    </div>
   );
 }
 
-export default App;
+export default App; 

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { utils } from "ethers";
-import { errorHandle } from "../utils";
+import { errorHandle } from "../../utils";
 
 async function getAdmin(veflex) {
   try {

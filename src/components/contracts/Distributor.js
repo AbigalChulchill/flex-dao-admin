@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { errorHandle } from "../utils";
+import { errorHandle } from "../../utils";
 
 async function getAdmin(distributor) {
   try {

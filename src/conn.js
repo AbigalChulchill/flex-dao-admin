@@ -2,7 +2,9 @@ import { ethers, Contract } from 'ethers';
 import * as flex from './contracts/FLEXCoin.json'
 import * as veFlex from './contracts/veFLEX.json'
 import * as dailyPayout from './contracts/DailyPayout.json'
+import * as dailyPayoutStg1 from './contracts/DailyPayoutStg1.json'
 import * as distributor from './contracts/Distributor.json'
+import * as DistributorStg1 from './contracts/DistributorStg1.json'
 import * as config from './config.json'
 
 export const getConn = () => {
@@ -34,6 +36,24 @@ export const getDailyPayoutPP = ( conn ) => {
 export const getDailyDistributorPP = ( conn ) => {
   return new Contract(config.flex_dao_pp.daily_mini_distributor, distributor.abi, conn)
 }
+
+
+export const getFlexStg1 = ( conn ) => {
+  return new Contract(config.flex_dao_stg1.flex, flex.abi, conn);
+}
+
+export const getVeFlexStg1 = ( conn ) => {
+  return new Contract(config.flex_dao_stg1.veFLEX, veFlex.abi, conn);
+}
+
+export const getDailyPayoutStg1 = ( conn ) => {
+  return new Contract(config.flex_dao_stg1.daily_payout, dailyPayoutStg1.abi, conn);
+}
+
+export const getDailyDistributorStg1 = ( conn ) => {
+  return new Contract(config.flex_dao_stg1.daily_mini_distributor, DistributorStg1.abi, conn)
+}
+
 
 
 export const getFlexStg2 = ( conn ) => {

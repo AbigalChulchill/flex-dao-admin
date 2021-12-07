@@ -7,6 +7,14 @@
     "qurterly_payout": "",
     "qurterly_mini_payout": ""
   },
+  "flex_dao_stg1": {
+    "flex": "0x67c4729aD44201972E8Bf5Ad2addaBE9DFea4e37",
+    "veFLEX": "0xF3c56FFd36D1A45D0c0B82eA3a79c7ABca3021e1",
+    "daily_payout": "0x41A4AA1bfd405E79A61039C223d055e4fcb5191a",
+    "daily_mini_distributor": "0x95D16de74a80f2D35B04E5A9DEAD6e4EB92b1481",
+    "qurterly_payout": "",
+    "qurterly_mini_payout": ""
+  },
   "flex_dao_stg2": {
     "flex": "0x67c4729aD44201972E8Bf5Ad2addaBE9DFea4e37",
     "veFLEX": "0x52aDbbB04572f61a9b48DD649719592C80750958",

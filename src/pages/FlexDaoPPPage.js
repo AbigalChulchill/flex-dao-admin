@@ -13,6 +13,14 @@ export const FlexDaoPPPage = ({conn}) => {
 
   useEffect(() => {
     async function fetchData() {
+      const ethereum = window.ethereum;
+      if (ethereum.networkVersion !== '10001') {
+        await ethereum.request({
+          method: "wallet_switchEthereumChain",
+          params: [{ chainId: '0x2711' }],
+        });
+        window.location.reload(false);
+      }
       if (conn) {
         const _dailyPayout = getDailyPayoutPP(conn);
         if (_dailyPayout) setDailyPayout(_dailyPayout);

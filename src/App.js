@@ -23,7 +23,7 @@ function App() {
       }
     }
     fetchData();
-  }, []);
+  }, [conn]);
 
   return (
     <div className='layout'>

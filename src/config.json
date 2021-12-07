@@ -1,9 +1,25 @@
 {
-  "contracts_addr": {
+  "flex_dao_pp": {
+    "flex": "0x66274647b6e59C13746877e7DFe61d4b47aEE045",
+    "veFLEX": "0x160CfF26D25a806B276BA85D32a76AD5B5B43b09",
+    "daily_payout": "0xd16BE22D6D5755C1be5a9DB2292990E970d23dd1",
+    "daily_mini_distributor": "0xA6899eBdF3bed78a7859C9ec9D9F5a8Ff10cB270",
+    "qurterly_payout": "",
+    "qurterly_mini_payout": ""
+  },
+  "flex_dao_stg2": {
     "flex": "0x67c4729aD44201972E8Bf5Ad2addaBE9DFea4e37",
     "veFLEX": "0x52aDbbB04572f61a9b48DD649719592C80750958",
     "daily_payout": "0xe5B22d8240F479f34aBA4913A67964f3Df9dAFCc",
     "daily_mini_distributor": "0x30DfEC4d5Cd6f819492A04c34E20f5F15171e934",
+    "qurterly_payout": "",
+    "qurterly_mini_payout": ""
+  },
+  "flex_dao_stg3": {
+    "flex": "0x67c4729aD44201972E8Bf5Ad2addaBE9DFea4e37",
+    "veFLEX": "0x2d414E3584DcEFa0b67DE5dAd0Aa388879C9D6a0",
+    "daily_payout": "0x497335C467933568542aEEcEE30b25F247C7B8Ae",
+    "daily_mini_distributor": "0xA39c29955b634914C4234D573CFFE39d2E2818e0",
     "qurterly_payout": "",
     "qurterly_mini_payout": ""
   }

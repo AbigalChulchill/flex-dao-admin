@@ -21,7 +21,7 @@ export const FlexDaoPPPage = ({conn}) => {
         });
         window.location.reload(false);
       }
-      if (conn) {
+      if (conn && ethereum.networkVersion === '10001') {
         const _dailyPayout = getDailyPayoutPP(conn);
         if (_dailyPayout) setDailyPayout(_dailyPayout);
         const _veFlex = getVeFlexPP(conn);

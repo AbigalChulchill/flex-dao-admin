@@ -21,7 +21,7 @@ export const FlexDaoStg3Page = ({conn}) => {
         });
         window.location.reload(false);
       }
-      if (conn) {
+      if (conn && ethereum.networkVersion === '10000') {
         const _dailyPayout = getDailyPayoutStg3(conn);
         if (_dailyPayout) setDailyPayout(_dailyPayout);
         const _veFlex = getVeFlexStg3(conn);

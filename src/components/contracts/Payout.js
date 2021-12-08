@@ -170,7 +170,7 @@ export function Payout({payout, conn}) {
       }
     }
     fetchData();
-  }, [payout]);
+  }, [payout, conn]);
 
   const onHistoryEpochReward = async (e) => {
     setHistoryReward(undefined);

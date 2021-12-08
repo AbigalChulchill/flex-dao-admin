@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { utils } from "ethers";
-import {errorHandle } from "../../utils";
+import {errorHandle, tsToLocalStr } from "../../utils";
 
 async function getAdmin(payout) {
   try {
@@ -89,7 +89,16 @@ async function queryIsDistributor(payout, value) {
   }
 }
 
-export function PayoutStg1({payout}) {
+async function queryBlockTimestamp(conn, height) {
+  try {
+    const _block = await conn.getBlock(Number(height));
+    return _block && _block.timestamp ? _block.timestamp : undefined;
+  } catch(err) {
+    errorHandle('queryBlockTimestamp', err);
+  }  
+}
+
+export function PayoutStg1({payout, conn}) {
 
   const [querying, setQuerying] = useState();
 
@@ -103,6 +112,7 @@ export function PayoutStg1({payout}) {
   const [currentActiveEpoch, setCurrentActiveEpoch] = useState();
   const [historyReward, setHistoryReward] = useState();
   const [epochStartBlockHeight, setEpochStartBlockHeight] = useState();
+  const [blockTimeAtHeight, setBlockTimeAtHeight] = useState();
   const [claimable, setClaimable] = useState();
   const [isDistributor, setIsdistributor] = useState();
   
@@ -148,12 +158,19 @@ export function PayoutStg1({payout}) {
 
   const onEpochStartBlockHeight = async (e) => {
     setEpochStartBlockHeight(undefined);
+    setBlockTimeAtHeight(undefined);
     if (querying) return; 
     setQuerying(true);
     const value = e.target.value;
     if (payout && value) {
       const _epochStartBlockHeight = await queryEpochStartBlockHeight(payout, value);
-      if (_epochStartBlockHeight) setEpochStartBlockHeight(_epochStartBlockHeight);
+      if (_epochStartBlockHeight) {
+        setEpochStartBlockHeight(_epochStartBlockHeight);
+        
+        // query block metadata to fetch block timestamp
+        const _blockTimeAtHeight = await queryBlockTimestamp(conn, _epochStartBlockHeight);
+        if (_blockTimeAtHeight) setBlockTimeAtHeight(_blockTimeAtHeight);
+      }
     }
     setQuerying(false);
   }
@@ -195,7 +212,7 @@ export function PayoutStg1({payout}) {
           <li>FLEX Addr: {token}</li>
           <li>VeFLEX Addr: {veFlex}</li>
           <li>Epoch Length: {epochLen} Seconds</li>
-          <li>Payout Start Timestamp: {startTime}</li>
+          <li>Payout Start Timestamp: {startTime} {tsToLocalStr(startTime)}</li>
           <li>Current Active Epoch: {currentActiveEpoch}</li>
         </ul>
       </div>
@@ -217,6 +234,7 @@ export function PayoutStg1({payout}) {
             </label>
             <input type="text" placeholder="epoch index (uint)" onChange={onEpochStartBlockHeight} />
             {epochStartBlockHeight}
+            <p>{blockTimeAtHeight} {tsToLocalStr(blockTimeAtHeight)}</p>
           </li>
           <li>
             <label>

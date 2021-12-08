@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { utils } from "ethers";
-import {errorHandle } from "../../utils";
+import {errorHandle, tsToLocalStr } from "../../utils";
 
 async function getAdmin(payout) {
   try {
@@ -107,7 +107,16 @@ async function queryIsOperator(payout, value) {
   }
 }
 
-export function Payout({payout}) {
+async function queryBlockTimestamp(conn, height) {
+  try {
+    const _block = await conn.getBlock(Number(height));
+    return _block && _block.timestamp ? _block.timestamp : undefined;
+  } catch(err) {
+    errorHandle('queryBlockTimestamp', err);
+  }  
+}
+
+export function Payout({payout, conn}) {
 
   const [querying, setQuerying] = useState();
 
@@ -122,6 +131,7 @@ export function Payout({payout}) {
   const [currentActiveEpoch, setCurrentActiveEpoch] = useState();
   const [historyReward, setHistoryReward] = useState();
   const [epochStartBlockHeight, setEpochStartBlockHeight] = useState();
+  const [blockTimeAtHeight, setBlockTimeAtHeight] = useState();
   const [claimable, setClaimable] = useState();
   const [isDistributor, setIsdistributor] = useState();
   const [isOperator, setIsOperator] = useState();
@@ -171,12 +181,19 @@ export function Payout({payout}) {
 
   const onEpochStartBlockHeight = async (e) => {
     setEpochStartBlockHeight(undefined);
+    setBlockTimeAtHeight(undefined);
     if (querying) return; 
     setQuerying(true);
     const value = e.target.value;
     if (payout && value) {
       const _epochStartBlockHeight = await queryEpochStartBlockHeight(payout, value);
-      if (_epochStartBlockHeight) setEpochStartBlockHeight(_epochStartBlockHeight);
+      if (_epochStartBlockHeight) {
+        setEpochStartBlockHeight(_epochStartBlockHeight);
+        
+        // query block metadata to fetch block timestamp
+        const _blockTimeAtHeight = await queryBlockTimestamp(conn, _epochStartBlockHeight);
+        if (_blockTimeAtHeight) setBlockTimeAtHeight(_blockTimeAtHeight);
+      }
     }
     setQuerying(false);
   }
@@ -253,6 +270,7 @@ export function Payout({payout}) {
             </label>
             <input type="text" placeholder="epoch index (uint)" onChange={onEpochStartBlockHeight} />
             {epochStartBlockHeight}
+            <p>{blockTimeAtHeight} {tsToLocalStr(blockTimeAtHeight)}</p>
           </li>
           <li>
             <label>

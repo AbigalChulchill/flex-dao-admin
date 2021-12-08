@@ -127,6 +127,7 @@ export function Payout({payout, conn}) {
   const [veFlex, setVeFlex] = useState();
   const [epochLen, setEpochLen] = useState();
   const [startBlockHeight, setStartBlockHeight] = useState();
+  const [startTime, setStartTime] = useState();
   const [currentEpoch, setCurrentEpoch] = useState();
   const [currentActiveEpoch, setCurrentActiveEpoch] = useState();
   const [historyReward, setHistoryReward] = useState();
@@ -155,8 +156,12 @@ export function Payout({payout, conn}) {
         if (_epochLen) setEpochLen(_epochLen);
   
         const _startBlockHeight = await getStartBlockHeight(payout);
-        if (_startBlockHeight) setStartBlockHeight(_startBlockHeight);
-  
+        if (_startBlockHeight) {
+          setStartBlockHeight(_startBlockHeight);
+          const _startTime = await queryBlockTimestamp(conn, _startBlockHeight);
+          if (_startTime) setStartTime(_startTime);
+        }
+
         const _currentEpoch = await getCurrentEpoch(payout);
         if(_currentEpoch) setCurrentEpoch(_currentEpoch);
   
@@ -248,6 +253,7 @@ export function Payout({payout, conn}) {
           <li>VeFLEX Addr: {veFlex}</li>
           <li>Epoch Length: {epochLen}</li>
           <li>Payout Start Block Height: {startBlockHeight}</li>
+          <li>Payout Start Time: {startTime} {tsToLocalStr(startTime)}</li>
           <li>Current Epoch: {currentEpoch}</li>
           <li>Current Active Epoch: {currentActiveEpoch}</li>
         </ul>

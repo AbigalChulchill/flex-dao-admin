@@ -42,7 +42,7 @@ export const FlexDaoStg1Page = ({conn}) => {
         <FLEX flex={flex}></FLEX>
         <VeFLEX veflex={veFlex}></VeFLEX>
         <PayoutStg1 payout={dailyPayout} conn={conn}></PayoutStg1>
-        <DistributorStg1 distributor={distributor}></DistributorStg1>
+        <DistributorStg1 distributor={distributor} flex={flex}></DistributorStg1>
       </div>
     </>
   )

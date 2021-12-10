@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { utils } from 'ethers';
 import { errorHandle } from "../../utils";
 
 async function getAdmin(distributor) {
@@ -25,7 +26,15 @@ async function getPayout(distributor) {
   }
 }
 
-export function DistributorStg1({ distributor }) {
+async function getFlexBalance(flex, address) {
+  try {
+    return await flex.balanceOf(address);
+  } catch (err) {
+    errorHandle('getFlexBalance', err);
+  }
+}
+
+export function DistributorStg1({ distributor, flex }) {
 
   const [querying] = useState();
 
@@ -33,6 +42,7 @@ export function DistributorStg1({ distributor }) {
   const [admin, setAdmin] = useState();
 
   const [token, setToken] = useState();
+  const [balance, setBalance] = useState();
   const [payout, setPayout] = useState();
 
   useEffect(() => {
@@ -46,12 +56,15 @@ export function DistributorStg1({ distributor }) {
         const _token = await getToken(distributor);
         if (_token) setToken(_token);
 
+        const _balance = await getFlexBalance(flex, distributor.address);
+        if (_balance) setBalance(utils.formatEther(_balance));
+
         const _payout = await getPayout(distributor);
         if (_payout) setPayout(_payout);
       }
     }
     fetchData();
-  }, [distributor]);
+  }, [distributor, flex]);
 
   return (
     <div className="box">
@@ -64,7 +77,8 @@ export function DistributorStg1({ distributor }) {
           <li>Contract Addr: {addr}</li>
           <li>Contract Admin: {admin}</li>
           <li>FLEX Addr: {token}</li>
-          <li>Payout Addr: {payout} FLEX</li>
+          <li>Contract FLEX balance: {balance} FLEX</li>
+          <li>Payout Addr: {payout}</li>
         </ul>
       </div>
       <div className="query">

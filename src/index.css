@@ -67,3 +67,11 @@ input {
 li {
   margin-top: 5px;
 }
+
+.status-on {
+  color: red;
+}
+
+.status-off {
+  color: grey;
+}

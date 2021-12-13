@@ -82,7 +82,7 @@ export function DistributorStg1({ distributor, flex }) {
         </ul>
       </div>
       <div className="query">
-        <div className="status">
+        <div className={"status-" + (querying ? "on" : "off")}>
           == Query Status: {querying ? "Querying" : "Not Query"} ==
         </div>
         <ul>

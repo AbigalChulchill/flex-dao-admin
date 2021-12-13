@@ -178,7 +178,7 @@ export function VeFLEX({ veflex }) {
         </ul>
       </div>
       <div className="query">
-        <div className="status">
+        <div className={"status-" + (querying ? "on" : "off")}>
           == Query Status: {querying ? "Querying" : "Not Query"} ==
         </div>
         <ul>

@@ -1,11 +1,14 @@
 import { getDailyPayoutStg1, getVeFlexStg1, getDailyDistributorStg1, getFlexStg1 } from '../conn';
+import { ConnectionContext} from '../App'
 import { PayoutStg1 } from '../components/contracts/PayoutStg1';
 import { VeFLEX } from '../components/contracts/VeFLEX';
 import { DistributorStg1 } from '../components/contracts/DistributorStg1';
 import { FLEX } from "../components/contracts/FLEX";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 
-export const FlexDaoStg1Page = ({conn}) => {
+export const FlexDaoStg1Page = () => {
+  const { conn } = useContext(ConnectionContext);
+
   const [dailyPayout, setDailyPayout] = useState();
   const [veFlex, setVeFlex] = useState();
   const [distributor, setDistributor] = useState();

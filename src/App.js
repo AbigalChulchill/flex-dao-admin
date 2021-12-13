@@ -1,5 +1,5 @@
 import { Route, Switch, Redirect } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, createContext } from 'react';
 
 import { SideNav } from './components/layout/SideNav';
 import { FlexPage } from './pages/FlexPage';
@@ -8,6 +8,7 @@ import { FlexDaoPage } from './pages/FlexDaoPage';
 import { getConn } from './conn';
 import { errorHandle } from "./utils";
 
+export const ConnectionContext = createContext(null);
 
 function App() {
 
@@ -26,25 +27,27 @@ function App() {
   }, [conn]);
 
   return (
-    <div className='layout'>
-      <SideNav />
-      <div className="content">
-        <Switch>
-          <Route path='/' exact>
-            <Redirect to='/flex-dao' />
-          </Route>
-          <Route path='/flex'>
-            <FlexPage />
-          </Route>
-          <Route path='/flex-usd'>
-            <FlexUsdPage />
-          </Route>
-          <Route path='/flex-dao'>
-            <FlexDaoPage conn={conn}/>
-          </Route>
-        </Switch>
+    <ConnectionContext.Provider value={{conn}}> 
+      <div className='layout'>
+        <SideNav />
+        <div className="content">
+          <Switch>
+            <Route path='/' exact>
+              <Redirect to='/flex-dao' />
+            </Route>
+            <Route path='/flex'>
+              <FlexPage />
+            </Route>
+            <Route path='/flex-usd'>
+              <FlexUsdPage />
+            </Route>
+            <Route path='/flex-dao'>
+              <FlexDaoPage/>
+            </Route>
+          </Switch>
+        </div>
       </div>
-    </div>
+    </ConnectionContext.Provider>
   );
 }
 

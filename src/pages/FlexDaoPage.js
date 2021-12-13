@@ -6,26 +6,26 @@ import { FlexDaoStg2Page } from '../pages/FlexDaoStg2Page';
 import { FlexDaoStg3Page } from '../pages/FlexDaoStg3Page';
 import { FlexDaoProdPage } from '../pages/FlexDaoProdPage';
 
-export const FlexDaoPage = ({conn}) => {
+export const FlexDaoPage = () => {
   return (
     <>
       <TopNav category='FlexDaoPage'></TopNav>
       <div className='subContent'>
         <Switch>
           <Route path='/flex-dao/pp'>
-            <FlexDaoPPPage conn={conn}/>
+            <FlexDaoPPPage />
           </Route>
           <Route path='/flex-dao/stg1'>
-            <FlexDaoStg1Page conn={conn}/>
+            <FlexDaoStg1Page />
           </Route>
           <Route path='/flex-dao/stg2'>
-            <FlexDaoStg2Page conn={conn}/>
+            <FlexDaoStg2Page />
           </Route>
           <Route path='/flex-dao/stg3'>
-            <FlexDaoStg3Page conn={conn}/>
+            <FlexDaoStg3Page />
           </Route>
           <Route path='/flex-dao/prod'>
-            <FlexDaoProdPage conn={conn}/>
+            <FlexDaoProdPage />
           </Route>
         </Switch>
       </div>

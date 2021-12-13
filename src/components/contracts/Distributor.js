@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { utils } from 'ethers';
 import { errorHandle,  } from "../../utils";
+import * as config from "../../config.json"
 
 async function getAdmin(distributor) {
   try {
@@ -89,16 +90,20 @@ export function Distributor({ distributor, flex }) {
     fetchData();
   }, [distributor, flex]);
 
+  let distributorTimer = undefined;
   const onIsDistributor = async (e) => {
-    setIsDistributor(undefined);
-    if (querying) return;
-    setQuerying(true);
-    const value = e.target.value;
-    if (distributor && value) {
-      const _isDistributor = await getIsDistributor(distributor, value);
-      if (_isDistributor) setIsDistributor(_isDistributor);
-    }
-    setQuerying(false);
+    if (distributorTimer) clearTimeout(distributorTimer);
+    distributorTimer = setTimeout( async ()=>{
+      setIsDistributor(undefined);
+      if (querying) return;
+      setQuerying(true);
+      const value = e.target.value;
+      if (distributor && value) {
+        const _isDistributor = await getIsDistributor(distributor, value);
+        if (_isDistributor) setIsDistributor(_isDistributor);
+      }
+      setQuerying(false);
+    }, config.query_response_millitime)
   }
 
   return (

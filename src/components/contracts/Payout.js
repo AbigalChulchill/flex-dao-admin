@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { utils } from "ethers";
 import {errorHandle, tsToLocalStr } from "../../utils";
+import * as config from "../../config.json"
 
 async function getAdmin(payout) {
   try {
@@ -172,71 +173,91 @@ export function Payout({payout, conn}) {
     fetchData();
   }, [payout, conn]);
 
+  let historyEpochTimer = undefined;
   const onHistoryEpochReward = async (e) => {
-    setHistoryReward(undefined);
-    if (querying) return; 
-    setQuerying(true);
-    const value = e.target.value;
-    if (payout && value) {
-      const _reward = await queryHistoryEpochReward(payout, value);
-      if (_reward) setHistoryReward(_reward);
-    }
-    setQuerying(false);
-  }
-
-  const onEpochStartBlockHeight = async (e) => {
-    setEpochStartBlockHeight(undefined);
-    setBlockTimeAtHeight(undefined);
-    if (querying) return; 
-    setQuerying(true);
-    const value = e.target.value;
-    if (payout && value) {
-      const _epochStartBlockHeight = await queryEpochStartBlockHeight(payout, value);
-      if (_epochStartBlockHeight) {
-        setEpochStartBlockHeight(_epochStartBlockHeight);
-        
-        // query block metadata to fetch block timestamp
-        const _blockTimeAtHeight = await queryBlockTimestamp(conn, _epochStartBlockHeight);
-        if (_blockTimeAtHeight) setBlockTimeAtHeight(_blockTimeAtHeight);
+    if (historyEpochTimer) clearTimeout(historyEpochTimer);
+    historyEpochTimer = setTimeout( async ()=>{
+      setHistoryReward(undefined);
+      if (querying) return; 
+      setQuerying(true);
+      const value = e.target.value;
+      if (payout && value) {
+        const _reward = await queryHistoryEpochReward(payout, value);
+        if (_reward) setHistoryReward(_reward);
       }
-    }
-    setQuerying(false);
+      setQuerying(false);
+    }, config.query_response_millitime)
   }
 
+  let epochStartTimer = undefined;
+  const onEpochStartBlockHeight = async (e) => {
+    if (epochStartTimer) clearTimeout(epochStartTimer);
+    epochStartTimer = setTimeout( async ()=>{
+      setEpochStartBlockHeight(undefined);
+      setBlockTimeAtHeight(undefined);
+      if (querying) return; 
+      setQuerying(true);
+      const value = e.target.value;
+      if (payout && value) {
+        const _epochStartBlockHeight = await queryEpochStartBlockHeight(payout, value);
+        if (_epochStartBlockHeight) {
+          setEpochStartBlockHeight(_epochStartBlockHeight);
+          
+          // query block metadata to fetch block timestamp
+          const _blockTimeAtHeight = await queryBlockTimestamp(conn, _epochStartBlockHeight);
+          if (_blockTimeAtHeight) setBlockTimeAtHeight(_blockTimeAtHeight);
+        }
+      }
+      setQuerying(false);
+    }, config.query_response_millitime)
+  }
+
+  let claimTimer = undefined;
   const onClaimable = async (e) => {
-    setClaimable(undefined);
-    if (querying) return; 
-    setQuerying(true);
-    const value = e.target.value;
-    if (payout && value) {
-      const _claimable = await queryClaimable(payout, value);
-      if (_claimable) setClaimable(_claimable);
-    }
-    setQuerying(false);
+    if(claimTimer) clearTimeout(claimTimer);
+    claimTimer = setTimeout( async ()=>{
+      setClaimable(undefined);
+      if (querying) return; 
+      setQuerying(true);
+      const value = e.target.value;
+      if (payout && value) {
+        const _claimable = await queryClaimable(payout, value);
+        if (_claimable) setClaimable(_claimable);
+      }
+      setQuerying(false);
+    }, config.query_response_millitime)
   }
 
+  let distributorTimer = undefined;
   const onIsDistributor = async (e) => {
-    setIsdistributor(undefined);
-    if (querying) return; 
-    setQuerying(true);
-    const value = e.target.value;
-    if (payout && value) {
-      const _isDistributor = await queryIsDistributor(payout, value);
-      if (_isDistributor) setIsdistributor(_isDistributor);
-    }
-    setQuerying(false);
+    if (distributorTimer) clearTimeout(distributorTimer);
+    distributorTimer = setTimeout( async ()=>{
+      setIsdistributor(undefined);
+      if (querying) return; 
+      setQuerying(true);
+      const value = e.target.value;
+      if (payout && value) {
+        const _isDistributor = await queryIsDistributor(payout, value);
+        if (_isDistributor) setIsdistributor(_isDistributor);
+      }
+      setQuerying(false);
+    }, config.query_response_millitime)
   }
 
+  let operatorTimer = undefined;
   const onIsOperator = async (e) => {
-    setIsOperator(undefined);
-    if (querying) return; 
-    setQuerying(true);
-    const value = e.target.value;
-    if (payout && value) {
-      const _isOperator = await queryIsOperator(payout, value);
-      if (_isOperator) setIsOperator(_isOperator);
-    }
-    setQuerying(false);
+    if (operatorTimer) clearTimeout(operatorTimer);
+    operatorTimer = setTimeout( async ()=>{
+      setIsOperator(undefined);
+      if (querying) return; 
+      setQuerying(true);
+      const value = e.target.value;
+      if (payout && value) {
+        const _isOperator = await queryIsOperator(payout, value);
+        if (_isOperator) setIsOperator(_isOperator);
+      }
+      setQuerying(false);
+    }, config.query_response_millitime)
   }
 
   return (

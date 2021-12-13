@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { utils } from 'ethers';
 import { errorHandle } from "../../utils";
+import * as config from "../../config.json"
 
 async function getAdmin(flex) {
   try {
@@ -53,16 +54,20 @@ export function FLEX({ flex }) {
     fetchData();
   }, [flex]);
 
+  let balanceTimer = undefined;
   const onBalanceOf = async (e) => {
-    setBalanceOf(undefined);
-    if (querying) return;
-    setQuerying(true);
-    const value = e.target.value;
-    if (flex && value) {
-      const _balanceOf = await getBalanceOf(flex, value);
-      if (_balanceOf) setBalanceOf(utils.formatEther(_balanceOf));
-    }
-    setQuerying(false);
+    if (balanceTimer) clearTimeout(balanceTimer);
+    balanceTimer = setTimeout( async ()=>{
+      setBalanceOf(undefined);
+      if (querying) return;
+      setQuerying(true);
+      const value = e.target.value;
+      if (flex && value) {
+        const _balanceOf = await getBalanceOf(flex, value);
+        if (_balanceOf) setBalanceOf(utils.formatEther(_balanceOf));
+      }
+      setQuerying(false);
+    }, config.query_response_millitime)
   }
 
   return (

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { utils } from "ethers";
 import { errorHandle } from "../../utils";
+import * as config from "../../config.json"
 
 async function getAdmin(veflex) {
   try {
@@ -109,52 +110,68 @@ export function VeFLEX({ veflex }) {
     fetchData();
   }, [veflex]);
 
+  let lockTimer = undefined;
   const onLocked = async (e) => {
-    setLocked(undefined);
-    if (querying) return;
-    setQuerying(true);
-    const value = e.target.value;
-    if (veflex && value) {
-      const _locked = await getLocked(veflex, value);
-      if (_locked) setLocked([utils.formatEther(_locked.amount), _locked.end.toString()]);
-    }
-    setQuerying(false);
+    if (lockTimer) clearTimeout(lockTimer);
+    lockTimer = setTimeout( async ()=> {
+      setLocked(undefined);
+      if (querying) return;
+      setQuerying(true);
+      const value = e.target.value;
+      if (veflex && value) {
+        const _locked = await getLocked(veflex, value);
+        if (_locked) setLocked([utils.formatEther(_locked.amount), _locked.end.toString()]);
+      }
+      setQuerying(false);
+    }, config.query_response_millitime);
   }
 
+  let balanceOfTimer = undefined;
   const onBalanceOf = async (e) => {
-    setBalanceOf(undefined);
-    if (querying) return;
-    setQuerying(true);
-    const value = e.target.value;
-    if (veflex && value) {
-      const _balanceOf = await getBalanceOf(veflex, value);
-      if (_balanceOf) setBalanceOf(utils.formatEther(_balanceOf));
-    }
-    setQuerying(false);
+    if (balanceOfTimer) clearTimeout(balanceOfTimer);
+    balanceOfTimer = setTimeout( async () => {
+      setBalanceOf(undefined);
+      if (querying) return;
+      setQuerying(true);
+      const value = e.target.value;
+      if (veflex && value) {
+        const _balanceOf = await getBalanceOf(veflex, value);
+        if (_balanceOf) setBalanceOf(utils.formatEther(_balanceOf));
+      }
+      setQuerying(false);
+    }, config.query_response_millitime);
   }
 
+  let totalSupplyAtTimer = undefined;
   const onTotalSupplyAt = async (e) => {
-    setTotalSupplyAt(undefined);
-    if (querying) return;
-    setQuerying(true);
-    const value = e.target.value;
-    if (veflex && value) {
-      const _totalSupplyAt = await getTotalSupplyAt(veflex, value);
-      if (_totalSupplyAt) setTotalSupplyAt(utils.formatEther(_totalSupplyAt));
-    }
-    setQuerying(false);
+    if (totalSupplyAtTimer) clearTimeout(totalSupplyAtTimer);
+    totalSupplyAtTimer = setTimeout(async () => {      
+      setTotalSupplyAt(undefined);
+      if (querying) return;
+      setQuerying(true);
+      const value = e.target.value;
+      if (veflex && value) {
+        const _totalSupplyAt = await getTotalSupplyAt(veflex, value);
+        if (_totalSupplyAt) setTotalSupplyAt(utils.formatEther(_totalSupplyAt));
+      }
+      setQuerying(false);
+    }, config.query_response_millitime);
   }
 
+  let balanceOfAtTimer = undefined;
   const onBalanceOfAt = async (e) => {
-    setBalanceOfAt(undefined);
-    if (querying) return;
-    setQuerying(true);
-    const value = e.target.value;
-    if (veflex && value && balanceOfAtAddr) {
-      const _balanceOfAt = await getBalanceOfAt(veflex, balanceOfAtAddr, value);
-      if (_balanceOfAt) setBalanceOfAt(utils.formatEther(_balanceOfAt));
-    }
-    setQuerying(false);
+    if (balanceOfAtTimer) clearTimeout(balanceOfAtTimer);
+    balanceOfAtTimer = setTimeout(async () => {
+      setBalanceOfAt(undefined);
+      if (querying) return;
+      setQuerying(true);
+      const value = e.target.value;
+      if (veflex && value && balanceOfAtAddr) {
+        const _balanceOfAt = await getBalanceOfAt(veflex, balanceOfAtAddr, value);
+        if (_balanceOfAt) setBalanceOfAt(utils.formatEther(_balanceOfAt));
+      }
+      setQuerying(false);
+    }, config.query_response_millitime);
   }
 
   const onBalanceOfAtAddr = async (e) => {

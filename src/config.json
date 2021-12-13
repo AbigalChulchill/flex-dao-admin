@@ -30,5 +30,6 @@
     "daily_mini_distributor": "0xA39c29955b634914C4234D573CFFE39d2E2818e0",
     "qurterly_payout": "",
     "qurterly_mini_payout": ""
-  }
+  },
+  "query_response_millitime": 1000
 }

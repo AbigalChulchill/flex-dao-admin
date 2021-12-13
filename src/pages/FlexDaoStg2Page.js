@@ -22,9 +22,8 @@ export const FlexDaoStg2Page = () => {
           method: "wallet_switchEthereumChain",
           params: [{ chainId: '0x2710' }],
         });
-        window.location.reload(false);
       }
-      if (conn && ethereum.networkVersion === '10000') {
+      if (conn) {
         const _dailyPayout = getDailyPayoutStg2(conn);
         if (_dailyPayout) setDailyPayout(_dailyPayout);
         const _veFlex = getVeFlexStg2(conn);

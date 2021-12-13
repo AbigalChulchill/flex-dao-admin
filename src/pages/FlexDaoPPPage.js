@@ -22,9 +22,8 @@ export const FlexDaoPPPage = () => {
           method: "wallet_switchEthereumChain",
           params: [{ chainId: '0x2711' }],
         });
-        window.location.reload(false);
       }
-      if (conn && ethereum.networkVersion === '10001') {
+      if (conn) {
         const _dailyPayout = getDailyPayoutPP(conn);
         if (_dailyPayout) setDailyPayout(_dailyPayout);
         const _veFlex = getVeFlexPP(conn);

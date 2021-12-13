@@ -2,9 +2,9 @@ import moment from 'moment';
 
 export const errorHandle = (name, err) => {
   if (err.data && err.data.message) {
-    window.alert(`${name} - ${err.data.message}`);
+    console.log(`${name} - ${err.data.message}`)
   } else {
-    window.alert(`${name} - ${err}`);
+    console.log(`${name} - ${err}`)
   }
 }
 

@@ -138,6 +138,9 @@ export function Payout({payout, conn}) {
   const [isDistributor, setIsdistributor] = useState();
   const [isOperator, setIsOperator] = useState();
   
+  const [claimEvents, setClaimEvents] = useState([]);
+  const [claimEventsLoading, setClaimEventsLoading] = useState(true);
+  
   useEffect( () => {
     async function fetchData() {
       if (payout) {
@@ -168,6 +171,14 @@ export function Payout({payout, conn}) {
   
         const _currentActiveEpoch = await getCurrentActiveEpoch(payout);
         if(_currentActiveEpoch) setCurrentActiveEpoch(_currentActiveEpoch);
+
+        setClaimEventsLoading(true);
+        const _claimEventsFilter = payout.filters.Claim(null);
+        const _claimEvents = await payout.queryFilter(_claimEventsFilter);
+        if (_claimEvents) {
+          setClaimEvents(_claimEvents);
+          setClaimEventsLoading(false);
+        }
       }
     }
     fetchData();
@@ -260,6 +271,14 @@ export function Payout({payout, conn}) {
     }, config.query_response_millitime)
   }
 
+  const claimItems = claimEvents.map( (event, index) => {
+    return (
+      <li key = {index}>
+        {event.blockNumber}: {event.args.from}, {utils.formatEther(event.args.amount)}, {event.args.lastClaimedEpoch.toString()}
+      </li>
+    )
+  })
+
   return (
     <div className="box">
       <div className="info">
@@ -321,6 +340,16 @@ export function Payout({payout, conn}) {
             {isOperator}
           </li>
         </ul>
+      </div>
+      <div className="events">
+        <div className="eventName">
+          == Claim History == 
+        </div>
+        <div className="eventList">
+          <ul>
+            {claimEventsLoading ? "Loading" : claimItems}
+          </ul>
+        </div>
       </div>
     </div>
   );

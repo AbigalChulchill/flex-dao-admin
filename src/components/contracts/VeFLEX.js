@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { utils } from "ethers";
-import { errorHandle } from "../../utils";
+import { errorHandle, tsToLocalStr } from "../../utils";
 import * as config from "../../config.json"
 
 async function getAdmin(veflex) {
@@ -88,6 +88,12 @@ export function VeFLEX({ veflex }) {
 
   const [balanceOfAtAddr, setBalanceOfAtAddr] = useState();
 
+  const [depositEvents, setDepositEvents] = useState([]);
+  const [depositEventsLoading, setDepositEventsLoading] = useState(true);
+
+  const [withdrawEvents, setWithdrawEvents] = useState([]);
+  const [withdrawEventsLoading, setWithdrawEventsLoading] = useState(true);
+
   useEffect(() => {
     async function fetchData() {
       if (veflex) {
@@ -105,6 +111,22 @@ export function VeFLEX({ veflex }) {
 
         const _totalSupply = await getTotalSupply(veflex);
         if (_totalSupply) setTotalSupply(utils.formatEther(_totalSupply));
+
+        setDepositEventsLoading(true);
+        const _depositEventsFilter = veflex.filters.Deposit(null);
+        const _depositEvents = await veflex.queryFilter(_depositEventsFilter);
+        if (_depositEvents) {
+          setDepositEvents(_depositEvents);
+          setDepositEventsLoading(false);
+        }
+        
+        setWithdrawEventsLoading(true);
+        const _withdrawEventsFilter = veflex.filters.Withdraw(null);
+        const _withdrawEvents = await veflex.queryFilter(_withdrawEventsFilter);
+        if (_withdrawEvents) {
+          setWithdrawEvents(_withdrawEvents);
+          setWithdrawEventsLoading(false);
+        }
       }
     }
     fetchData();
@@ -179,6 +201,22 @@ export function VeFLEX({ veflex }) {
     setBalanceOfAtAddr(e.target.value);
   }
 
+  const depositItems = depositEvents.map( (event, index) => {
+    return (
+      <li key = {index}>
+        {event.blockNumber}: {event.args.provider}, {utils.formatEther(event.args.value)}, {tsToLocalStr(event.args.locktime.toString())}, {event.args.type.toString()}, {tsToLocalStr(event.args.ts.toString())}
+      </li>
+    )
+  })
+
+  const withdrawItems = withdrawEvents.map( (event, index) => {
+    return (
+      <li key = {index}>
+        {event.blockNumber}: {event.args.provider}, {utils.formatEther(event.args.value)}, {tsToLocalStr(event.args.ts.toString())}
+      </li>
+    )
+  })
+
   return (
     <div className="box">
       <div className="info">
@@ -229,6 +267,24 @@ export function VeFLEX({ veflex }) {
             {balanceOfAt} veFLEX
           </li>
         </ul>
+      </div>
+      <div className="events">
+        <div className="eventName">
+          == Deposit History == 
+        </div>
+        <div className="eventList">
+          <ul>
+            {depositEventsLoading ? "Loading" : depositItems}
+          </ul>
+        </div>
+        <div className="eventName">
+          == Withdral History ==
+        </div>
+        <div className="eventList">
+          <ul>
+            {withdrawEventsLoading ? "Loading" : withdrawItems}
+          </ul>
+        </div>
       </div>
     </div>
   );

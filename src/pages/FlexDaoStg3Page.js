@@ -5,6 +5,7 @@ import { VeFLEX } from '../components/contracts/VeFLEX';
 import { Distributor } from '../components/contracts/Distributor';
 import { FLEX } from "../components/contracts/FLEX";
 import { useEffect, useState, useContext } from "react";
+import * as config from '../config.json';
 
 export const FlexDaoStg3Page = () => {
   const { conn } = useContext(ConnectionContext);
@@ -43,7 +44,7 @@ export const FlexDaoStg3Page = () => {
       <div className="container">
         <FLEX flex={flex}></FLEX>
         <VeFLEX veflex={veFlex}></VeFLEX>
-        <Payout payout={dailyPayout} conn={conn}></Payout>
+        <Payout payout={dailyPayout} conn={conn} startTs={config.flex_dao_stg3.payout_start_ts}></Payout>
         <Distributor distributor={distributor} flex={flex}></Distributor>
       </div>
     </>

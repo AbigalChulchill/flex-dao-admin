@@ -117,7 +117,14 @@ async function queryBlockTimestamp(conn, height) {
   }  
 }
 
-export function Payout({payout, conn}) {
+function getCurrentExpectEpoch(startTs) {
+  if (!startTs) return -1;
+  const now = Date.now() / 1000;
+  const oneDay = 86400;
+  return Math.floor((now - startTs) / oneDay);
+}
+
+export function Payout({payout, conn, startTs}) {
 
   const [querying, setQuerying] = useState();
 
@@ -129,6 +136,7 @@ export function Payout({payout, conn}) {
   const [epochLen, setEpochLen] = useState();
   const [startBlockHeight, setStartBlockHeight] = useState();
   const [startTime, setStartTime] = useState();
+  const [expectCurrentEpoch, setExpectCurrentEpoch] = useState();
   const [currentEpoch, setCurrentEpoch] = useState();
   const [currentActiveEpoch, setCurrentActiveEpoch] = useState();
   const [historyReward, setHistoryReward] = useState();
@@ -169,6 +177,9 @@ export function Payout({payout, conn}) {
           if (_startTime) setStartTime(_startTime);
         }
 
+        const _expectCurrentEpoch = getCurrentExpectEpoch(startTs);
+        if(_expectCurrentEpoch) setExpectCurrentEpoch(_expectCurrentEpoch);
+  
         const _currentEpoch = await getCurrentEpoch(payout);
         if(_currentEpoch) setCurrentEpoch(_currentEpoch);
   
@@ -177,7 +188,7 @@ export function Payout({payout, conn}) {
       }
     }
     fetchData();
-  }, [payout, conn]);
+  }, [payout, conn, startTs]);
 
   let historyEpochTimer = undefined;
   const onHistoryEpochReward = async (e) => {
@@ -317,6 +328,7 @@ export function Payout({payout, conn}) {
           <li>Epoch Length: {epochLen}</li>
           <li>Payout Start Block Height: {startBlockHeight}</li>
           <li>Payout Start Time: {startTime} {tsToLocalStr(startTime)}</li>
+          <li>Current Expect Epoch: {expectCurrentEpoch}</li>
           <li>Current Epoch: {currentEpoch}</li>
           <li>Current Active Epoch: {currentActiveEpoch}</li>
         </ul>

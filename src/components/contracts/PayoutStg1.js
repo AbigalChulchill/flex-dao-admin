@@ -118,7 +118,7 @@ export function PayoutStg1({payout, conn}) {
   const [isDistributor, setIsdistributor] = useState();
 
   const [claimEvents, setClaimEvents] = useState([]);
-  const [claimEventsLoading, setClaimEventsLoading] = useState(true);
+  const [claimEventsLoading, setClaimEventsLoading] = useState(false);
   
   useEffect( () => {
     async function fetchData() {
@@ -143,14 +143,6 @@ export function PayoutStg1({payout, conn}) {
   
         const _currentActiveEpoch = await getCurrentActiveEpoch(payout);
         if(_currentActiveEpoch) setCurrentActiveEpoch(_currentActiveEpoch);
-      
-        setClaimEventsLoading(true);
-        const _claimEventsFilter = payout.filters.Claim(null);
-        const _claimEvents = await payout.queryFilter(_claimEventsFilter);
-        if (_claimEvents) {
-          setClaimEvents(_claimEvents);
-          setClaimEventsLoading(false);
-        }
       }
     }
     fetchData();
@@ -227,6 +219,16 @@ export function PayoutStg1({payout, conn}) {
     }, config.query_response_millitime)  
   }
 
+  const onQueryClaimHistory = async () => {
+    setClaimEventsLoading(true);
+    const _claimEventsFilter = payout.filters.Claim(null);
+    const _claimEvents = await payout.queryFilter(_claimEventsFilter);
+    if (_claimEvents) {
+      setClaimEvents(_claimEvents);
+      setClaimEventsLoading(false);
+    }
+  }
+
   const claimItems = claimEvents.map( (event, index) => {
     return (
       <li key = {index}>
@@ -293,6 +295,9 @@ export function PayoutStg1({payout, conn}) {
           == Claim History == 
         </div>
         <div className="eventList">
+          <div>
+            <button onClick={onQueryClaimHistory}>Query</button>
+          </div>
           <ul>
             {claimEventsLoading ? "Loading" : claimItems}
           </ul>

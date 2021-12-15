@@ -89,10 +89,10 @@ export function VeFLEX({ veflex }) {
   const [balanceOfAtAddr, setBalanceOfAtAddr] = useState();
 
   const [depositEvents, setDepositEvents] = useState([]);
-  const [depositEventsLoading, setDepositEventsLoading] = useState(true);
+  const [depositEventsLoading, setDepositEventsLoading] = useState(false);
 
   const [withdrawEvents, setWithdrawEvents] = useState([]);
-  const [withdrawEventsLoading, setWithdrawEventsLoading] = useState(true);
+  const [withdrawEventsLoading, setWithdrawEventsLoading] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
@@ -111,22 +111,6 @@ export function VeFLEX({ veflex }) {
 
         const _totalSupply = await getTotalSupply(veflex);
         if (_totalSupply) setTotalSupply(utils.formatEther(_totalSupply));
-
-        setDepositEventsLoading(true);
-        const _depositEventsFilter = veflex.filters.Deposit(null);
-        const _depositEvents = await veflex.queryFilter(_depositEventsFilter);
-        if (_depositEvents) {
-          setDepositEvents(_depositEvents);
-          setDepositEventsLoading(false);
-        }
-        
-        setWithdrawEventsLoading(true);
-        const _withdrawEventsFilter = veflex.filters.Withdraw(null);
-        const _withdrawEvents = await veflex.queryFilter(_withdrawEventsFilter);
-        if (_withdrawEvents) {
-          setWithdrawEvents(_withdrawEvents);
-          setWithdrawEventsLoading(false);
-        }
       }
     }
     fetchData();
@@ -201,6 +185,26 @@ export function VeFLEX({ veflex }) {
     setBalanceOfAtAddr(e.target.value);
   }
 
+  const onQueryDepositHistory = async () => {
+    setDepositEventsLoading(true);
+    const _depositEventsFilter = veflex.filters.Deposit(null);
+    const _depositEvents = await veflex.queryFilter(_depositEventsFilter);
+    if (_depositEvents) {
+      setDepositEvents(_depositEvents);
+      setDepositEventsLoading(false);
+    }
+  }
+
+  const onQueryWithdrawHistory = async () => {
+    setWithdrawEventsLoading(true);
+    const _withdrawEventsFilter = veflex.filters.Withdraw(null);
+    const _withdrawEvents = await veflex.queryFilter(_withdrawEventsFilter);
+    if (_withdrawEvents) {
+      setWithdrawEvents(_withdrawEvents);
+      setWithdrawEventsLoading(false);
+    }
+  }
+
   const depositItems = depositEvents.map( (event, index) => {
     return (
       <li key = {index}>
@@ -273,6 +277,9 @@ export function VeFLEX({ veflex }) {
           == Deposit History == 
         </div>
         <div className="eventList">
+          <div>
+            <button onClick={onQueryDepositHistory}>Query</button>
+          </div>
           <ul>
             {depositEventsLoading ? "Loading" : depositItems}
           </ul>
@@ -281,6 +288,9 @@ export function VeFLEX({ veflex }) {
           == Withdral History ==
         </div>
         <div className="eventList">
+          <div>
+            <button onClick={onQueryWithdrawHistory}>Query</button>
+          </div>
           <ul>
             {withdrawEventsLoading ? "Loading" : withdrawItems}
           </ul>

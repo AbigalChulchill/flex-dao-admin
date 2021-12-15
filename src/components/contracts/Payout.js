@@ -140,6 +140,9 @@ export function Payout({payout, conn}) {
   
   const [claimEvents, setClaimEvents] = useState([]);
   const [claimEventsLoading, setClaimEventsLoading] = useState(true);
+
+  const [distributeEvents, setDistributeEvents] = useState([]);
+  const [distributeEventsLoading, setDistributeEventsLoading] = useState(true);
   
   useEffect( () => {
     async function fetchData() {
@@ -178,6 +181,14 @@ export function Payout({payout, conn}) {
         if (_claimEvents) {
           setClaimEvents(_claimEvents);
           setClaimEventsLoading(false);
+        }
+
+        setDistributeEventsLoading(true);
+        const _distributeEventsFilter = payout.filters.Distribute(null);
+        const _distributeEvents = await payout.queryFilter(_distributeEventsFilter);
+        if (_distributeEvents) {
+          setDistributeEvents(_distributeEvents);
+          setDistributeEventsLoading(false);
         }
       }
     }
@@ -279,6 +290,14 @@ export function Payout({payout, conn}) {
     )
   })
 
+  const distributeItems = distributeEvents.map( (event, index) => {
+    return (
+      <li key = {index}>
+        {event.blockNumber}: {event.args.distributor}, {utils.formatEther(event.args.amount)}
+      </li>
+    )
+  })
+
   return (
     <div className="box">
       <div className="info">
@@ -348,6 +367,14 @@ export function Payout({payout, conn}) {
         <div className="eventList">
           <ul>
             {claimEventsLoading ? "Loading" : claimItems}
+          </ul>
+        </div>
+        <div className="eventName">
+          == Distribute History == 
+        </div>
+        <div className="eventList">
+          <ul>
+            {distributeEventsLoading ? "Loading" : distributeItems}
           </ul>
         </div>
       </div>

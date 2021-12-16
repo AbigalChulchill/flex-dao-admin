@@ -178,7 +178,7 @@ export function Payout({payout, conn, startTs}) {
         }
 
         const _expectCurrentEpoch = getCurrentExpectEpoch(startTs);
-        if(_expectCurrentEpoch) setExpectCurrentEpoch(_expectCurrentEpoch);
+        if(_expectCurrentEpoch !== undefined) setExpectCurrentEpoch(_expectCurrentEpoch);
   
         const _currentEpoch = await getCurrentEpoch(payout);
         if(_currentEpoch) setCurrentEpoch(_currentEpoch);

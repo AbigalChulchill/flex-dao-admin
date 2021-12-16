@@ -35,5 +35,14 @@
     "qurterly_mini_payout": "",
     "payout_start_ts": "1638489600"
   },
+  "flex_dao_prod": {
+    "flex": "0x98Dd7eC28FB43b3C4c770AE532417015fa939Dd3",
+    "veFLEX": "0xA9bB3b5334347F9a56bebb3f590E8dF97fC091f9",
+    "daily_payout": "0xB226C60886e81920d3d913858678d8C9e71eC17E",
+    "daily_mini_distributor": "0x684c8CAA4466D72a2E4682843D29bFAEa9C4e0B2",
+    "qurterly_payout": "",
+    "qurterly_mini_payout": "",
+    "payout_start_ts": "1639641600"
+  },
   "query_response_millitime": 1000
 }

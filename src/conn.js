@@ -85,3 +85,17 @@ export const getDailyPayoutStg3 = ( conn ) => {
 export const getDailyDistributorStg3 = ( conn ) => {
   return new Contract(config.flex_dao_stg3.daily_mini_distributor, distributor.abi, conn.getSigner())
 }
+
+
+export const getFlexProd = ( conn ) => {
+  return new Contract(config.flex_dao_prod.flex, flex.abi, conn.getSigner());
+}
+export const getVeFlexProd = ( conn ) => {
+  return new Contract(config.flex_dao_prod.veFLEX, veFlex.abi, conn.getSigner());
+}
+export const getDailyPayoutProd = ( conn ) => {
+  return new Contract(config.flex_dao_prod.daily_payout, dailyPayout.abi, conn.getSigner());
+}
+export const getDailyDistributorProd = ( conn ) => {
+  return new Contract(config.flex_dao_prod.daily_mini_distributor, distributor.abi, conn.getSigner())
+}

@@ -117,6 +117,14 @@ async function queryBlockTimestamp(conn, height) {
   }  
 }
 
+async function getFlexBalance(flex, address) {
+  try {
+    return await flex.balanceOf(address);
+  } catch (err) {
+    errorHandle('getFlexBalance', err);
+  }
+}
+
 function getCurrentExpectEpoch(startTs) {
   if (!startTs) return -1;
   const now = Date.now() / 1000;
@@ -124,7 +132,7 @@ function getCurrentExpectEpoch(startTs) {
   return Math.floor((now - startTs) / oneDay);
 }
 
-export function Payout({payout, conn, startTs}) {
+export function Payout({payout, conn, flex, startTs}) {
 
   const [querying, setQuerying] = useState();
 
@@ -133,6 +141,7 @@ export function Payout({payout, conn, startTs}) {
   const [admin, setAdmin] = useState();
   const [token, setToken] = useState();
   const [veFlex, setVeFlex] = useState();
+  const [contractBalance, setContractBalance] = useState();
   const [epochLen, setEpochLen] = useState();
   const [startBlockHeight, setStartBlockHeight] = useState();
   const [startTime, setStartTime] = useState();
@@ -169,6 +178,9 @@ export function Payout({payout, conn, startTs}) {
   
         const _epochLen = await getEpochLen(payout);
         if (_epochLen) setEpochLen(_epochLen);
+
+        const _balance = await getFlexBalance(flex, payout.address);
+        if (_balance) setContractBalance(utils.formatEther(_balance));
   
         const _startBlockHeight = await getStartBlockHeight(payout);
         if (_startBlockHeight) {
@@ -188,7 +200,7 @@ export function Payout({payout, conn, startTs}) {
       }
     }
     fetchData();
-  }, [payout, conn, startTs]);
+  }, [payout, conn, flex, startTs]);
 
   let historyEpochTimer = undefined;
   const onHistoryEpochReward = async (e) => {
@@ -317,14 +329,14 @@ export function Payout({payout, conn, startTs}) {
     <div className="box">
       <div className="info">
         <div className="bulletin">
-          == Basic Info ==
+          == Contract Name: {name} ==
         </div>
         <ul>
-          <li>Contract Name: {name}</li>
           <li>Contract Addr: {addr}</li>
           <li>Contract Admin: {admin}</li>
           <li>FLEX Addr: {token}</li>
           <li>VeFLEX Addr: {veFlex}</li>
+          <li>Contract FLEX balance: {contractBalance} FLEX</li>
           <li>Epoch Length: {epochLen}</li>
           <li>Payout Start Block Height: {startBlockHeight}</li>
           <li>Payout Start Time: {startTime} {tsToLocalStr(startTime)}</li>

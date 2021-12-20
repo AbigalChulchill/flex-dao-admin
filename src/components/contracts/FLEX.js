@@ -74,10 +74,9 @@ export function FLEX({ flex }) {
     <div className="box">
       <div className="info">
         <div className="bulletin">
-          == Basic Info ==
+          == Contract Name: {name} ==
         </div>
         <ul>
-          <li>Contract Name: {name}</li>
           <li>Contract Addr: {addr}</li>
           <li>Contract Admin: {admin}</li>
           <li>Total Supply: {totalSupply} FLEX</li>

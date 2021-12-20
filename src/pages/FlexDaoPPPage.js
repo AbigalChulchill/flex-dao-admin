@@ -43,7 +43,7 @@ export const FlexDaoPPPage = () => {
       <div className="container">
         <FLEX flex={flex}></FLEX>
         <VeFLEX veflex={veFlex}></VeFLEX>
-        <Payout payout={dailyPayout} conn={conn}></Payout>
+        <Payout payout={dailyPayout} conn={conn} flex={flex}></Payout>
         <Distributor distributor={distributor} flex={flex}></Distributor>
       </div>
     </>

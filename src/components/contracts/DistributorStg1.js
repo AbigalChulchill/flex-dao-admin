@@ -70,10 +70,9 @@ export function DistributorStg1({ distributor, flex }) {
     <div className="box">
       <div className="info">
         <div className="bulletin">
-          == Basic Info ==
+          == Contract Name: Daily Payout Distributor ==
         </div>
         <ul>
-          <li>Contract Name: Daily Payout Distributor</li>
           <li>Contract Addr: {addr}</li>
           <li>Contract Admin: {admin}</li>
           <li>FLEX Addr: {token}</li>

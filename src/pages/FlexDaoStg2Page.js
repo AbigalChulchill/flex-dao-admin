@@ -44,7 +44,7 @@ export const FlexDaoStg2Page = () => {
       <div className="container">
         <FLEX flex={flex}></FLEX>
         <VeFLEX veflex={veFlex}></VeFLEX>
-        <Payout payout={dailyPayout} conn={conn} startTs={config.flex_dao_stg2.payout_start_ts}></Payout>
+        <Payout payout={dailyPayout} conn={conn} flex={flex} startTs={config.flex_dao_stg2.payout_start_ts}></Payout>
         <Distributor distributor={distributor} flex={flex}></Distributor>
       </div>
     </>

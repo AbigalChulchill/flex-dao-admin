@@ -27,6 +27,14 @@ async function getVested(payout) {
   }
 }
 
+async function getFlexBalance(flex, address) {
+  try {
+    return await flex.balanceOf(address);
+  } catch (err) {
+    errorHandle('getFlexBalance', err);
+  }
+}
+
 async function getEpochLen(payout) {
   try {
     const _epochLen = await payout.epoch_period();
@@ -99,7 +107,7 @@ async function queryBlockTimestamp(conn, height) {
   }  
 }
 
-export function PayoutStg1({payout, conn}) {
+export function PayoutStg1({payout, conn, flex}) {
 
   const [querying, setQuerying] = useState();
 
@@ -107,6 +115,7 @@ export function PayoutStg1({payout, conn}) {
   const [addr, setAddr] = useState();
   const [admin, setAdmin] = useState();
   const [token, setToken] = useState();
+  const [contractBalance, setContractBalance] = useState();
   const [veFlex, setVeFlex] = useState();
   const [epochLen, setEpochLen] = useState();
   const [startTime, setStartTime] = useState();
@@ -134,6 +143,9 @@ export function PayoutStg1({payout, conn}) {
   
         const _veFlex = await getVested(payout);
         if (_veFlex) setVeFlex(_veFlex);
+      
+        const _balance = await getFlexBalance(flex, payout.address);
+        if (_balance) setContractBalance(utils.formatEther(_balance));
   
         const _epochLen = await getEpochLen(payout);
         if (_epochLen) setEpochLen(_epochLen);
@@ -146,7 +158,7 @@ export function PayoutStg1({payout, conn}) {
       }
     }
     fetchData();
-  }, [payout, conn]);
+  }, [payout, conn, flex]);
 
   let historyEpochTimer = undefined;
   const onHistoryEpochReward = async (e) => {
@@ -241,14 +253,14 @@ export function PayoutStg1({payout, conn}) {
     <div className="box">
       <div className="info">
         <div className="bulletin">
-          == Basic Info ==
+          == Contract Name: {name} ==
         </div>
         <ul>
-          <li>Contract Name: {name}</li>
           <li>Contract Addr: {addr}</li>
           <li>Contract Admin: {admin}</li>
           <li>FLEX Addr: {token}</li>
           <li>VeFLEX Addr: {veFlex}</li>
+          <li>Contract FLEX balance: {contractBalance} FLEX</li>
           <li>Epoch Length: {epochLen} Seconds</li>
           <li>Payout Start Timestamp: {startTime} {tsToLocalStr(startTime)}</li>
           <li>Current Active Epoch: {currentActiveEpoch}</li>

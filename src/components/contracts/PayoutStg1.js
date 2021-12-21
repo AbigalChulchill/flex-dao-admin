@@ -313,6 +313,7 @@ export function PayoutStg1({payout, conn, flex}) {
           <ul>
             {claimEventsLoading ? "Loading" : claimItems}
           </ul>
+          <p>total: {claimEvents.length}</p>
         </div>
       </div>
     </div>

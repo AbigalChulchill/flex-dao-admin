@@ -282,6 +282,7 @@ export function VeFLEX({ veflex }) {
           <ul>
             {depositEventsLoading ? "Loading" : depositItems}
           </ul>
+          <p>total: {depositEvents.length}</p>
         </div>
         <div className="eventName">
           == Withdral History ==
@@ -293,6 +294,7 @@ export function VeFLEX({ veflex }) {
           <ul>
             {withdrawEventsLoading ? "Loading" : withdrawItems}
           </ul>
+          <p>total: {withdrawEvents.length}</p>
         </div>
       </div>
     </div>

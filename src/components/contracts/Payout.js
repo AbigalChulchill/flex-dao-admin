@@ -399,6 +399,7 @@ export function Payout({payout, conn, flex, startTs}) {
           <ul>
             {claimEventsLoading ? "Loading" : claimItems}
           </ul>
+          <p>total: {claimEvents.length}</p>
         </div>
         <div className="eventName">
           == Distribute History == 
@@ -410,6 +411,7 @@ export function Payout({payout, conn, flex, startTs}) {
           <ul>
             {distributeEventsLoading ? "Loading" : distributeItems}
           </ul>
+          <p>total: {distributeEvents.length}</p>
         </div>
       </div>
     </div>

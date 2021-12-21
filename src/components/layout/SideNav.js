@@ -7,12 +7,12 @@ export const SideNav = () => {
         <Link to="/">ADMIN PAGE</Link>
       </div>
       <div className="menu">
-        <div className="item">
+        {/* <div className="item">
           <Link to="/flex">FLEX</Link>
-        </div>
-        <div className="item">
+        </div> */}
+        {/* <div className="item">
           <Link to="/flex-usd">FLEXUSD</Link>
-        </div>
+        </div> */}
         <div className="item">
           <Link to="/flex-dao">FLEXDAO</Link>
         </div>

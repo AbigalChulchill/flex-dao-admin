@@ -16,7 +16,7 @@ export const TopNav = ({category}) => {
   } else if (category === 'FlexDaoPage') {
     return (
       <div className="topbar">
-          <div className="item">
+          {/* <div className="item">
             <Link to="/flex-dao/pp">{category}-PP</Link>
           </div>
           <div className="item">
@@ -27,7 +27,7 @@ export const TopNav = ({category}) => {
           </div>
           <div className="item">
             <Link to="/flex-dao/stg3">{category}-stg3</Link>
-          </div>
+          </div> */}
           <div className="item">
             <Link to="/flex-dao/prod">{category}-prod</Link>
         </div>

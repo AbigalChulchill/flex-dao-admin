@@ -148,11 +148,21 @@ export function Payout({payout, conn, flex, startTs}) {
   const [expectCurrentEpoch, setExpectCurrentEpoch] = useState();
   const [currentEpoch, setCurrentEpoch] = useState();
   const [currentActiveEpoch, setCurrentActiveEpoch] = useState();
+  
+  const [epochForHistoryReward, setEpochForHistoryReward] = useState(); 
   const [historyReward, setHistoryReward] = useState();
+
+  const [epochForEpochStartBlockHeight, setEpochForEpochStartBlockHeight] = useState();
   const [epochStartBlockHeight, setEpochStartBlockHeight] = useState();
   const [blockTimeAtHeight, setBlockTimeAtHeight] = useState();
+
+  const [addressClaimable, setAddressClaimable] = useState();
   const [claimable, setClaimable] = useState();
+
+  const [addressIsDistributor, setAddressIsdistributor] = useState();
   const [isDistributor, setIsdistributor] = useState();
+  
+  const [addressIsOperator, setAddressIsOperator] = useState();
   const [isOperator, setIsOperator] = useState();
   
   const [claimEvents, setClaimEvents] = useState([]);
@@ -202,91 +212,72 @@ export function Payout({payout, conn, flex, startTs}) {
     fetchData();
   }, [payout, conn, flex, startTs]);
 
-  let historyEpochTimer = undefined;
-  const onHistoryEpochReward = async (e) => {
-    if (historyEpochTimer) clearTimeout(historyEpochTimer);
-    historyEpochTimer = setTimeout( async ()=>{
-      setHistoryReward(undefined);
-      if (querying) return; 
-      setQuerying(true);
-      const value = e.target.value;
-      if (payout && value) {
-        const _reward = await queryHistoryEpochReward(payout, value);
-        if (_reward) setHistoryReward(_reward);
-      }
-      setQuerying(false);
-    }, config.query_response_millitime)
+  const onHistoryReward = async (e) => {
+    e.preventDefault();
+    setHistoryReward(undefined);
+    if (querying) return; 
+    setQuerying(true);
+    if (payout && epochForHistoryReward) {
+      const _reward = await queryHistoryEpochReward(payout, epochForHistoryReward);
+      if (_reward) setHistoryReward(_reward);
+    }
+    setQuerying(false);
   }
 
-  let epochStartTimer = undefined;
   const onEpochStartBlockHeight = async (e) => {
-    if (epochStartTimer) clearTimeout(epochStartTimer);
-    epochStartTimer = setTimeout( async ()=>{
-      setEpochStartBlockHeight(undefined);
-      setBlockTimeAtHeight(undefined);
-      if (querying) return; 
-      setQuerying(true);
-      const value = e.target.value;
-      if (payout && value) {
-        const _epochStartBlockHeight = await queryEpochStartBlockHeight(payout, value);
-        if (_epochStartBlockHeight) {
-          setEpochStartBlockHeight(_epochStartBlockHeight);
-          
-          // query block metadata to fetch block timestamp
-          const _blockTimeAtHeight = await queryBlockTimestamp(conn, _epochStartBlockHeight);
-          if (_blockTimeAtHeight) setBlockTimeAtHeight(_blockTimeAtHeight);
-        }
+    e.preventDefault();
+    setEpochStartBlockHeight(undefined);
+    setBlockTimeAtHeight(undefined);
+    if (querying) return; 
+    setQuerying(true);
+    if (payout && epochForEpochStartBlockHeight) {
+      const _epochStartBlockHeight = await queryEpochStartBlockHeight(payout, epochForEpochStartBlockHeight);
+      if (_epochStartBlockHeight) {
+        setEpochStartBlockHeight(_epochStartBlockHeight);
+        
+        // query block metadata to fetch block timestamp
+        const _blockTimeAtHeight = await queryBlockTimestamp(conn, _epochStartBlockHeight);
+        if (_blockTimeAtHeight) setBlockTimeAtHeight(_blockTimeAtHeight);
       }
-      setQuerying(false);
-    }, config.query_response_millitime)
+    }
+    setQuerying(false);
   }
 
-  let claimTimer = undefined;
   const onClaimable = async (e) => {
-    if(claimTimer) clearTimeout(claimTimer);
-    claimTimer = setTimeout( async ()=>{
-      setClaimable(undefined);
-      if (querying) return; 
-      setQuerying(true);
-      const value = e.target.value;
-      if (payout && value) {
-        const _claimable = await queryClaimable(payout, value);
-        if (_claimable) setClaimable(_claimable);
-      }
-      setQuerying(false);
-    }, config.query_response_millitime)
+    e.preventDefault();
+    setClaimable(undefined);
+    if (querying) return; 
+    setQuerying(true);
+    if (payout && addressClaimable) {
+      const _claimable = await queryClaimable(payout, addressClaimable);
+      if (_claimable) setClaimable(_claimable);
+    }
+    setQuerying(false);
   }
 
-  let distributorTimer = undefined;
   const onIsDistributor = async (e) => {
-    if (distributorTimer) clearTimeout(distributorTimer);
-    distributorTimer = setTimeout( async ()=>{
-      setIsdistributor(undefined);
-      if (querying) return; 
-      setQuerying(true);
-      const value = e.target.value;
-      if (payout && value) {
-        const _isDistributor = await queryIsDistributor(payout, value);
-        if (_isDistributor) setIsdistributor(_isDistributor);
-      }
-      setQuerying(false);
-    }, config.query_response_millitime)
+    e.preventDefault();
+    setIsdistributor(undefined);
+    if (querying) return; 
+    setQuerying(true);
+    if (payout && addressIsDistributor) {
+      const _isDistributor = await queryIsDistributor(payout, addressIsDistributor);
+      if (_isDistributor) setIsdistributor(_isDistributor);
+    }
+    setQuerying(false);
   }
 
-  let operatorTimer = undefined;
   const onIsOperator = async (e) => {
-    if (operatorTimer) clearTimeout(operatorTimer);
-    operatorTimer = setTimeout( async ()=>{
-      setIsOperator(undefined);
-      if (querying) return; 
-      setQuerying(true);
-      const value = e.target.value;
-      if (payout && value) {
-        const _isOperator = await queryIsOperator(payout, value);
-        if (_isOperator) setIsOperator(_isOperator);
-      }
-      setQuerying(false);
-    }, config.query_response_millitime)
+    e.preventDefault();
+    setIsOperator(undefined);
+    if (querying) return; 
+    setQuerying(true);
+    const value = e.target.value;
+    if (payout && addressIsOperator) {
+      const _isOperator = await queryIsOperator(payout, addressIsOperator);
+      if (_isOperator) setIsOperator(_isOperator);
+    }
+    setQuerying(false);
   }
 
   const onQueryClaimHistory = async () => {
@@ -351,40 +342,54 @@ export function Payout({payout, conn, flex, startTs}) {
         </div>
         <ul>
           <li>
-            <label>
-              History Epoch Reward:
-            </label>
-            <input type="text" placeholder="epoch index (uint)" onChange={onHistoryEpochReward} />
-            {historyReward} FLEX
+            <form>
+              <label>
+                History Epoch Reward:
+              </label>
+              <input type="text" placeholder="epoch index (uint)" onChange={e=>setEpochForHistoryReward(e.target.value)} />
+              <button onClick={onHistoryReward}>Read</button>
+              <span>{historyReward} {historyReward?'FLEX':''}</span> 
+            </form>
           </li>
           <li>
-            <label>
-              Epoch Start Block Height:
-            </label>
-            <input type="text" placeholder="epoch index (uint)" onChange={onEpochStartBlockHeight} />
-            {epochStartBlockHeight}
-            <p>{blockTimeAtHeight} {tsToLocalStr(blockTimeAtHeight)}</p>
+            <form>
+              <label>
+                Epoch Start Block Height:
+              </label>
+              <input type="text" placeholder="epoch index (uint)" onChange={e=>setEpochForEpochStartBlockHeight(e.target.value)} />
+              <button onClick={onEpochStartBlockHeight}>Read</button>
+              {epochStartBlockHeight} <b>{blockTimeAtHeight} {tsToLocalStr(blockTimeAtHeight)}</b>
+            </form>
           </li>
           <li>
-            <label>
-              Claimable Amount:
-            </label>
-            <input type="text" placeholder="address" onChange={onClaimable} />
-            {claimable} FLEX
+            <form>
+              <label>
+                Claimable Amount:
+              </label>
+              <input type="text" placeholder="address" onChange={e=>setAddressClaimable(e.target.value)} />
+              <button onClick={onClaimable}>Read</button>
+              {claimable} {claimable?"FLEX":""}
+            </form>
           </li>
           <li>
-            <label>
-              Is Distributor:
-            </label>
-            <input type="text" placeholder="address" onChange={onIsDistributor} />
-            {isDistributor}
+            <form>
+              <label>
+                Is Distributor:
+              </label>
+              <input type="text" placeholder="address" onChange={e=>setAddressIsdistributor(e.target.value)} />
+              <button onClick={onIsDistributor}>Read</button>
+              {isDistributor}
+            </form>
           </li>
           <li>
-            <label>
-              Is Operator:
-            </label>
-            <input type="text" placeholder="address" onChange={onIsOperator} />
-            {isOperator}
+            <form>
+              <label>
+                Is Operator:
+              </label>
+              <input type="text" placeholder="address" onChange={e=>setAddressIsOperator(e.target.value)} />
+              <button onClick={onIsOperator}>Read</button>
+              {isOperator}
+            </form>
           </li>
         </ul>
       </div>

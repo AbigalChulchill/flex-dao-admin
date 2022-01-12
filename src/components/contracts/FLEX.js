@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { utils } from 'ethers';
 import { errorHandle } from "../../utils";
-import * as config from "../../config.json"
 
 async function getAdmin(flex) {
   try {
@@ -36,6 +35,7 @@ export function FLEX({ flex }) {
   const [admin, setAdmin] = useState();
   const [totalSupply, setTotalSupply] = useState();
 
+  const [addressBalanceOf, setAddressBalanceOf] = useState();
   const [balanceOf, setBalanceOf] = useState();
 
   useEffect(() => {
@@ -54,20 +54,16 @@ export function FLEX({ flex }) {
     fetchData();
   }, [flex]);
 
-  let balanceTimer = undefined;
   const onBalanceOf = async (e) => {
-    if (balanceTimer) clearTimeout(balanceTimer);
-    balanceTimer = setTimeout( async ()=>{
-      setBalanceOf(undefined);
-      if (querying) return;
-      setQuerying(true);
-      const value = e.target.value;
-      if (flex && value) {
-        const _balanceOf = await getBalanceOf(flex, value);
-        if (_balanceOf) setBalanceOf(utils.formatEther(_balanceOf));
-      }
-      setQuerying(false);
-    }, config.query_response_millitime)
+    e.preventDefault();
+    setBalanceOf(undefined);
+    if (querying) return;
+    setQuerying(true);
+    if (flex && addressBalanceOf) {
+      const _balanceOf = await getBalanceOf(flex, addressBalanceOf);
+      if (_balanceOf) setBalanceOf(utils.formatEther(_balanceOf));
+    }
+    setQuerying(false);
   }
 
   return (
@@ -88,11 +84,14 @@ export function FLEX({ flex }) {
         </div>
         <ul>
           <li>
-            <label>
-              Account Balance Of:
-            </label>
-            <input type="text" placeholder="address" onChange={onBalanceOf} />
-            {balanceOf} FLEX
+            <form>
+              <label>
+                Account Balance Of:
+              </label>
+              <input type="text" placeholder="address" onChange={ e => setAddressBalanceOf(e.target.value)} />
+              <button onClick={onBalanceOf}>Read</button>
+              <span>{balanceOf} {balanceOf ? 'FLEX' : ''}</span>
+            </form>
           </li>
         </ul>
       </div>

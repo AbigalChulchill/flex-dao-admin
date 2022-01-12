@@ -80,13 +80,18 @@ export function VeFLEX({ veflex }) {
   const [supply, setSupply] = useState();
   const [totalSupply, setTotalSupply] = useState();
 
+  const [addressLocked, setAddressLocked] = useState();
   const [locked, setLocked] = useState();
 
+  const [addressBalanceOf, setAddressBalanceOf] = useState();
   const [balanceOf, setBalanceOf] = useState();
-  const [totalSupplyAt, setTotalSupplyAt] = useState();
-  const [balanceOfAt, setBalanceOfAt] = useState();
 
-  const [balanceOfAtAddr, setBalanceOfAtAddr] = useState();
+  const [heightTotalSupplyAt, setHeightTotalSupplyAt] = useState();
+  const [totalSupplyAt, setTotalSupplyAt] = useState();
+
+  const [addressBalanceOfAt, setAddressBalanceOfAt] = useState();
+  const [heightBalanceOfAt, setHeightBalanceOfAt] = useState();
+  const [balanceOfAt, setBalanceOfAt] = useState();
 
   const [depositEvents, setDepositEvents] = useState([]);
   const [depositEventsLoading, setDepositEventsLoading] = useState(false);
@@ -116,73 +121,52 @@ export function VeFLEX({ veflex }) {
     fetchData();
   }, [veflex]);
 
-  let lockTimer = undefined;
   const onLocked = async (e) => {
-    if (lockTimer) clearTimeout(lockTimer);
-    lockTimer = setTimeout( async ()=> {
-      setLocked(undefined);
-      if (querying) return;
-      setQuerying(true);
-      const value = e.target.value;
-      if (veflex && value) {
-        const _locked = await getLocked(veflex, value);
-        if (_locked) setLocked([utils.formatEther(_locked.amount), _locked.end.toString()]);
-      }
-      setQuerying(false);
-    }, config.query_response_millitime);
+    e.preventDefault();
+    setLocked(undefined);
+    if (querying) return;
+    setQuerying(true);
+    if (veflex && addressLocked) {
+      const _locked = await getLocked(veflex, addressLocked);
+      if (_locked) setLocked([utils.formatEther(_locked.amount), _locked.end.toString()]);
+    }
+    setQuerying(false);
   }
 
-  let balanceOfTimer = undefined;
   const onBalanceOf = async (e) => {
-    if (balanceOfTimer) clearTimeout(balanceOfTimer);
-    balanceOfTimer = setTimeout( async () => {
-      setBalanceOf(undefined);
-      if (querying) return;
-      setQuerying(true);
-      const value = e.target.value;
-      if (veflex && value) {
-        const _balanceOf = await getBalanceOf(veflex, value);
-        if (_balanceOf) setBalanceOf(utils.formatEther(_balanceOf));
-      }
-      setQuerying(false);
-    }, config.query_response_millitime);
+    e.preventDefault();
+    setBalanceOf(undefined);
+    if (querying) return;
+    setQuerying(true);
+    if (veflex && addressBalanceOf) {
+      const _balanceOf = await getBalanceOf(veflex, addressBalanceOf);
+      if (_balanceOf) setBalanceOf(utils.formatEther(_balanceOf));
+    }
+    setQuerying(false);
   }
 
-  let totalSupplyAtTimer = undefined;
   const onTotalSupplyAt = async (e) => {
-    if (totalSupplyAtTimer) clearTimeout(totalSupplyAtTimer);
-    totalSupplyAtTimer = setTimeout(async () => {      
-      setTotalSupplyAt(undefined);
-      if (querying) return;
-      setQuerying(true);
-      const value = e.target.value;
-      if (veflex && value) {
-        const _totalSupplyAt = await getTotalSupplyAt(veflex, value);
-        if (_totalSupplyAt) setTotalSupplyAt(utils.formatEther(_totalSupplyAt));
-      }
-      setQuerying(false);
-    }, config.query_response_millitime);
+    e.preventDefault()
+    setTotalSupplyAt(undefined);
+    if (querying) return;
+    setQuerying(true);
+    if (veflex && heightTotalSupplyAt) {
+      const _totalSupplyAt = await getTotalSupplyAt(veflex, heightTotalSupplyAt);
+      if (_totalSupplyAt) setTotalSupplyAt(utils.formatEther(_totalSupplyAt));
+    }
+    setQuerying(false);
   }
 
-  let balanceOfAtTimer = undefined;
   const onBalanceOfAt = async (e) => {
-    if (balanceOfAtTimer) clearTimeout(balanceOfAtTimer);
-    balanceOfAtTimer = setTimeout(async () => {
-      setBalanceOfAt(undefined);
-      if (querying) return;
-      setQuerying(true);
-      const value = e.target.value;
-      if (veflex && value && balanceOfAtAddr) {
-        const _balanceOfAt = await getBalanceOfAt(veflex, balanceOfAtAddr, value);
-        if (_balanceOfAt) setBalanceOfAt(utils.formatEther(_balanceOfAt));
-      }
-      setQuerying(false);
-    }, config.query_response_millitime);
-  }
-
-  const onBalanceOfAtAddr = async (e) => {
+    e.preventDefault();
     setBalanceOfAt(undefined);
-    setBalanceOfAtAddr(e.target.value);
+    if (querying) return;
+    setQuerying(true);
+    if (veflex && addressBalanceOfAt && heightBalanceOfAt) {
+      const _balanceOfAt = await getBalanceOfAt(veflex, addressBalanceOfAt, heightBalanceOfAt);
+      if (_balanceOfAt) setBalanceOfAt(utils.formatEther(_balanceOfAt));
+    }
+    setQuerying(false);
   }
 
   const onQueryDepositHistory = async () => {
@@ -259,33 +243,45 @@ export function VeFLEX({ veflex }) {
         </div>
         <ul>
           <li>
-            <label>
-              Stake Detail For Address:
-            </label>
-            <input type="text" placeholder="address" onChange={onLocked} />
-            {locked ? `staked ${locked[0]} FLEX, end at: ${new Date(locked[1] * 1000).toLocaleString()} Local Time` : ""}
+            <form>
+              <label>
+                Stake Detail For Address:
+              </label>
+              <input type="text" placeholder="address" onChange={e=>setAddressLocked(e.target.value)} />
+              <button onClick={onLocked}>Read</button>
+              {locked ? `staked ${locked[0]} FLEX, end at: ${new Date(locked[1] * 1000).toLocaleString()} Local Time` : ""}
+            </form>
           </li>
           <li>
-            <label>
-              Account Latest Balance:
-            </label>
-            <input type="text" placeholder="address" onChange={onBalanceOf} />
-            {balanceOf} veFLEX
+            <form>
+              <label>
+                Account Latest Balance:
+              </label>
+              <input type="text" placeholder="address" onChange={e=>setAddressBalanceOf(e.target.value)} />
+              <button onClick={onBalanceOf}>Read</button>
+              <span>{balanceOf} {balanceOf?"veFLEX":""}</span>
+            </form>
           </li>
           <li>
-            <label>
-              History Total Supply At Block Height:
-            </label>
-            <input type="text" placeholder="block height (uint)" onChange={onTotalSupplyAt} />
-            {totalSupplyAt} veFLEX
+            <form>
+              <label>
+                History Total Supply At Block Height:
+              </label>
+              <input type="text" placeholder="block height (uint)" onChange={e=>setHeightTotalSupplyAt(e.target.value)} />
+              <button onClick={onTotalSupplyAt}>Read</button>
+              <span>{totalSupplyAt} {totalSupplyAt?"veFLEX":""}</span>
+            </form>
           </li>
           <li>
-            <label>
-              History Account Balance At Block Height:
-            </label>
-            <input type="text" placeholder="address" onChange={onBalanceOfAtAddr} />
-            <input type="text" placeholder="block height (uint)" onChange={onBalanceOfAt} />
-            {balanceOfAt} veFLEX
+            <form>
+              <label>
+                History Account Balance At Block Height:
+              </label>
+              <input type="text" placeholder="address" onChange={e=>setAddressBalanceOfAt(e.target.value)} />
+              <input type="text" placeholder="block height (uint)" onChange={e=>setHeightBalanceOfAt(e.target.value)} />
+              <button onClick={onBalanceOfAt}>Read</button>
+              <span>{balanceOfAt} {balanceOfAt?"veFLEX":""}</span>
+            </form>
           </li>
         </ul>
       </div>

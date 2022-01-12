@@ -81,3 +81,7 @@ li {
 .status-off {
   color: grey;
 }
+
+button {
+  margin-right: 5px;
+}

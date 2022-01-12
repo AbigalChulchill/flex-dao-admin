@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { utils } from 'ethers';
 import { errorHandle,  } from "../../utils";
-import * as config from "../../config.json"
 
 async function getAdmin(distributor) {
   try {
@@ -64,6 +63,7 @@ export function Distributor({ distributor, flex }) {
   const [balance, setBalance] = useState();
   const [payout, setPayout] = useState();
 
+  const [addressIsDistributor, setAddressIsDistributor] = useState();
   const [isDistributor, setIsDistributor] = useState();
 
   useEffect(() => {
@@ -90,20 +90,16 @@ export function Distributor({ distributor, flex }) {
     fetchData();
   }, [distributor, flex]);
 
-  let distributorTimer = undefined;
   const onIsDistributor = async (e) => {
-    if (distributorTimer) clearTimeout(distributorTimer);
-    distributorTimer = setTimeout( async ()=>{
-      setIsDistributor(undefined);
-      if (querying) return;
-      setQuerying(true);
-      const value = e.target.value;
-      if (distributor && value) {
-        const _isDistributor = await getIsDistributor(distributor, value);
-        if (_isDistributor) setIsDistributor(_isDistributor);
-      }
-      setQuerying(false);
-    }, config.query_response_millitime)
+    e.preventDefault();
+    setIsDistributor(undefined);
+    if (querying) return;
+    setQuerying(true);
+    if (distributor && addressIsDistributor) {
+      const _isDistributor = await getIsDistributor(distributor, addressIsDistributor);
+      if (_isDistributor) setIsDistributor(_isDistributor);
+    }
+    setQuerying(false);
   }
 
   return (
@@ -126,11 +122,14 @@ export function Distributor({ distributor, flex }) {
         </div>
         <ul>
           <li>
-            <label>
-              Is Distributor:
-            </label>
-            <input type="text" placeholder="address" onChange={onIsDistributor} />
-            {isDistributor}
+            <form>
+              <label>
+                Is Distributor:
+              </label>
+              <input type="text" placeholder="address" onChange={e=>setAddressIsDistributor(e.target.value)} />
+              <button onClick={onIsDistributor}>Read</button>
+              <span>{isDistributor}</span>
+            </form>
           </li>
         </ul>
       </div>

@@ -88,6 +88,14 @@ export function Distributor({ distributor, flex }) {
       }
     }
     fetchData();
+    return () => {
+      setName();
+      setAddr();
+      setAdmin();
+      setToken();
+      setBalance();
+      setPayout();
+    }
   }, [distributor, flex]);
 
   const onIsDistributor = async (e) => {

@@ -52,6 +52,12 @@ export function FLEX({ flex }) {
       }
     }
     fetchData();
+    return () => {
+      setName();
+      setAddr();
+      setAdmin();
+      setTotalSupply();
+    }
   }, [flex]);
 
   const onBalanceOf = async (e) => {

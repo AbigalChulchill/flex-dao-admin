@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { utils } from "ethers";
 import { errorHandle, tsToLocalStr } from "../../utils";
-import * as config from "../../config.json"
 
 async function getAdmin(veflex) {
   try {
@@ -68,6 +67,14 @@ async function getBalanceOfAt(veflex, address, height) {
   }
 }
 
+async function depositFor(veflex, address, amount) {
+  try {
+    return await veflex.deposit_for(address, Number(amount));
+  } catch (err) {
+    errorHandle('getBalanceOfAt', err);
+  }
+}
+
 export function VeFLEX({ veflex }) {
 
   const [querying, setQuerying] = useState();
@@ -92,6 +99,9 @@ export function VeFLEX({ veflex }) {
   const [addressBalanceOfAt, setAddressBalanceOfAt] = useState();
   const [heightBalanceOfAt, setHeightBalanceOfAt] = useState();
   const [balanceOfAt, setBalanceOfAt] = useState();
+
+  const [addressDepositFor, setAddressDepositFor] = useState();
+  const [amountDepositFor, setAmountDepositFor] = useState();
 
   const [depositEvents, setDepositEvents] = useState([]);
   const [depositEventsLoading, setDepositEventsLoading] = useState(false);
@@ -119,6 +129,14 @@ export function VeFLEX({ veflex }) {
       }
     }
     fetchData();
+    return () => {
+      setName();
+      setAddr();
+      setAdmin();
+      setToken();
+      setSupply();
+      setTotalSupply();
+    }
   }, [veflex]);
 
   const onLocked = async (e) => {
@@ -165,6 +183,16 @@ export function VeFLEX({ veflex }) {
     if (veflex && addressBalanceOfAt && heightBalanceOfAt) {
       const _balanceOfAt = await getBalanceOfAt(veflex, addressBalanceOfAt, heightBalanceOfAt);
       if (_balanceOfAt) setBalanceOfAt(utils.formatEther(_balanceOfAt));
+    }
+    setQuerying(false);
+  }
+
+  const onDepositFor = async (e) => {
+    e.preventDefault()
+    if (querying) return;
+    setQuerying(true);
+    if (veflex && addressDepositFor && amountDepositFor) {
+      await depositFor(veflex, addressDepositFor, amountDepositFor);
     }
     setQuerying(false);
   }
@@ -281,6 +309,16 @@ export function VeFLEX({ veflex }) {
               <input type="text" placeholder="block height (uint)" onChange={e=>setHeightBalanceOfAt(e.target.value)} />
               <button onClick={onBalanceOfAt}>Read</button>
               <span>{balanceOfAt} {balanceOfAt?"veFLEX":""}</span>
+            </form>
+          </li>
+          <li>
+            <form>
+              <label>
+                Stake For Other Address:
+              </label>
+              <input type="text" placeholder="address" onChange={e=>setAddressDepositFor(e.target.value)} />
+              <input type="text" placeholder="amount (FLEX)" onChange={e=>setAmountDepositFor(e.target.value)} />
+              <button onClick={onDepositFor}>Write</button>
             </form>
           </li>
         </ul>

@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { utils } from "ethers";
 import {errorHandle, tsToLocalStr } from "../../utils";
-import * as config from "../../config.json"
 
 async function getAdmin(payout) {
   try {
@@ -166,6 +165,17 @@ export function PayoutStg1({payout, conn, flex}) {
       }
     }
     fetchData();
+    return () => {
+      setName();
+      setAddr();
+      setAdmin();
+      setToken();
+      setVeFlex();
+      setEpochLen();
+      setContractBalance();
+      setStartTime();
+      setCurrentActiveEpoch();
+    }
   }, [payout, conn, flex]);
 
   const onHistoryReward = async (e) => {

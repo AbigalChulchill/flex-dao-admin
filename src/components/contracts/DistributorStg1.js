@@ -64,6 +64,13 @@ export function DistributorStg1({ distributor, flex }) {
       }
     }
     fetchData();
+    return () => {
+      setAddr();
+      setAdmin();
+      setToken();
+      setBalance();
+      setPayout();
+    }
   }, [distributor, flex]);
 
   return (

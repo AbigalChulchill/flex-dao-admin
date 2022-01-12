@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { utils } from "ethers";
 import {errorHandle, tsToLocalStr } from "../../utils";
-import * as config from "../../config.json"
 
 async function getAdmin(payout) {
   try {
@@ -210,6 +209,20 @@ export function Payout({payout, conn, flex, startTs}) {
       }
     }
     fetchData();
+    return () => {
+      setName();
+      setAddr();
+      setAdmin();
+      setToken();
+      setVeFlex();
+      setEpochLen();
+      setContractBalance();
+      setStartBlockHeight();
+      setStartTime();
+      setExpectCurrentEpoch();
+      setCurrentEpoch();
+      setCurrentActiveEpoch();
+    }
   }, [payout, conn, flex, startTs]);
 
   const onHistoryReward = async (e) => {
@@ -272,7 +285,6 @@ export function Payout({payout, conn, flex, startTs}) {
     setIsOperator(undefined);
     if (querying) return; 
     setQuerying(true);
-    const value = e.target.value;
     if (payout && addressIsOperator) {
       const _isOperator = await queryIsOperator(payout, addressIsOperator);
       if (_isOperator) setIsOperator(_isOperator);

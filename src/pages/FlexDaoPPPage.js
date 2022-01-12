@@ -42,7 +42,7 @@ export const FlexDaoPPPage = () => {
       <h1>FLEX DAO PP Admin Page</h1>
       <div className="container">
         <FLEX flex={flex}></FLEX>
-        <VeFLEX veflex={veFlex}></VeFLEX>
+        <VeFLEX veflex={veFlex}  flex={flex} conn={conn}></VeFLEX>
         <Payout payout={dailyPayout} conn={conn} flex={flex}></Payout>
         <Distributor distributor={distributor} flex={flex}></Distributor>
       </div>

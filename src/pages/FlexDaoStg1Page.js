@@ -42,7 +42,7 @@ export const FlexDaoStg1Page = () => {
       <h1>FLEX DAO Stg1 Admin Page</h1>
       <div className="container">
         <FLEX flex={flex}></FLEX>
-        <VeFLEX veflex={veFlex}></VeFLEX>
+        <VeFLEX veflex={veFlex} flex={flex} conn={conn}></VeFLEX>
         <PayoutStg1 payout={dailyPayout} conn={conn} flex={flex}></PayoutStg1>
         <DistributorStg1 distributor={distributor} flex={flex}></DistributorStg1>
       </div>

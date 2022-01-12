@@ -43,7 +43,7 @@ export const FlexDaoStg3Page = () => {
       <h1>FLEX DAO Stg3 Admin Page</h1>
       <div className="container">
         <FLEX flex={flex}></FLEX>
-        <VeFLEX veflex={veFlex}></VeFLEX>
+        <VeFLEX veflex={veFlex} flex={flex} conn={conn}></VeFLEX>
         <Payout payout={dailyPayout} conn={conn} flex={flex} startTs={config.flex_dao_stg3.payout_start_ts}></Payout>
         <Distributor distributor={distributor} flex={flex}></Distributor>
       </div>

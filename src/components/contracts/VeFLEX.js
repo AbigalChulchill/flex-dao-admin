@@ -67,15 +67,48 @@ async function getBalanceOfAt(veflex, address, height) {
   }
 }
 
-async function depositFor(veflex, address, amount) {
+async function createLock(veflex, flex, conn, amount, timestamp) {
   try {
-    return await veflex.deposit_for(address, Number(amount));
+    const sender = await conn.getSigner().getAddress()
+    const allowanceBn =  await flex.allowance(sender, veflex.address)
+    const amountBn = utils.parseEther(amount);
+    let gasLimitBn;
+    if (allowanceBn.lt(amountBn)) {
+      console.log(`allowance ${allowanceBn.toString()} is less than stake amount ${amountBn.toString()}`)
+      console.log('approve 1000000000 FLEX to veFlex contract...')
+      // approve 
+      const approveAmountBn = utils.parseEther('1000000000.0')
+      gasLimitBn = await flex.estimateGas.approve(veflex.address, approveAmountBn)
+      await flex.approve(veflex.address, approveAmountBn, {
+        gasLimit: gasLimitBn,
+        gasPrice: utils.parseUnits('1.05', 'gwei')
+      })
+
+    }
+    gasLimitBn = await veflex.estimateGas.create_lock(amountBn, Number(timestamp)); 
+    await veflex.create_lock(amountBn, Number(timestamp), {
+      gasLimit: gasLimitBn,
+      gasPrice: utils.parseUnits('1.05', 'gwei')
+    });
   } catch (err) {
-    errorHandle('getBalanceOfAt', err);
+    errorHandle('createLock', err);
   }
 }
 
-export function VeFLEX({ veflex }) {
+async function depositFor(veflex, address, amount) {
+  try {
+    const amountBn = utils.parseEther(amount);
+    const gasLimitBn = await veflex.estimateGas.deposit_for(address, amountBn);
+    await veflex.deposit_for(address, amountBn, {
+      gasLimit: gasLimitBn,
+      gasPrice: utils.parseUnits('1.05', 'gwei')
+    });
+  } catch (err) {
+    errorHandle('depositFor', err);
+  }
+}
+
+export function VeFLEX({ veflex, flex, conn }) {
 
   const [querying, setQuerying] = useState();
 
@@ -99,6 +132,9 @@ export function VeFLEX({ veflex }) {
   const [addressBalanceOfAt, setAddressBalanceOfAt] = useState();
   const [heightBalanceOfAt, setHeightBalanceOfAt] = useState();
   const [balanceOfAt, setBalanceOfAt] = useState();
+  
+  const [amountCreateLock, setAmountCreateLock] = useState();
+  const [timestampCreateLock, setTimestampCreateLock] = useState();
 
   const [addressDepositFor, setAddressDepositFor] = useState();
   const [amountDepositFor, setAmountDepositFor] = useState();
@@ -137,7 +173,7 @@ export function VeFLEX({ veflex }) {
       setSupply();
       setTotalSupply();
     }
-  }, [veflex]);
+  }, [veflex, flex, conn]);
 
   const onLocked = async (e) => {
     e.preventDefault();
@@ -187,11 +223,21 @@ export function VeFLEX({ veflex }) {
     setQuerying(false);
   }
 
+  const onCreateLock = async (e) => {
+    e.preventDefault()
+    if (querying) return;
+    setQuerying(true);
+    if (veflex && flex && conn && amountCreateLock && timestampCreateLock) {
+      await createLock(veflex, flex, conn, amountCreateLock, timestampCreateLock);
+    }
+    setQuerying(false);
+  }
+
   const onDepositFor = async (e) => {
     e.preventDefault()
     if (querying) return;
     setQuerying(true);
-    if (veflex && addressDepositFor && amountDepositFor) {
+    if (veflex && flex && conn && addressDepositFor && amountDepositFor) {
       await depositFor(veflex, addressDepositFor, amountDepositFor);
     }
     setQuerying(false);
@@ -309,6 +355,16 @@ export function VeFLEX({ veflex }) {
               <input type="text" placeholder="block height (uint)" onChange={e=>setHeightBalanceOfAt(e.target.value)} />
               <button onClick={onBalanceOfAt}>Read</button>
               <span>{balanceOfAt} {balanceOfAt?"veFLEX":""}</span>
+            </form>
+          </li>
+          <li>
+            <form>
+              <label>
+                Inital Stake:
+              </label>
+              <input type="text" placeholder="amount (FLEX)" onChange={e=>setAmountCreateLock(e.target.value)} />
+              <input type="text" placeholder="expiry timestamp (s)" onChange={e=>setTimestampCreateLock(e.target.value)} />
+              <button onClick={onCreateLock}>Write</button>
             </form>
           </li>
           <li>

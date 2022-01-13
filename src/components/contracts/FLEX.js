@@ -94,7 +94,7 @@ export function FLEX({ flex }) {
               <label>
                 Account Balance Of:
               </label>
-              <input type="text" placeholder="address" onChange={ e => setAddressBalanceOf(e.target.value)} />
+              <input type="text" placeholder="address" size="45" onChange={ e => setAddressBalanceOf(e.target.value)} />
               <button onClick={onBalanceOf}>Read</button>
               <span>{balanceOf} {balanceOf ? 'FLEX' : ''}</span>
             </form>

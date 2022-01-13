@@ -67,14 +67,12 @@ async function getBalanceOfAt(veflex, address, height) {
   }
 }
 
-async function createLock(veflex, flex, conn, amount, timestamp) {
+async function createLock(veflex, flex, textCreateLock, amount, timestamp) {
   try {
-    const sender = await conn.getSigner().getAddress()
-    const allowanceBn =  await flex.allowance(sender, veflex.address)
-    const amountBn = utils.parseEther(amount);
+
     let gasLimitBn;
-    if (allowanceBn.lt(amountBn)) {
-      console.log(`allowance ${allowanceBn.toString()} is less than stake amount ${amountBn.toString()}`)
+    
+    if (textCreateLock == 'approve') {
       console.log('approve 1000000000 FLEX to veFlex contract...')
       // approve 
       const approveAmountBn = utils.parseEther('1000000000.0')
@@ -83,13 +81,14 @@ async function createLock(veflex, flex, conn, amount, timestamp) {
         gasLimit: gasLimitBn,
         gasPrice: utils.parseUnits('1.05', 'gwei')
       })
-
+    } else if (textCreateLock == 'Create Lock') {
+      const amountBn = utils.parseEther(amount);
+      gasLimitBn = await veflex.estimateGas.create_lock(amountBn, Number(timestamp)); 
+      await veflex.create_lock(amountBn, Number(timestamp), {
+        gasLimit: gasLimitBn,
+        gasPrice: utils.parseUnits('1.05', 'gwei')
+      });
     }
-    gasLimitBn = await veflex.estimateGas.create_lock(amountBn, Number(timestamp)); 
-    await veflex.create_lock(amountBn, Number(timestamp), {
-      gasLimit: gasLimitBn,
-      gasPrice: utils.parseUnits('1.05', 'gwei')
-    });
   } catch (err) {
     errorHandle('createLock', err);
   }
@@ -135,6 +134,7 @@ export function VeFLEX({ veflex, flex, conn }) {
   
   const [amountCreateLock, setAmountCreateLock] = useState();
   const [timestampCreateLock, setTimestampCreateLock] = useState();
+  const [textCreateLock, setTextCreateLock] = useState();
 
   const [addressDepositFor, setAddressDepositFor] = useState();
   const [amountDepositFor, setAmountDepositFor] = useState();
@@ -147,7 +147,16 @@ export function VeFLEX({ veflex, flex, conn }) {
 
   useEffect(() => {
     async function fetchData() {
-      if (veflex) {
+      if (veflex && flex) {
+
+        const sender = await conn.getSigner().getAddress();
+        const allowanceBn =  await flex.allowance(sender, veflex.address);
+        if (allowanceBn.gt(0)) {
+          setTextCreateLock('Create Lock');
+        } else {
+          setTextCreateLock('Approve');
+        }
+
         setName('veFlex');
         setAddr(veflex.address);
 
@@ -162,6 +171,7 @@ export function VeFLEX({ veflex, flex, conn }) {
 
         const _totalSupply = await getTotalSupply(veflex);
         if (_totalSupply) setTotalSupply(utils.formatEther(_totalSupply));
+
       }
     }
     fetchData();
@@ -228,7 +238,7 @@ export function VeFLEX({ veflex, flex, conn }) {
     if (querying) return;
     setQuerying(true);
     if (veflex && flex && conn && amountCreateLock && timestampCreateLock) {
-      await createLock(veflex, flex, conn, amountCreateLock, timestampCreateLock);
+      await createLock(veflex, flex, textCreateLock, amountCreateLock, timestampCreateLock);
     }
     setQuerying(false);
   }
@@ -321,7 +331,7 @@ export function VeFLEX({ veflex, flex, conn }) {
               <label>
                 Stake Detail For Address:
               </label>
-              <input type="text" placeholder="address" onChange={e=>setAddressLocked(e.target.value)} />
+              <input type="text" placeholder="address" size="45" onChange={e=>setAddressLocked(e.target.value)} />
               <button onClick={onLocked}>Read</button>
               {locked ? `staked ${locked[0]} FLEX, end at: ${new Date(locked[1] * 1000).toLocaleString()} Local Time` : ""}
             </form>
@@ -331,7 +341,7 @@ export function VeFLEX({ veflex, flex, conn }) {
               <label>
                 Account Latest Balance:
               </label>
-              <input type="text" placeholder="address" onChange={e=>setAddressBalanceOf(e.target.value)} />
+              <input type="text" placeholder="address" size="45" onChange={e=>setAddressBalanceOf(e.target.value)} />
               <button onClick={onBalanceOf}>Read</button>
               <span>{balanceOf} {balanceOf?"veFLEX":""}</span>
             </form>
@@ -351,7 +361,7 @@ export function VeFLEX({ veflex, flex, conn }) {
               <label>
                 History Account Balance At Block Height:
               </label>
-              <input type="text" placeholder="address" onChange={e=>setAddressBalanceOfAt(e.target.value)} />
+              <input type="text" placeholder="address" size="45" onChange={e=>setAddressBalanceOfAt(e.target.value)} />
               <input type="text" placeholder="block height (uint)" onChange={e=>setHeightBalanceOfAt(e.target.value)} />
               <button onClick={onBalanceOfAt}>Read</button>
               <span>{balanceOfAt} {balanceOfAt?"veFLEX":""}</span>
@@ -364,7 +374,7 @@ export function VeFLEX({ veflex, flex, conn }) {
               </label>
               <input type="text" placeholder="amount (FLEX)" onChange={e=>setAmountCreateLock(e.target.value)} />
               <input type="text" placeholder="expiry timestamp (s)" onChange={e=>setTimestampCreateLock(e.target.value)} />
-              <button onClick={onCreateLock}>Write</button>
+              <button onClick={onCreateLock}>{textCreateLock}</button>
             </form>
           </li>
           <li>
@@ -372,9 +382,9 @@ export function VeFLEX({ veflex, flex, conn }) {
               <label>
                 Stake For Other Address:
               </label>
-              <input type="text" placeholder="address" onChange={e=>setAddressDepositFor(e.target.value)} />
+              <input type="text" placeholder="address" size="45" onChange={e=>setAddressDepositFor(e.target.value)} />
               <input type="text" placeholder="amount (FLEX)" onChange={e=>setAmountDepositFor(e.target.value)} />
-              <button onClick={onDepositFor}>Write</button>
+              <button onClick={onDepositFor}>Deposit For</button>
             </form>
           </li>
         </ul>

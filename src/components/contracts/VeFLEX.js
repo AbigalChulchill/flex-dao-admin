@@ -136,20 +136,17 @@ async function depositForInBatch(annualBonus, dataForDepositForInBatch, setTxSta
     addresses.push(ele.address);
     amountsBn.push(utils.parseEther(ele.amount));
   }
-  console.log(addresses);
-  console.log(amountsBn);
   const gasLimitBn = await annualBonus.estimateGas.depositFor(addresses, amountsBn);
-  console.log(gasLimitBn);
-  // const tx = await annualBonus.depositFor(addresses, amountsBn, {
-  //   gasLimit: gasLimitBn,
-  //   gasPrice: utils.parseUnits('5', 'gwei')
-  // });
-  // setTxStatus(true);
-  // setTxStatusText(`pending - ${tx.hash}`);
-  // tx.wait(2).then((receipt) => {
-  //   setTxStatus(false);
-  //   setTxStatusText(`confirmed - ${receipt.transactionHash} - ${receipt.confirmations} blocks`);
-  // })
+  const tx = await annualBonus.depositFor(addresses, amountsBn, {
+    gasLimit: gasLimitBn,
+    gasPrice: utils.parseUnits('5', 'gwei')
+  });
+  setTxStatus(true);
+  setTxStatusText(`pending - ${tx.hash}`);
+  tx.wait(2).then((receipt) => {
+    setTxStatus(false);
+    setTxStatusText(`confirmed - ${receipt.transactionHash} - ${receipt.confirmations} blocks`);
+  })
 }
 
 export function VeFLEX({ veflex, flex, conn, annualBonus }) {

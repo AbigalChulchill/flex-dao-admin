@@ -132,26 +132,23 @@ export function VeFLEX({ veflex, flex, conn }) {
 
   const [walletAddress, setWalletAddress] = useState();
   
-  const [txStatus, setTxStatus] = useState();
-  const [txStatusText, setTxStatusText] = useState();
-
   const [name, setName] = useState();
   const [addr, setAddr] = useState();
   const [admin, setAdmin] = useState();
-
+  
   const [token, setToken] = useState();
   const [supply, setSupply] = useState();
   const [totalSupply, setTotalSupply] = useState();
-
+  
   const [addressLocked, setAddressLocked] = useState();
   const [locked, setLocked] = useState();
-
+  
   const [addressBalanceOf, setAddressBalanceOf] = useState();
   const [balanceOf, setBalanceOf] = useState();
-
+  
   const [heightTotalSupplyAt, setHeightTotalSupplyAt] = useState();
   const [totalSupplyAt, setTotalSupplyAt] = useState();
-
+  
   const [addressBalanceOfAt, setAddressBalanceOfAt] = useState();
   const [heightBalanceOfAt, setHeightBalanceOfAt] = useState();
   const [balanceOfAt, setBalanceOfAt] = useState();
@@ -159,9 +156,14 @@ export function VeFLEX({ veflex, flex, conn }) {
   const [amountCreateLock, setAmountCreateLock] = useState();
   const [timestampCreateLock, setTimestampCreateLock] = useState();
   const [textCreateLock, setTextCreateLock] = useState();
-
+  
   const [addressDepositFor, setAddressDepositFor] = useState();
   const [amountDepositFor, setAmountDepositFor] = useState();
+  
+  const [txStatus, setTxStatus] = useState();
+  const [txStatusText, setTxStatusText] = useState();
+
+  const [depositForInBatch, setDepositForInBatch] = useState();
 
   const [depositEvents, setDepositEvents] = useState([]);
   const [depositEventsLoading, setDepositEventsLoading] = useState(false);
@@ -277,6 +279,26 @@ export function VeFLEX({ veflex, flex, conn }) {
     if (txStatus) return;
     if (veflex && addressDepositFor && amountDepositFor) {
       await depositFor(veflex, addressDepositFor, amountDepositFor, setTxStatus, setTxStatusText);
+    }
+  }
+
+  const onUploadStakeBatchFile = (file) => {
+    const reader = new FileReader();
+    reader.onload = onReaderLoad;
+    reader.readAsText(file);
+  }
+
+  const onReaderLoad = (e) => {
+    const obj = JSON.parse(e.target.result);
+    setDepositForInBatch(obj);
+  }
+
+  const onDepositForInBatch = async (e) => {
+    e.preventDefault();
+    if (txStatus) return;
+    if (depositForInBatch) {
+      console.log(depositForInBatch);
+      // await depositForInBatch();
     }
   }
 
@@ -420,6 +442,15 @@ export function VeFLEX({ veflex, flex, conn }) {
               <input type="text" placeholder="address" size="45" onChange={e=>setAddressDepositFor(e.target.value)} />
               <input type="text" placeholder="amount (FLEX)" onChange={e=>setAmountDepositFor(e.target.value)} />
               <button onClick={onDepositFor}>Deposit For</button>
+            </form>
+          </li>
+          <li>
+            <form>
+              <label>
+                Stake For Other Addresses in batch:
+              </label>
+              <input type="file" id="file" accept='.json' onChange={e => onUploadStakeBatchFile(e.target.files[0])} />
+              <button onClick={onDepositForInBatch}>Deposit For In Batch</button>
             </form>
           </li>
         </ul>

@@ -40,7 +40,7 @@ export const FlexDaoStg2Page = () => {
 
   return (
     <>
-      <h1>FLEX DAO Stg2 Admin Page</h1>
+      <h1>FLEX DAO Stg Admin Page</h1>
       <div className="container">
         <FLEX flex={flex}></FLEX>
         <VeFLEX veflex={veFlex} flex={flex} conn={conn}></VeFLEX>

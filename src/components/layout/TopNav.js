@@ -19,15 +19,15 @@ export const TopNav = ({category}) => {
           <div className="item">
             <Link to="/flex-dao/pp">{category}-PP</Link>
           </div>
-          <div className="item">
+          {/* <div className="item">
             <Link to="/flex-dao/stg1">{category}-stg1</Link>
-          </div>
+          </div> */}
           <div className="item">
-            <Link to="/flex-dao/stg2">{category}-stg2</Link>
+            <Link to="/flex-dao/stg2">{category}-stg</Link>
           </div>
-          <div className="item">
+          {/* <div className="item">
             <Link to="/flex-dao/stg3">{category}-stg3</Link>
-          </div>
+          </div> */}
           <div className="item">
             <Link to="/flex-dao/prod">{category}-prod</Link>
         </div>

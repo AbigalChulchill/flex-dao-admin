@@ -1,9 +1,9 @@
 import { Route, Switch } from 'react-router-dom';
 import { TopNav } from '../components/layout/TopNav'
 import { FlexDaoPPPage } from '../pages/FlexDaoPPPage';
-import { FlexDaoStg1Page } from '../pages/FlexDaoStg1Page';
+// import { FlexDaoStg1Page } from '../pages/FlexDaoStg1Page';
 import { FlexDaoStg2Page } from '../pages/FlexDaoStg2Page';
-import { FlexDaoStg3Page } from '../pages/FlexDaoStg3Page';
+// import { FlexDaoStg3Page } from '../pages/FlexDaoStg3Page';
 import { FlexDaoProdPage } from '../pages/FlexDaoProdPage';
 
 export const FlexDaoPage = () => {
@@ -15,15 +15,15 @@ export const FlexDaoPage = () => {
           <Route path='/flex-dao/pp'>
             <FlexDaoPPPage />
           </Route>
-          <Route path='/flex-dao/stg1'>
+          {/* <Route path='/flex-dao/stg1'>
             <FlexDaoStg1Page />
-          </Route>
+          </Route> */}
           <Route path='/flex-dao/stg2'>
             <FlexDaoStg2Page />
           </Route>
-          <Route path='/flex-dao/stg3'>
+          {/* <Route path='/flex-dao/stg3'>
             <FlexDaoStg3Page />
-          </Route>
+          </Route> */}
           <Route path='/flex-dao/prod'>
             <FlexDaoProdPage />
           </Route>

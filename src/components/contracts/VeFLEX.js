@@ -72,10 +72,10 @@ async function createLock(veflex, flex, textCreateLock, amount, timestamp) {
 
     let gasLimitBn;
     
-    if (textCreateLock === 'approve') {
-      console.log('approve 1000000000 FLEX to veFlex contract...')
+    if (textCreateLock === 'Approve') {
       // approve 
       const approveAmountBn = utils.parseEther('1000000000.0')
+      console.log(`approve ${approveAmountBn.toString()} FLEX-WEI to veFlex contract...`)
       gasLimitBn = await flex.estimateGas.approve(veflex.address, approveAmountBn)
       await flex.approve(veflex.address, approveAmountBn, {
         gasLimit: gasLimitBn,
@@ -110,6 +110,8 @@ async function depositFor(veflex, address, amount) {
 export function VeFLEX({ veflex, flex, conn }) {
 
   const [querying, setQuerying] = useState();
+
+  const [walletAddress, setWalletAddress] = useState();
 
   const [name, setName] = useState();
   const [addr, setAddr] = useState();
@@ -147,31 +149,36 @@ export function VeFLEX({ veflex, flex, conn }) {
 
   useEffect(() => {
     async function fetchData() {
-      if (veflex && flex) {
+      try {
+        if (veflex && flex) {
 
-        const sender = await conn.getSigner().getAddress();
-        const allowanceBn =  await flex.allowance(sender, veflex.address);
-        if (allowanceBn.gt(0)) {
-          setTextCreateLock('Create Lock');
-        } else {
-          setTextCreateLock('Approve');
+          const sender = await conn.getSigner().getAddress();
+          setWalletAddress(sender);
+          const allowanceBn =  await flex.allowance(sender, veflex.address);
+          if (allowanceBn.gt(0)) {
+            setTextCreateLock('Create Lock');
+          } else {
+            setTextCreateLock('Approve');
+          }
+  
+          setName('veFlex');
+          setAddr(veflex.address);
+  
+          const _admin = await getAdmin(veflex);
+          if (_admin) setAdmin(_admin);
+  
+          const _token = await getToken(veflex);
+          if (_token) setToken(_token);
+  
+          const _supply = await getSupply(veflex);
+          if (_supply) setSupply(utils.formatEther(_supply));
+  
+          const _totalSupply = await getTotalSupply(veflex);
+          if (_totalSupply) setTotalSupply(utils.formatEther(_totalSupply));
+  
         }
-
-        setName('veFlex');
-        setAddr(veflex.address);
-
-        const _admin = await getAdmin(veflex);
-        if (_admin) setAdmin(_admin);
-
-        const _token = await getToken(veflex);
-        if (_token) setToken(_token);
-
-        const _supply = await getSupply(veflex);
-        if (_supply) setSupply(utils.formatEther(_supply));
-
-        const _totalSupply = await getTotalSupply(veflex);
-        if (_totalSupply) setTotalSupply(utils.formatEther(_totalSupply));
-
+      } catch (err) {
+        errorHandle('depositFor', err);
       }
     }
     fetchData();
@@ -375,6 +382,7 @@ export function VeFLEX({ veflex, flex, conn }) {
           == Query Status: {querying ? "Querying" : "Not Query"} ==
         </div>
         <ul>
+          <p>Connected wallet: {walletAddress}</p>
           <li>
             <form>
               <label>

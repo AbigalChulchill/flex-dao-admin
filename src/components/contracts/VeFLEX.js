@@ -126,7 +126,33 @@ async function depositFor(veflex, address, amount, setTxStatus, setTxStatusText)
   }
 }
 
-export function VeFLEX({ veflex, flex, conn }) {
+async function depositForInBatch(annualBonus, dataForDepositForInBatch, setTxStatus, setTxStatusText) {
+  const addresses = [];
+  const amountsBn = [];
+  for (let ele of dataForDepositForInBatch) {
+    if (!ele.address || !ele.amount) {
+      errorHandle('depositForInBatch', `${ele} is invalid`);
+    }
+    addresses.push(ele.address);
+    amountsBn.push(utils.parseEther(ele.amount));
+  }
+  console.log(addresses);
+  console.log(amountsBn);
+  const gasLimitBn = await annualBonus.estimateGas.depositFor(addresses, amountsBn);
+  console.log(gasLimitBn);
+  // const tx = await annualBonus.depositFor(addresses, amountsBn, {
+  //   gasLimit: gasLimitBn,
+  //   gasPrice: utils.parseUnits('5', 'gwei')
+  // });
+  // setTxStatus(true);
+  // setTxStatusText(`pending - ${tx.hash}`);
+  // tx.wait(2).then((receipt) => {
+  //   setTxStatus(false);
+  //   setTxStatusText(`confirmed - ${receipt.transactionHash} - ${receipt.confirmations} blocks`);
+  // })
+}
+
+export function VeFLEX({ veflex, flex, conn, annualBonus }) {
 
   const [querying, setQuerying] = useState();
 
@@ -163,7 +189,7 @@ export function VeFLEX({ veflex, flex, conn }) {
   const [txStatus, setTxStatus] = useState();
   const [txStatusText, setTxStatusText] = useState();
 
-  const [depositForInBatch, setDepositForInBatch] = useState();
+  const [dataForDepositForInBatch, setDataForDepositForInBatch] = useState();
 
   const [depositEvents, setDepositEvents] = useState([]);
   const [depositEventsLoading, setDepositEventsLoading] = useState(false);
@@ -216,7 +242,7 @@ export function VeFLEX({ veflex, flex, conn }) {
       setSupply();
       setTotalSupply();
     }
-  }, [veflex, flex, conn]);
+  }, [veflex, flex, conn, annualBonus]);
 
   const onLocked = async (e) => {
     e.preventDefault();
@@ -290,15 +316,14 @@ export function VeFLEX({ veflex, flex, conn }) {
 
   const onReaderLoad = (e) => {
     const obj = JSON.parse(e.target.result);
-    setDepositForInBatch(obj);
+    setDataForDepositForInBatch(obj);
   }
 
   const onDepositForInBatch = async (e) => {
     e.preventDefault();
     if (txStatus) return;
-    if (depositForInBatch) {
-      console.log(depositForInBatch);
-      // await depositForInBatch();
+    if (dataForDepositForInBatch) {
+      await depositForInBatch(annualBonus, dataForDepositForInBatch, setTxStatus, setTxStatusText);
     }
   }
 

@@ -67,7 +67,7 @@ async function getBalanceOfAt(veflex, address, height) {
   }
 }
 
-async function createLock(veflex, flex, textCreateLock, amount, timestamp) {
+async function createLock(veflex, flex, textCreateLock, amount, timestamp, setTxStatus, setTxStatusText, setTextCreateLock) {
   try {
 
     let gasLimitBn;
@@ -77,31 +77,50 @@ async function createLock(veflex, flex, textCreateLock, amount, timestamp) {
       const approveAmountBn = utils.parseEther('1000000000.0')
       console.log(`approve ${approveAmountBn.toString()} FLEX-WEI to veFlex contract...`)
       gasLimitBn = await flex.estimateGas.approve(veflex.address, approveAmountBn)
-      await flex.approve(veflex.address, approveAmountBn, {
+      const tx = await flex.approve(veflex.address, approveAmountBn, {
         gasLimit: gasLimitBn,
         gasPrice: utils.parseUnits('5', 'gwei')
+      })
+      setTxStatus(true);
+      setTxStatusText(`pending - ${tx.hash}`);
+      tx.wait(2).then((receipt) => {
+        setTxStatus(false);
+        setTxStatusText(`confirmed - ${receipt.transactionHash} - ${receipt.confirmations} blocks`);
+        setTextCreateLock('Create Lock');
       })
     } else if (textCreateLock ==='Create Lock') {
       const amountBn = utils.parseEther(amount);
       gasLimitBn = await veflex.estimateGas.create_lock(amountBn, Number(timestamp)); 
-      await veflex.create_lock(amountBn, Number(timestamp), {
+      const tx = await veflex.create_lock(amountBn, Number(timestamp), {
         gasLimit: gasLimitBn,
         gasPrice: utils.parseUnits('5', 'gwei')
       });
+      setTxStatus(true);
+      setTxStatusText(`pending - ${tx.hash}`);
+      tx.wait(2).then((receipt) => {
+        setTxStatus(false);
+        setTxStatusText(`confirmed - ${receipt.transactionHash} - ${receipt.confirmations} blocks`);
+      })
     }
   } catch (err) {
     errorHandle('createLock', err);
   }
 }
 
-async function depositFor(veflex, address, amount) {
+async function depositFor(veflex, address, amount, setTxStatus, setTxStatusText) {
   try {
     const amountBn = utils.parseEther(amount);
     const gasLimitBn = await veflex.estimateGas.deposit_for(address, amountBn);
-    await veflex.deposit_for(address, amountBn, {
+    const tx = await veflex.deposit_for(address, amountBn, {
       gasLimit: gasLimitBn,
       gasPrice: utils.parseUnits('5', 'gwei')
     });
+    setTxStatus(true);
+    setTxStatusText(`pending - ${tx.hash}`);
+    tx.wait(2).then((receipt) => {
+      setTxStatus(false);
+      setTxStatusText(`confirmed - ${receipt.transactionHash} - ${receipt.confirmations} blocks`);
+    })
   } catch (err) {
     errorHandle('depositFor', err);
   }
@@ -112,6 +131,9 @@ export function VeFLEX({ veflex, flex, conn }) {
   const [querying, setQuerying] = useState();
 
   const [walletAddress, setWalletAddress] = useState();
+  
+  const [txStatus, setTxStatus] = useState();
+  const [txStatusText, setTxStatusText] = useState();
 
   const [name, setName] = useState();
   const [addr, setAddr] = useState();
@@ -178,11 +200,12 @@ export function VeFLEX({ veflex, flex, conn }) {
   
         }
       } catch (err) {
-        errorHandle('depositFor', err);
+        errorHandle('veFlex init', err);
       }
     }
     fetchData();
     return () => {
+      setWalletAddress();
       setTextCreateLock();
       setName();
       setAddr();
@@ -243,22 +266,18 @@ export function VeFLEX({ veflex, flex, conn }) {
 
   const onCreateLock = async (e) => {
     e.preventDefault()
-    if (querying) return;
-    setQuerying(true);
+    if (txStatus) return;
     if (veflex && flex && amountCreateLock && timestampCreateLock) {
-      await createLock(veflex, flex, textCreateLock, amountCreateLock, timestampCreateLock);
+      await createLock(veflex, flex, textCreateLock, amountCreateLock, timestampCreateLock, setTxStatus, setTxStatusText, setTextCreateLock);
     }
-    setQuerying(false);
   }
 
   const onDepositFor = async (e) => {
     e.preventDefault()
-    if (querying) return;
-    setQuerying(true);
+    if (txStatus) return;
     if (veflex && addressDepositFor && amountDepositFor) {
-      await depositFor(veflex, addressDepositFor, amountDepositFor);
+      await depositFor(veflex, addressDepositFor, amountDepositFor, setTxStatus, setTxStatusText);
     }
-    setQuerying(false);
   }
 
   const onQueryDepositHistory = async () => {
@@ -378,8 +397,8 @@ export function VeFLEX({ veflex, flex, conn }) {
         </ul>
       </div>
       <div className="query">
-        <div className={"status-" + (querying ? "on" : "off")}>
-          == Query Status: {querying ? "Querying" : "Not Query"} ==
+        <div className={"status-" + (txStatus ? "on" : "off")}>
+          == Tx Status: {txStatusText} ==
         </div>
         <ul>
           <p>Connected wallet: {walletAddress}</p>

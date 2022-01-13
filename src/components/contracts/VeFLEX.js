@@ -72,21 +72,21 @@ async function createLock(veflex, flex, textCreateLock, amount, timestamp) {
 
     let gasLimitBn;
     
-    if (textCreateLock == 'approve') {
+    if (textCreateLock === 'approve') {
       console.log('approve 1000000000 FLEX to veFlex contract...')
       // approve 
       const approveAmountBn = utils.parseEther('1000000000.0')
       gasLimitBn = await flex.estimateGas.approve(veflex.address, approveAmountBn)
       await flex.approve(veflex.address, approveAmountBn, {
         gasLimit: gasLimitBn,
-        gasPrice: utils.parseUnits('1.05', 'gwei')
+        gasPrice: utils.parseUnits('5', 'gwei')
       })
-    } else if (textCreateLock == 'Create Lock') {
+    } else if (textCreateLock ==='Create Lock') {
       const amountBn = utils.parseEther(amount);
       gasLimitBn = await veflex.estimateGas.create_lock(amountBn, Number(timestamp)); 
       await veflex.create_lock(amountBn, Number(timestamp), {
         gasLimit: gasLimitBn,
-        gasPrice: utils.parseUnits('1.05', 'gwei')
+        gasPrice: utils.parseUnits('5', 'gwei')
       });
     }
   } catch (err) {
@@ -100,7 +100,7 @@ async function depositFor(veflex, address, amount) {
     const gasLimitBn = await veflex.estimateGas.deposit_for(address, amountBn);
     await veflex.deposit_for(address, amountBn, {
       gasLimit: gasLimitBn,
-      gasPrice: utils.parseUnits('1.05', 'gwei')
+      gasPrice: utils.parseUnits('5', 'gwei')
     });
   } catch (err) {
     errorHandle('depositFor', err);
@@ -176,6 +176,7 @@ export function VeFLEX({ veflex, flex, conn }) {
     }
     fetchData();
     return () => {
+      setTextCreateLock();
       setName();
       setAddr();
       setAdmin();
@@ -237,7 +238,7 @@ export function VeFLEX({ veflex, flex, conn }) {
     e.preventDefault()
     if (querying) return;
     setQuerying(true);
-    if (veflex && flex && conn && amountCreateLock && timestampCreateLock) {
+    if (veflex && flex && amountCreateLock && timestampCreateLock) {
       await createLock(veflex, flex, textCreateLock, amountCreateLock, timestampCreateLock);
     }
     setQuerying(false);
@@ -247,7 +248,7 @@ export function VeFLEX({ veflex, flex, conn }) {
     e.preventDefault()
     if (querying) return;
     setQuerying(true);
-    if (veflex && flex && conn && addressDepositFor && amountDepositFor) {
+    if (veflex && addressDepositFor && amountDepositFor) {
       await depositFor(veflex, addressDepositFor, amountDepositFor);
     }
     setQuerying(false);
@@ -367,6 +368,13 @@ export function VeFLEX({ veflex, flex, conn }) {
               <span>{balanceOfAt} {balanceOfAt?"veFLEX":""}</span>
             </form>
           </li>
+        </ul>
+      </div>
+      <div className="query">
+        <div className={"status-" + (querying ? "on" : "off")}>
+          == Query Status: {querying ? "Querying" : "Not Query"} ==
+        </div>
+        <ul>
           <li>
             <form>
               <label>

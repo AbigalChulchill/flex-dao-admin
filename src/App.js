@@ -18,7 +18,15 @@ function App() {
     async function fetchData() {
       try {
         const _conn = await getConn();
-        if (_conn) setConn(_conn);
+        if (_conn) {
+          setConn(_conn);
+          window.ethereum.on('chainChanged', () => {
+            window.location.reload();
+          });
+          window.ethereum.on('accountsChanged', () => {
+            window.location.reload();
+          });
+        } 
       } catch (err) {
         errorHandle('init connection with blockchain', err);
       }

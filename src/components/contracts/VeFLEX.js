@@ -115,29 +115,47 @@ async function createLock(veflex, flex, textCreateLock, amount, timestamp, setTx
   }
 }
 
-async function depositForInBatch(annualBonus, addressForDepositForInBatch, amountForDepositForInBatch, setTxStatus, setTxStatusText) {
+async function depositForInBatch(annualBonus, flex, addressForDepositForInBatch, amountForDepositForInBatch, setTxStatus, setTxStatusText, textDepositFor, setTextDepositFor) {
   try {
-    const gasLimitBn = await annualBonus.estimateGas.depositFor(addressForDepositForInBatch, amountForDepositForInBatch);
-    const tx = await annualBonus.depositFor(addressForDepositForInBatch, amountForDepositForInBatch, {
-      gasLimit: gasLimitBn.mul(2),
-      gasPrice: utils.parseUnits('1.05', 'gwei')
-    });
-    setTxStatus(true);
-    setTxStatusText(`pending - ${tx.hash}`);
-    tx.wait(2).then((receipt) => {
-      setTxStatus(false);
-      setTxStatusText(`confirmed - ${receipt.transactionHash} - ${receipt.confirmations} blocks`);
-    }).catch((err) => {
+    let gasLimitBn;
+    if (textDepositFor === 'Approve') {
+      const approveAmountBn = utils.parseEther('1000000000.0')
+      console.log(`approve ${approveAmountBn.toString()} FLEX-WEI to annualBonus contract...`)
+      gasLimitBn = await flex.estimateGas.approve(annualBonus.address, approveAmountBn)
+      const tx = await flex.approve(annualBonus.address, approveAmountBn, {
+        gasLimit: gasLimitBn,
+        gasPrice: utils.parseUnits('1.05', 'gwei')
+      })
       setTxStatus(true);
-      if (typeof(err) === 'string') {
-        setTxStatusText(err);
-      } else {
-        if (err.data && err.data.message) {
-          setTxStatusText(err.data.message);
+      setTxStatusText(`pending - ${tx.hash}`);
+      tx.wait(2).then((receipt) => {
+        setTxStatus(false);
+        setTxStatusText(`confirmed - ${receipt.transactionHash} - ${receipt.confirmations} blocks`);
+        setTextDepositFor('Deposit For');
+      })
+    } else if (textDepositFor === 'Deposit For') {
+      gasLimitBn = await annualBonus.estimateGas.depositFor(addressForDepositForInBatch, amountForDepositForInBatch);
+      const tx = await annualBonus.depositFor(addressForDepositForInBatch, amountForDepositForInBatch, {
+        gasLimit: gasLimitBn.mul(3).div(2),
+        gasPrice: utils.parseUnits('1.05', 'gwei')
+      });
+      setTxStatus(true);
+      setTxStatusText(`pending - ${tx.hash}`);
+      tx.wait(2).then((receipt) => {
+        setTxStatus(false);
+        setTxStatusText(`confirmed - ${receipt.transactionHash} - ${receipt.confirmations} blocks`);
+      }).catch((err) => {
+        setTxStatus(true);
+        if (typeof(err) === 'string') {
+          setTxStatusText(err);
+        } else {
+          if (err.data && err.data.message) {
+            setTxStatusText(err.data.message);
+          }
         }
-      }
-      errorHandle('depositForInBatch', err);
-    })
+        errorHandle('depositForInBatch', err);
+      })
+    }
   } catch (err) {
     setTxStatus(true);
     if (typeof(err) === 'string') {
@@ -181,6 +199,8 @@ export function VeFLEX({ veflex, flex, conn, annualBonus }) {
   const [amountCreateLock, setAmountCreateLock] = useState();
   const [timestampCreateLock, setTimestampCreateLock] = useState();
   const [textCreateLock, setTextCreateLock] = useState();
+
+  const [textDepositFor, setTextDepositFor] = useState();
   
   const [addressDepositFor, setAddressDepositFor] = useState();
   const [amountDepositFor, setAmountDepositFor] = useState();
@@ -223,11 +243,18 @@ export function VeFLEX({ veflex, flex, conn, annualBonus }) {
           setWalletAddress(sender);
           const allowanceBn =  await flex.allowance(sender, veflex.address);
           if (allowanceBn.gt(0)) {
-            setTextCreateLock('Create Lock');
+            setTextCreateLock('Create Lock')
           } else {
             setTextCreateLock('Approve');
           }
-  
+
+          const allowanceForAnnualBonusBn =  await flex.allowance(sender, annualBonus.address);
+          if (allowanceForAnnualBonusBn.gt(0)) {
+            setTextDepositFor('Deposit For');
+          } else {
+            setTextDepositFor('Approve');
+          }
+          
           setName('veFlex');
           setAddr(veflex.address);
   
@@ -320,7 +347,7 @@ export function VeFLEX({ veflex, flex, conn, annualBonus }) {
     e.preventDefault()
     if (addressDepositFor && amountDepositFor) {
       const amountBn = utils.parseEther(amountDepositFor);
-      await depositForInBatch(annualBonus, [addressDepositFor], [amountBn], setTxStatus, setTxStatusText)
+      await depositForInBatch(annualBonus, flex, [addressDepositFor], [amountBn], setTxStatus, setTxStatusText, textDepositFor, setTextDepositFor)
     }
   }
 
@@ -337,7 +364,7 @@ export function VeFLEX({ veflex, flex, conn, annualBonus }) {
     if (address1DepositFor && address2DepositFor && address3DepositFor && address4DepositFor && amount1DepositFor && amount2DepositFor && amount3DepositFor && amount4DepositFor) {
       const addressArray = [address1DepositFor, address2DepositFor, address3DepositFor, address4DepositFor];
       const amountArray = [amount1DepositFor, amount2DepositFor, amount3DepositFor, amount4DepositFor]
-      await depositForInBatch(annualBonus, addressArray, amountArray, setTxStatus, setTxStatusText);
+      await depositForInBatch(annualBonus, flex, addressArray, amountArray, setTxStatus, setTxStatusText, textDepositFor, setTextDepositFor);
     }
   }
 
@@ -378,7 +405,7 @@ export function VeFLEX({ veflex, flex, conn, annualBonus }) {
   const onDepositForInBatch = async (e) => {
     e.preventDefault();
     if (addressForDepositForInBatch && amountForDepositForInBatch) {
-      await depositForInBatch(annualBonus, addressForDepositForInBatch, amountForDepositForInBatch, setTxStatus, setTxStatusText);
+      await depositForInBatch(annualBonus, flex, addressForDepositForInBatch, amountForDepositForInBatch, setTxStatus, setTxStatusText, textDepositFor, setTextDepositFor);
     }
   }
 
@@ -529,7 +556,7 @@ export function VeFLEX({ veflex, flex, conn, annualBonus }) {
               </label>
               <input type="text" placeholder="address" size="45" onChange={e=>setAddressDepositFor(e.target.value)} />
               <input type="text" placeholder="amount (FLEX)" onChange={e=>setAmountDepositFor(e.target.value)} />
-              <button onClick={onDepositFor}>Deposit For</button>
+              <button onClick={onDepositFor}>{textDepositFor}</button>
             </form>
           </li>
           <li>
@@ -558,7 +585,7 @@ export function VeFLEX({ veflex, flex, conn, annualBonus }) {
                   <input type="text" placeholder="amount (FLEX)" onChange={e=>onAmountForDeposit(e.target.value, setAmount4DepositFor)} />
                   {locked4 ? `staked ${locked4[0]} FLEX, end at: ${new Date(locked4[1] * 1000).toLocaleString()} Local Time` : ""}
                 </li>
-                <button onClick={onDepositFor4}>Deposit For the 4 Addresses</button>
+                <button onClick={onDepositFor4}>{textDepositFor}</button>
               </ul>
             </form>
           </li>
@@ -568,7 +595,7 @@ export function VeFLEX({ veflex, flex, conn, annualBonus }) {
                 Stake For Other Addresses in batch (.csv only):
               </label>
               <input type="file" id="file" accept='.csv' onChange={e => onUploadStakeBatchFile(e)} />
-              <button onClick={onDepositForInBatch}>Deposit For In Batch</button>
+              <button onClick={onDepositForInBatch}>{textDepositFor}</button>
             </form>
           </li>
         </ul>

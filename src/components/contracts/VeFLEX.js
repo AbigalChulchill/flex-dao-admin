@@ -338,7 +338,6 @@ export function VeFLEX({ veflex, flex, conn, annualBonus }) {
 
   const onCreateLock = async (e) => {
     e.preventDefault()
-    if (txStatus) return;
     if (veflex && flex && amountCreateLock && timestampCreateLock) {
       await createLock(veflex, flex, textCreateLock, amountCreateLock, timestampCreateLock, setTxStatus, setTxStatusText, setTextCreateLock);
     }
@@ -346,7 +345,6 @@ export function VeFLEX({ veflex, flex, conn, annualBonus }) {
 
   const onDepositFor = async (e) => {
     e.preventDefault()
-    if (txStatus) return;
     if (veflex && addressDepositFor && amountDepositFor) {
       await depositFor(veflex, addressDepositFor, amountDepositFor, setTxStatus, setTxStatusText);
     }
@@ -362,7 +360,6 @@ export function VeFLEX({ veflex, flex, conn, annualBonus }) {
 
   const onDepositFor4 = async (e) => {
     e.preventDefault();
-    if (txStatus) return;
     if (address1DepositFor && address2DepositFor && address3DepositFor && address4DepositFor && amount1DepositFor && amount2DepositFor && amount3DepositFor && amount4DepositFor) {
       const addressArray = [address1DepositFor, address2DepositFor, address3DepositFor, address4DepositFor];
       const amountArray = [amount1DepositFor, amount2DepositFor, amount3DepositFor, amount4DepositFor]
@@ -370,11 +367,11 @@ export function VeFLEX({ veflex, flex, conn, annualBonus }) {
     }
   }
 
-  const onUploadStakeBatchFile = (file) => {
+  const onUploadStakeBatchFile = (e) => {
     try {
       const reader = new FileReader();
       reader.onload = onReaderLoad;
-      reader.readAsBinaryString(file);
+      reader.readAsBinaryString(e.target.files[0]);
     } catch (err) {
       errorHandle('onUploadStakeBatchFile', err);
     }
@@ -406,7 +403,6 @@ export function VeFLEX({ veflex, flex, conn, annualBonus }) {
 
   const onDepositForInBatch = async (e) => {
     e.preventDefault();
-    if (txStatus) return;
     if (addressForDepositForInBatch && amountForDepositForInBatch) {
       await depositForInBatch(annualBonus, addressForDepositForInBatch, amountForDepositForInBatch, setTxStatus, setTxStatusText);
     }
@@ -597,7 +593,7 @@ export function VeFLEX({ veflex, flex, conn, annualBonus }) {
               <label>
                 Stake For Other Addresses in batch (.csv only):
               </label>
-              <input type="file" id="file" accept='.csv' onChange={e => onUploadStakeBatchFile(e.target.files[0])} />
+              <input type="file" id="file" value="" accept='.csv' onChange={e => onUploadStakeBatchFile(e)} />
               <button onClick={onDepositForInBatch}>Deposit For In Batch</button>
             </form>
           </li>

@@ -111,6 +111,7 @@ async function createLock(veflex, flex, textCreateLock, amount, timestamp, setTx
         setTxStatusText(err.data.message);
       }
     }
+    errorHandle('createLock', err);
   }
 }
 
@@ -137,6 +138,7 @@ async function depositFor(veflex, address, amount, setTxStatus, setTxStatusText)
         setTxStatusText(err.data.message);
       }
     }
+    errorHandle('depositFor', err);
   }
 }
 
@@ -161,6 +163,7 @@ async function depositForInBatch(annualBonus, addressForDepositForInBatch, amoun
           setTxStatusText(err.data.message);
         }
       }
+      errorHandle('depositForInBatch', err);
     })
   } catch (err) {
     setTxStatus(true);
@@ -171,6 +174,7 @@ async function depositForInBatch(annualBonus, addressForDepositForInBatch, amoun
         setTxStatusText(err.data.message);
       }
     }
+    errorHandle('depositForInBatch', err);
   }
 }
 
@@ -239,6 +243,8 @@ export function VeFLEX({ veflex, flex, conn, annualBonus }) {
     async function fetchData() {
       try {
         if (veflex && flex) {
+
+          console.log(`annualBonus works for veFlex: ${await annualBonus.vestingToken()}`);
 
           const sender = await conn.getSigner().getAddress();
           setWalletAddress(sender);
@@ -350,7 +356,7 @@ export function VeFLEX({ veflex, flex, conn, annualBonus }) {
     if (value) {
       setAddress(value);
       const locked = await getLocked(veflex, value);
-      setLocked(locked);
+      setLocked([utils.formatEther(locked.amount), locked.end.toString()]);
     }
   }
 
@@ -441,6 +447,14 @@ export function VeFLEX({ veflex, flex, conn, annualBonus }) {
     if (_withdrawEvents) {
       setWithdrawEvents(_withdrawEvents);
       setWithdrawEventsLoading(false);
+    }
+  }
+
+  const onAmountForDeposit = async (value, setAmountFunc) => {
+    try {
+      setAmountFunc(utils.parseEther(value))
+    } catch (err) {
+      errorHandle('onAmountForDeposit', err);
     }
   }
 
@@ -556,22 +570,22 @@ export function VeFLEX({ veflex, flex, conn, annualBonus }) {
               <ul>
                 <li>
                   <input type="text" placeholder="address" size="45" onChange={e=>onAddress4DepositFor(e.target.value, setAddress1DepositFor, setLocked1)} />
-                  <input type="text" placeholder="amount (FLEX)" onChange={e=>setAmount1DepositFor(utils.parseEther(e.target.value))} />
+                  <input type="text" placeholder="amount (FLEX)" onChange={e=>onAmountForDeposit(e.target.value, setAmount1DepositFor)} />
                   {locked1 ? `staked ${locked1[0]} FLEX, end at: ${new Date(locked1[1] * 1000).toLocaleString()} Local Time` : ""}
                 </li>
                 <li>
                   <input type="text" placeholder="address" size="45" onChange={e=>onAddress4DepositFor(e.target.value, setAddress2DepositFor, setLocked2)} />
-                  <input type="text" placeholder="amount (FLEX)" onChange={e=>setAmount2DepositFor(utils.parseEther(e.target.value))} />
+                  <input type="text" placeholder="amount (FLEX)" onChange={e=>onAmountForDeposit(e.target.value, setAmount2DepositFor)} />
                   {locked2 ? `staked ${locked2[0]} FLEX, end at: ${new Date(locked2[1] * 1000).toLocaleString()} Local Time` : ""}
                 </li>
                 <li>
                   <input type="text" placeholder="address" size="45" onChange={e=>onAddress4DepositFor(e.target.value, setAddress3DepositFor, setLocked3)} />
-                  <input type="text" placeholder="amount (FLEX)" onChange={e=>setAmount3DepositFor(utils.parseEther(e.target.value))} />
+                  <input type="text" placeholder="amount (FLEX)" onChange={e=>onAmountForDeposit(e.target.value, setAmount3DepositFor)} />
                   {locked3 ? `staked ${locked3[0]} FLEX, end at: ${new Date(locked3[1] * 1000).toLocaleString()} Local Time` : ""}
                 </li>
                 <li>
                   <input type="text" placeholder="address" size="45" onChange={e=>onAddress4DepositFor(e.target.value, setAddress4DepositFor, setLocked4)} />
-                  <input type="text" placeholder="amount (FLEX)" onChange={e=>setAmount4DepositFor(utils.parseEther(e.target.value))} />
+                  <input type="text" placeholder="amount (FLEX)" onChange={e=>onAmountForDeposit(e.target.value, setAmount4DepositFor)} />
                   {locked4 ? `staked ${locked4[0]} FLEX, end at: ${new Date(locked4[1] * 1000).toLocaleString()} Local Time` : ""}
                 </li>
                 <button onClick={onDepositFor4}>Deposit For the 4 Addresses</button>

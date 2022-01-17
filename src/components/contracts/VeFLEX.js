@@ -593,7 +593,7 @@ export function VeFLEX({ veflex, flex, conn, annualBonus }) {
               <label>
                 Stake For Other Addresses in batch (.csv only):
               </label>
-              <input type="file" id="file" value="" accept='.csv' onChange={e => onUploadStakeBatchFile(e)} />
+              <input type="file" id="file" accept='.csv' onChange={e => onUploadStakeBatchFile(e)} />
               <button onClick={onDepositForInBatch}>Deposit For In Batch</button>
             </form>
           </li>

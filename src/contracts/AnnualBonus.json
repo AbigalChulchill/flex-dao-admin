@@ -6,6 +6,11 @@
           "internalType": "address",
           "name": "_vestingToken",
           "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "_tokenFLEX",
+          "type": "address"
         }
       ],
       "stateMutability": "nonpayable",
@@ -98,6 +103,19 @@
       "name": "setVestingToken",
       "outputs": [],
       "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "token",
+      "outputs": [
+        {
+          "internalType": "contract IERC20",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
       "type": "function"
     },
     {

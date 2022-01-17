@@ -238,6 +238,7 @@ export function VeFLEX({ veflex, flex, conn, annualBonus }) {
         if (veflex && flex) {
 
           console.log(`annualBonus works for veFlex: ${await annualBonus.vestingToken()}`);
+          console.log(`annualBonus works for flex token: ${await annualBonus.token()}`);
 
           const sender = await conn.getSigner().getAddress();
           setWalletAddress(sender);

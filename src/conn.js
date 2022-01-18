@@ -5,7 +5,7 @@ import * as dailyPayout from './contracts/DailyPayout.json'
 import * as dailyPayoutStg1 from './contracts/DailyPayoutStg1.json'
 import * as distributor from './contracts/Distributor.json'
 import * as DistributorStg1 from './contracts/DistributorStg1.json'
-import * as annualBonus from './contracts/AnnualBonus.json'
+import * as increaseStake from './contracts/IncreaseStake.json'
 import * as config from './config.json'
 
 export const getConn = () => {
@@ -38,8 +38,8 @@ export const getDailyDistributorPP = ( conn ) => {
   return new Contract(config.flex_dao_pp.daily_mini_distributor, distributor.abi, conn.getSigner())
 }
 
-export const getAnnualBonusPP = ( conn ) => {
-  return new Contract(config.flex_dao_pp.annual_bonus, annualBonus.abi, conn.getSigner())
+export const getIncreaseStakePP = ( conn ) => {
+  return new Contract(config.flex_dao_pp.increase_stake, increaseStake.abi, conn.getSigner())
 }
 
 export const getFlexStg1 = ( conn ) => {
@@ -76,8 +76,8 @@ export const getDailyDistributorStg2 = ( conn ) => {
   return new Contract(config.flex_dao_stg2.daily_mini_distributor, distributor.abi, conn.getSigner())
 }
 
-export const getAnnualBonusStg2 = ( conn ) => {
-  return new Contract(config.flex_dao_stg2.annual_bonus, annualBonus.abi, conn.getSigner())
+export const getIncreaseStakeStg2 = ( conn ) => {
+  return new Contract(config.flex_dao_stg2.increase_stake, increaseStake.abi, conn.getSigner())
 }
 
 
@@ -107,6 +107,6 @@ export const getDailyPayoutProd = ( conn ) => {
 export const getDailyDistributorProd = ( conn ) => {
   return new Contract(config.flex_dao_prod.daily_mini_distributor, distributor.abi, conn.getSigner())
 }
-export const getAnnualBonusProd = ( conn ) => {
-  return new Contract(config.flex_dao_prod.annual_bonus, annualBonus.abi, conn.getSigner())
+export const getIncreaseStakeProd = ( conn ) => {
+  return new Contract(config.flex_dao_prod.increase_stake, increaseStake.abi, conn.getSigner())
 }

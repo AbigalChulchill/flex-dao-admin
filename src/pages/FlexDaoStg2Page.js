@@ -1,4 +1,4 @@
-import { getDailyPayoutStg2, getVeFlexStg2, getDailyDistributorStg2, getFlexStg2, getAnnualBonusStg2 } from '../conn';
+import { getDailyPayoutStg2, getVeFlexStg2, getDailyDistributorStg2, getFlexStg2, getIncreaseStakeStg2 } from '../conn';
 import { ConnectionContext} from '../App'
 import { Payout } from '../components/contracts/Payout';
 import { VeFLEX } from '../components/contracts/VeFLEX';
@@ -14,7 +14,7 @@ export const FlexDaoStg2Page = () => {
   const [veFlex, setVeFlex] = useState();
   const [distributor, setDistributor] = useState();
   const [flex, setFlex] = useState();
-  const [annualBonus, setAnnualBonus] = useState();
+  const [increaseStake, setIncreaseStake] = useState();
 
   useEffect(() => {
     async function fetchData() {
@@ -34,8 +34,8 @@ export const FlexDaoStg2Page = () => {
         if (_distributor) setDistributor(_distributor);
         const _flex = getFlexStg2(conn);
         if (_flex) setFlex(_flex);
-        const _annualBonus = getAnnualBonusStg2(conn);
-        if (_annualBonus) setAnnualBonus(_annualBonus);
+        const _increaseStake = getIncreaseStakeStg2(conn);
+        if (_increaseStake) setIncreaseStake(_increaseStake);
       }
     }
     fetchData();
@@ -46,7 +46,7 @@ export const FlexDaoStg2Page = () => {
       <h1>FLEX DAO Stg Admin Page</h1>
       <div className="container">
         <FLEX flex={flex}></FLEX>
-        <VeFLEX veflex={veFlex} flex={flex} conn={conn} annualBonus={annualBonus}></VeFLEX>
+        <VeFLEX veflex={veFlex} flex={flex} conn={conn} increaseStake={increaseStake}></VeFLEX>
         <Payout payout={dailyPayout} conn={conn} flex={flex} startTs={config.flex_dao_stg2.payout_start_ts}></Payout>
         <Distributor distributor={distributor} flex={flex}></Distributor>
       </div>

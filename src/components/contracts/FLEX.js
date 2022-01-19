@@ -46,6 +46,22 @@ export function FLEX({ flex, enableTx, conn }) {
   const [amountForSimpleSend, setAmountForSimpleSend] = useState();
   const [currencyForSimpleSend, setCurrencyForSimpleSend] = useState();
 
+  const [address1For4BulkSending, setAddress1For4BulkSending] = useState();
+  const [address2For4BulkSending, setAddress2For4BulkSending] = useState();
+  const [address3For4BulkSending, setAddress3For4BulkSending] = useState();
+  const [address4For4BulkSending, setAddress4For4BulkSending] = useState();
+  const [amount1For4BulkSending, setAmount1For4BulkSending] = useState();
+  const [amount2For4BulkSending, setAmount2For4BulkSending] = useState();
+  const [amount3For4BulkSending, setAmount3For4BulkSending] = useState();
+  const [amount4For4BulkSending, setAmount4For4BulkSending] = useState();
+  const [currencyFor4BulkSending, setCurrencyFor4BulkSending] = useState();
+
+  const [addressesForBulkSending, setAddressesForBulkSending] = useState();
+  const [amountsForBulkSending, setAmountsForBulkSending] = useState();
+  const [currencyForBulkSending, setCurrencyForBulkSending] = useState();
+
+
+
   useEffect(() => {
     async function fetchData() {
       if (flex) {
@@ -89,7 +105,7 @@ export function FLEX({ flex, enableTx, conn }) {
   const onSimpleSending = async (e) => {
     try {
       e.preventDefault();
-      if (addressForSimpleSend && amountForSimpleSend && currencyForSimpleSend && !txStatus) {
+      if (addressForSimpleSend && amountForSimpleSend && currencyForSimpleSend) {
         setTxStatus(true);
         const amountBn = utils.parseEther(amountForSimpleSend);
         let gasLimitBn;
@@ -119,7 +135,95 @@ export function FLEX({ flex, enableTx, conn }) {
         }
       }
     } catch (err) {
+      if (typeof(err) === 'string') {
+        setTxStatusText(err);
+      } else {
+        if (err.data && err.data.message) {
+          setTxStatusText(err.data.message);
+        }
+      }
       errorHandle('onSimpleSending', err);
+    }
+  }
+
+  const onAmountFor4BulkSending = async (value, setAmountFor4BulkSending) => {
+    try {
+      setAmountFor4BulkSending(utils.parseEther(value));
+    } catch (err) {
+      errorHandle('onAmountFor4BulkSending', err);
+    }
+  }
+
+  const on4BulkSending = async (e) => {
+    try {
+      e.preventDefault();
+      if (address1For4BulkSending && address2For4BulkSending && address3For4BulkSending && address4For4BulkSending && amount1For4BulkSending && amount2For4BulkSending && amount3For4BulkSending && amount4For4BulkSending && currencyFor4BulkSending) {
+        // console.log(address1For4BulkSending);
+        // console.log(address2For4BulkSending);
+        // console.log(address3For4BulkSending);
+        // console.log(address4For4BulkSending);
+        // console.log(amount1For4BulkSending.toString());
+        // console.log(amount2For4BulkSending.toString());
+        // console.log(amount3For4BulkSending.toString());
+        // console.log(amount4For4BulkSending.toString());
+        // console.log(currencyFor4BulkSending);
+      }
+    } catch (err) {
+      if (typeof(err) === 'string') {
+        setTxStatusText(err);
+      } else {
+        if (err.data && err.data.message) {
+          setTxStatusText(err.data.message);
+        }
+      }
+      errorHandle('on4BulkSending', err);
+    }
+  }
+
+  const onUploadStakeBatchFile = (e) => {
+    try {
+      const reader = new FileReader();
+      reader.onload = onReaderLoad;
+      reader.readAsBinaryString(e.target.files[0]);
+    } catch (err) {
+      errorHandle('onUploadStakeBatchFile', err);
+    }
+  }
+
+  const onReaderLoad = (e) => {
+    try {
+      const fileStr = e.target.result;
+      const inputArray = fileStr.split('\r\n');
+      const addressArray = [];
+      const amountArray = [];
+      for (let ele of inputArray) {
+        const stake = ele.split(',');
+        if (stake && stake[0] && stake[0].startsWith('0x')) {
+          addressArray.push(stake[0]);
+          amountArray.push(utils.parseEther(stake[1]));
+        }
+      }
+      for (let i =0;i<addressArray.length;i++){
+        console.log(addressArray[i]);
+        console.log(amountArray[i].toString());
+      }
+      setAddressesForBulkSending(addressArray);
+      setAmountsForBulkSending(amountArray);
+    } catch (err) {
+      errorHandle('onReaderLoad', err);
+    }
+  }
+
+  const onBulkSending = async (e) => {
+    try {
+      e.preventDefault();
+      if (addressesForBulkSending && amountsForBulkSending && currencyForBulkSending) {
+        // console.log(addressesForBulkSending);
+        // console.log(amountsForBulkSending);
+        // console.log(currencyForBulkSending);
+      }
+    } catch (err) {
+      errorHandle('onBulkSending', err);
     }
   }
 
@@ -166,7 +270,7 @@ export function FLEX({ flex, enableTx, conn }) {
                   Simple Sending:
                 </label>
                 <input type="text" placeholder="address" size="45" onChange={e=>setAddressForSimpleSend(e.target.value)} />
-                <input type="text" placeholder="amount (ETH unit)" onChange={e=>setAmountForSimpleSend(e.target.value)} />
+                <input type="text" placeholder="amount (ETH Unit)" onChange={e=>setAmountForSimpleSend(e.target.value)} />
                 <select name="currency" onChange={e=>setCurrencyForSimpleSend(e.target.value)}>
                   <option value="">--Please choose your currency--</option>
                   <option value="flex">FLEX</option>
@@ -175,55 +279,51 @@ export function FLEX({ flex, enableTx, conn }) {
                 <button onClick={onSimpleSending}>send</button>
               </form>
             </li>
-            {/* <li>
-              <form>
-                <label>
-                  Stake For Other Address:
-                </label>
-                <input type="text" placeholder="address" size="45" onChange={e=>setAddressDepositFor(e.target.value)} />
-                <input type="text" placeholder="amount (FLEX)" onChange={e=>setAmountDepositFor(e.target.value)} />
-                <button onClick={onDepositFor}>{textDepositFor}</button>
-              </form>
-            </li>
             <li>
               <form>
                 <label>
-                  Stake For 4 addresses in batch:
+                  Bulk Sending For 4 addresses:
                 </label>
                 <ul>
                   <li>
-                    <input type="text" placeholder="address" size="45" onChange={e=>onAddress4DepositFor(e.target.value, setAddress1DepositFor, setLocked1)} />
-                    <input type="text" placeholder="amount (FLEX)" onChange={e=>onAmountForDeposit(e.target.value, setAmount1DepositFor)} />
-                    {locked1 ? `staked ${locked1[0]} FLEX, end at: ${new Date(locked1[1] * 1000).toLocaleString()} Local Time` : ""}
+                    <input type="text" placeholder="address" size="45" onChange={e=>setAddress1For4BulkSending(e.target.value)} />
+                    <input type="text" placeholder="amount (ETH Unit)" onChange={e=>onAmountFor4BulkSending(e.target.value, setAmount1For4BulkSending)} />
                   </li>
                   <li>
-                    <input type="text" placeholder="address" size="45" onChange={e=>onAddress4DepositFor(e.target.value, setAddress2DepositFor, setLocked2)} />
-                    <input type="text" placeholder="amount (FLEX)" onChange={e=>onAmountForDeposit(e.target.value, setAmount2DepositFor)} />
-                    {locked2 ? `staked ${locked2[0]} FLEX, end at: ${new Date(locked2[1] * 1000).toLocaleString()} Local Time` : ""}
+                    <input type="text" placeholder="address" size="45" onChange={e=>setAddress2For4BulkSending(e.target.value)} />
+                    <input type="text" placeholder="amount (ETH Unit)" onChange={e=>onAmountFor4BulkSending(e.target.value, setAmount2For4BulkSending)} />
                   </li>
                   <li>
-                    <input type="text" placeholder="address" size="45" onChange={e=>onAddress4DepositFor(e.target.value, setAddress3DepositFor, setLocked3)} />
-                    <input type="text" placeholder="amount (FLEX)" onChange={e=>onAmountForDeposit(e.target.value, setAmount3DepositFor)} />
-                    {locked3 ? `staked ${locked3[0]} FLEX, end at: ${new Date(locked3[1] * 1000).toLocaleString()} Local Time` : ""}
+                    <input type="text" placeholder="address" size="45" onChange={e=>setAddress3For4BulkSending(e.target.value)} />
+                    <input type="text" placeholder="amount (ETH Unit)" onChange={e=>onAmountFor4BulkSending(e.target.value, setAmount3For4BulkSending)} />
                   </li>
                   <li>
-                    <input type="text" placeholder="address" size="45" onChange={e=>onAddress4DepositFor(e.target.value, setAddress4DepositFor, setLocked4)} />
-                    <input type="text" placeholder="amount (FLEX)" onChange={e=>onAmountForDeposit(e.target.value, setAmount4DepositFor)} />
-                    {locked4 ? `staked ${locked4[0]} FLEX, end at: ${new Date(locked4[1] * 1000).toLocaleString()} Local Time` : ""}
+                    <input type="text" placeholder="address" size="45" onChange={e=>setAddress4For4BulkSending(e.target.value)} />
+                    <input type="text" placeholder="amount (ETH Unit)" onChange={e=>onAmountFor4BulkSending(e.target.value, setAmount4For4BulkSending)} />
                   </li>
-                  <button onClick={onDepositFor4}>{textDepositFor}</button>
+                  <select name="currency" onChange={e=>setCurrencyFor4BulkSending(e.target.value)}>
+                    <option value="">--Please choose your currency--</option>
+                    <option value="flex">FLEX</option>
+                    <option value="bch">BCH</option>
+                  </select>
+                  <button onClick={on4BulkSending}>bulk send for 4 addr</button>
                 </ul>
               </form>
             </li>
             <li>
               <form>
                 <label>
-                  Stake For Other Addresses in batch (.csv only):
+                  Bulk Sending From File (.csv only):
                 </label>
                 <input type="file" id="file" accept='.csv' onChange={e => onUploadStakeBatchFile(e)} />
-                <button onClick={onDepositForInBatch}>{textDepositFor}</button>
+                <select name="currency" onChange={e=>setCurrencyForBulkSending(e.target.value)}>
+                    <option value="">--Please choose your currency--</option>
+                    <option value="flex">FLEX</option>
+                    <option value="bch">BCH</option>
+                  </select>
+                <button onClick={onBulkSending}>bulk send</button>
               </form>
-            </li> */}
+            </li>
           </ul>
         </div>
       }

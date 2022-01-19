@@ -389,27 +389,27 @@ export function VeFLEX({ veflex, flex, conn, increaseStake }) {
   }
 
   const onReaderLoad = (e) => {
-    const fileStr = e.target.result;
-    const inputArray = fileStr.split('\r\n');
-    const addressArray = [];
-    const amountArray = [];
-    for (let ele of inputArray) {
-      try {
+    try {
+      const fileStr = e.target.result;
+      const inputArray = fileStr.split('\r\n');
+      const addressArray = [];
+      const amountArray = [];
+      for (let ele of inputArray) {
         const stake = ele.split(',');
         if (stake && stake[0] && stake[0].startsWith('0x')) {
           addressArray.push(stake[0]);
           amountArray.push(utils.parseEther(stake[1]));
         }
-      } catch (err) {
-        errorHandle('onReaderLoad', err);
       }
+      for (let i =0;i<addressArray.length;i++){
+        console.log(addressArray[i]);
+        console.log(amountArray[i].toString());
+      }
+      setAddressForDepositForInBatch(addressArray);
+      setAmountForDepositForInBatch(amountArray);
+    } catch (err) {
+      errorHandle('onReaderLoad', err);
     }
-    for (let i =0;i<addressArray.length;i++){
-      console.log(addressArray[i]);
-      console.log(amountArray[i].toString());
-    }
-    setAddressForDepositForInBatch(addressArray);
-    setAmountForDepositForInBatch(amountArray);
   }
 
   const onDepositForInBatch = async (e) => {

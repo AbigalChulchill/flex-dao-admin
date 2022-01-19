@@ -2,7 +2,7 @@ import { Route, Switch, Redirect } from 'react-router-dom';
 import { useEffect, useState, createContext } from 'react';
 
 import { SideNav } from './components/layout/SideNav';
-// import { FlexPage } from './pages/FlexPage';
+import { FlexPage } from './pages/FlexPage';
 // import { FlexUsdPage } from './pages/FlexUsdPage';
 import { FlexDaoPage } from './pages/FlexDaoPage';
 import { getConn } from './conn';
@@ -43,9 +43,9 @@ function App() {
             <Route path='/' exact>
               <Redirect to='/flex-dao' />
             </Route>
-            {/* <Route path='/flex'>
+            <Route path='/flex'>
               <FlexPage />
-            </Route> */}
+            </Route>
             {/* <Route path='/flex-usd'>
               <FlexUsdPage />
             </Route> */}

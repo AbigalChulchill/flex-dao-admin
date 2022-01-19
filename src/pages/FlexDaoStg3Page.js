@@ -36,6 +36,13 @@ export const FlexDaoStg3Page = () => {
       }
     }
     fetchData();
+    return () => {
+      setDailyPayout();
+      setVeFlex();
+      setDistributor();
+      setFlex();
+      setIncreaseStake();
+    }
   }, [conn]);
 
   return (

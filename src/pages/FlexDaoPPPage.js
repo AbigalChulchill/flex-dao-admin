@@ -38,6 +38,13 @@ export const FlexDaoPPPage = () => {
       }
     }
     fetchData();
+    return () => {
+      setDailyPayout();
+      setVeFlex();
+      setDistributor();
+      setFlex();
+      setIncreaseStake();
+    }
   }, [conn]);
 
   return (

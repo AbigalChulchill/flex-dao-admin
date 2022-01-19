@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { utils } from 'ethers';
+import { BigNumber, utils } from 'ethers';
 import { errorHandle } from "../../utils";
 
 async function getAdmin(flex) {
@@ -59,8 +59,26 @@ async function bulkSending(transferToken, flex, addressArray, amountArray, curre
           setApproved(true);
         })
       }
-    } else if (currency === 'bch') {
-
+    } else if (currency === 'bch') {      
+      let totalAmount = BigNumber.from(0);
+      for (let amount of amountArray) {
+        totalAmount = totalAmount.add(amount);
+      }
+      console.log(totalAmount.toString());
+      gasLimitBn = await transferToken.estimateGas.sendNativeToken(addressArray, amountArray, {
+        value: totalAmount
+      }); 
+      const tx = await transferToken.sendNativeToken(addressArray, amountArray, {
+        gasLimit: gasLimitBn,
+        gasPrice: utils.parseUnits('1.05', 'gwei'),
+        value: totalAmount
+      });
+      setTxStatus(true);
+      setTxStatusText(`pending - ${tx.hash}`);
+      tx.wait(2).then((receipt) => {
+        setTxStatus(false);
+        setTxStatusText(`confirmed - ${receipt.transactionHash} - ${receipt.confirmations} blocks`);
+      })
     }
   } catch (err) {
     if (typeof(err) === 'string') {

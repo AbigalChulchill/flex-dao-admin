@@ -5,6 +5,7 @@
     "daily_payout": "0xd16BE22D6D5755C1be5a9DB2292990E970d23dd1",
     "daily_mini_distributor": "0xA6899eBdF3bed78a7859C9ec9D9F5a8Ff10cB270",
     "increase_stake": "0x0aCD7b498DFd6b25Be7F2Fcf46E6A8f2cA9fF37C",
+    "transfer_token": "0x21b9287A085D51c89C97D3EFB63675fB8A5e42cA",
     "qurterly_payout": "",
     "qurterly_mini_payout": "",
     "payout_start_ts": ""

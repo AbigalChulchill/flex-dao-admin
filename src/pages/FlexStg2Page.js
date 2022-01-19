@@ -32,7 +32,7 @@ export const FlexStg2Page = () => {
     <>
       <h1>FLEX Stg Admin Page</h1>
       <div className="container">
-        <FLEX flex={flex}></FLEX>
+        <FLEX flex={flex} enableTx={true} conn={conn}></FLEX>
       </div>
     </>
   )

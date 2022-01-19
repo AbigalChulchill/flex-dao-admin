@@ -26,7 +26,55 @@ async function getBalanceOf(flex, value) {
   }
 }
 
-export function FLEX({ flex, enableTx, conn }) {
+async function bulkSending(transferToken, flex, addressArray, amountArray, currency, setTxStatus, setTxStatusText, approved, setApproved) {
+  try {
+    let gasLimitBn;
+    if (currency === 'flex') {
+      if (approved) {
+        gasLimitBn = await transferToken.estimateGas.sendToken(addressArray, amountArray, flex.address); 
+        const tx = await transferToken.sendToken(addressArray, amountArray, flex.address, {
+          gasLimit: gasLimitBn,
+          gasPrice: utils.parseUnits('1.05', 'gwei')
+        });
+        setTxStatus(true);
+        setTxStatusText(`pending - ${tx.hash}`);
+        tx.wait(2).then((receipt) => {
+          setTxStatus(false);
+          setTxStatusText(`confirmed - ${receipt.transactionHash} - ${receipt.confirmations} blocks`);
+        })
+      } else {
+        // approve 
+        const approveAmountBn = utils.parseEther('1000000000.0')
+        console.log(`approve ${approveAmountBn.toString()} FLEX-WEI to transferToken contract...`)
+        gasLimitBn = await flex.estimateGas.approve(transferToken.address, approveAmountBn)
+        const tx = await flex.approve(transferToken.address, approveAmountBn, {
+          gasLimit: gasLimitBn,
+          gasPrice: utils.parseUnits('1.05', 'gwei')
+        })
+        setTxStatus(true);
+        setTxStatusText(`pending - ${tx.hash}`);
+        tx.wait(2).then((receipt) => {
+          setTxStatus(false);
+          setTxStatusText(`confirmed - ${receipt.transactionHash} - ${receipt.confirmations} blocks`);
+          setApproved(true);
+        })
+      }
+    } else if (currency === 'bch') {
+
+    }
+  } catch (err) {
+    if (typeof(err) === 'string') {
+      setTxStatusText(err);
+    } else {
+      if (err.data && err.data.message) {
+        setTxStatusText(err.data.message);
+      }
+    }
+    errorHandle('bulkSending', err);
+  }
+}
+
+export function FLEX({ flex, enableTx, conn, transferToken }) {
 
   const [querying, setQuerying] = useState();
 
@@ -60,7 +108,7 @@ export function FLEX({ flex, enableTx, conn }) {
   const [amountsForBulkSending, setAmountsForBulkSending] = useState();
   const [currencyForBulkSending, setCurrencyForBulkSending] = useState();
 
-
+  const [approved, setApproved] = useState();
 
   useEffect(() => {
     async function fetchData() {
@@ -69,6 +117,13 @@ export function FLEX({ flex, enableTx, conn }) {
         if (enableTx) {
           const sender = await conn.getSigner().getAddress();
           setWalletAddress(sender);
+
+          const allowanceBn =  await flex.allowance(sender, transferToken.address);
+          if (allowanceBn.gt(0)) {
+            setApproved(true);
+          } else {
+            setApproved(false);
+          }
         }
 
         setName('FLEX');
@@ -88,7 +143,7 @@ export function FLEX({ flex, enableTx, conn }) {
       setAdmin();
       setTotalSupply();
     }
-  }, [flex, enableTx, conn]);
+  }, [flex, enableTx, conn, transferToken]);
 
   const onBalanceOf = async (e) => {
     e.preventDefault();
@@ -155,28 +210,11 @@ export function FLEX({ flex, enableTx, conn }) {
   }
 
   const on4BulkSending = async (e) => {
-    try {
-      e.preventDefault();
-      if (address1For4BulkSending && address2For4BulkSending && address3For4BulkSending && address4For4BulkSending && amount1For4BulkSending && amount2For4BulkSending && amount3For4BulkSending && amount4For4BulkSending && currencyFor4BulkSending) {
-        // console.log(address1For4BulkSending);
-        // console.log(address2For4BulkSending);
-        // console.log(address3For4BulkSending);
-        // console.log(address4For4BulkSending);
-        // console.log(amount1For4BulkSending.toString());
-        // console.log(amount2For4BulkSending.toString());
-        // console.log(amount3For4BulkSending.toString());
-        // console.log(amount4For4BulkSending.toString());
-        // console.log(currencyFor4BulkSending);
-      }
-    } catch (err) {
-      if (typeof(err) === 'string') {
-        setTxStatusText(err);
-      } else {
-        if (err.data && err.data.message) {
-          setTxStatusText(err.data.message);
-        }
-      }
-      errorHandle('on4BulkSending', err);
+    e.preventDefault();
+    if (address1For4BulkSending && address2For4BulkSending && address3For4BulkSending && address4For4BulkSending && amount1For4BulkSending && amount2For4BulkSending && amount3For4BulkSending && amount4For4BulkSending && currencyFor4BulkSending) {
+      const addressArray = [address1For4BulkSending, address2For4BulkSending, address3For4BulkSending, address4For4BulkSending];
+      const amountArray = [amount1For4BulkSending, amount2For4BulkSending, amount3For4BulkSending, amount4For4BulkSending];
+      await bulkSending(transferToken, flex, addressArray, amountArray, currencyFor4BulkSending, setTxStatus, setTxStatusText, approved, setApproved)
     }
   }
 
@@ -215,15 +253,9 @@ export function FLEX({ flex, enableTx, conn }) {
   }
 
   const onBulkSending = async (e) => {
-    try {
-      e.preventDefault();
-      if (addressesForBulkSending && amountsForBulkSending && currencyForBulkSending) {
-        // console.log(addressesForBulkSending);
-        // console.log(amountsForBulkSending);
-        // console.log(currencyForBulkSending);
-      }
-    } catch (err) {
-      errorHandle('onBulkSending', err);
+    e.preventDefault();
+    if (addressesForBulkSending && amountsForBulkSending && currencyForBulkSending) {
+      await bulkSending(transferToken, flex, addressesForBulkSending, amountsForBulkSending, currencyForBulkSending, setTxStatus, setTxStatusText, approved, setApproved)
     }
   }
 
@@ -276,7 +308,7 @@ export function FLEX({ flex, enableTx, conn }) {
                   <option value="flex">FLEX</option>
                   <option value="bch">BCH</option>
                 </select>
-                <button onClick={onSimpleSending}>send</button>
+                <button onClick={onSimpleSending}>Simple Send</button>
               </form>
             </li>
             <li>
@@ -306,7 +338,7 @@ export function FLEX({ flex, enableTx, conn }) {
                     <option value="flex">FLEX</option>
                     <option value="bch">BCH</option>
                   </select>
-                  <button onClick={on4BulkSending}>bulk send for 4 addr</button>
+                  <button onClick={on4BulkSending}>{!approved && currencyFor4BulkSending === 'flex' ? 'Approve':'Bulk Send for 4 Addresses'}</button>
                 </ul>
               </form>
             </li>
@@ -321,7 +353,7 @@ export function FLEX({ flex, enableTx, conn }) {
                     <option value="flex">FLEX</option>
                     <option value="bch">BCH</option>
                   </select>
-                <button onClick={onBulkSending}>bulk send</button>
+                <button onClick={onBulkSending}>{!approved && currencyForBulkSending === 'flex' ? 'Approve':'Bulk Send'}</button>
               </form>
             </li>
           </ul>

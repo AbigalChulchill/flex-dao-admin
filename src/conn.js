@@ -6,6 +6,7 @@ import * as dailyPayoutStg1 from './contracts/DailyPayoutStg1.json'
 import * as distributor from './contracts/Distributor.json'
 import * as DistributorStg1 from './contracts/DistributorStg1.json'
 import * as increaseStake from './contracts/IncreaseStake.json'
+import * as transferToken from './contracts/TransferToken.json'
 import * as config from './config.json'
 
 export const getConn = () => {
@@ -41,6 +42,11 @@ export const getDailyDistributorPP = ( conn ) => {
 export const getIncreaseStakePP = ( conn ) => {
   return new Contract(config.flex_dao_pp.increase_stake, increaseStake.abi, conn.getSigner())
 }
+
+export const getTransferTokenPP = ( conn ) => {
+  return new Contract(config.flex_dao_pp.transfer_token, transferToken.abi, conn.getSigner())
+}
+
 
 export const getFlexStg1 = ( conn ) => {
   return new Contract(config.flex_dao_stg1.flex, flex.abi, conn.getSigner());

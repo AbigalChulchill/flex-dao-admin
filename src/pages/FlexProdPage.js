@@ -32,7 +32,7 @@ export const FlexProdPage = () => {
     <>
       <h1>FLEX Prod Admin Page</h1>
       <div className="container">
-        <FLEX flex={flex}></FLEX>
+        <FLEX flex={flex} enableTx={true} conn={conn}></FLEX>
       </div>
     </>
   )

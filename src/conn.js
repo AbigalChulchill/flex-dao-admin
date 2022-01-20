@@ -23,26 +23,20 @@ export const getConn = () => {
 
 
 export const getFlexPP = ( conn ) => {
-
   return new Contract(config.flex_dao_pp.flex, flex.abi, conn.getSigner());
 }
-
 export const getVeFlexPP = ( conn ) => {
   return new Contract(config.flex_dao_pp.veFLEX, veFlex.abi, conn.getSigner());
 }
-
 export const getDailyPayoutPP = ( conn ) => {
   return new Contract(config.flex_dao_pp.daily_payout, dailyPayout.abi, conn.getSigner());
 }
-
 export const getDailyDistributorPP = ( conn ) => {
   return new Contract(config.flex_dao_pp.daily_mini_distributor, distributor.abi, conn.getSigner())
 }
-
 export const getIncreaseStakePP = ( conn ) => {
   return new Contract(config.flex_dao_pp.increase_stake, increaseStake.abi, conn.getSigner())
 }
-
 export const getTransferTokenPP = ( conn ) => {
   return new Contract(config.flex_dao_pp.transfer_token, transferToken.abi, conn.getSigner())
 }
@@ -51,15 +45,12 @@ export const getTransferTokenPP = ( conn ) => {
 export const getFlexStg1 = ( conn ) => {
   return new Contract(config.flex_dao_stg1.flex, flex.abi, conn.getSigner());
 }
-
 export const getVeFlexStg1 = ( conn ) => {
   return new Contract(config.flex_dao_stg1.veFLEX, veFlex.abi, conn.getSigner());
 }
-
 export const getDailyPayoutStg1 = ( conn ) => {
   return new Contract(config.flex_dao_stg1.daily_payout, dailyPayoutStg1.abi, conn.getSigner());
 }
-
 export const getDailyDistributorStg1 = ( conn ) => {
   return new Contract(config.flex_dao_stg1.daily_mini_distributor, DistributorStg1.abi, conn.getSigner())
 }
@@ -69,21 +60,20 @@ export const getDailyDistributorStg1 = ( conn ) => {
 export const getFlexStg2 = ( conn ) => {
   return new Contract(config.flex_dao_stg2.flex, flex.abi, conn.getSigner());
 }
-
 export const getVeFlexStg2 = ( conn ) => {
   return new Contract(config.flex_dao_stg2.veFLEX, veFlex.abi, conn.getSigner());
 }
-
 export const getDailyPayoutStg2 = ( conn ) => {
   return new Contract(config.flex_dao_stg2.daily_payout, dailyPayout.abi, conn.getSigner());
 }
-
 export const getDailyDistributorStg2 = ( conn ) => {
   return new Contract(config.flex_dao_stg2.daily_mini_distributor, distributor.abi, conn.getSigner())
 }
-
 export const getIncreaseStakeStg2 = ( conn ) => {
   return new Contract(config.flex_dao_stg2.increase_stake, increaseStake.abi, conn.getSigner())
+}
+export const getTransferTokenStg2 = ( conn ) => {
+  return new Contract(config.flex_dao_stg2.transfer_token, transferToken.abi, conn.getSigner())
 }
 
 
@@ -116,3 +106,7 @@ export const getDailyDistributorProd = ( conn ) => {
 export const getIncreaseStakeProd = ( conn ) => {
   return new Contract(config.flex_dao_prod.increase_stake, increaseStake.abi, conn.getSigner())
 }
+export const getTransferTokenProd = ( conn ) => {
+  return new Contract(config.flex_dao_prod.transfer_token, transferToken.abi, conn.getSigner())
+}
+

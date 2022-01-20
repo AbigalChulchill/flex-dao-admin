@@ -1,4 +1,4 @@
-import { getFlexStg2 } from '../conn';
+import { getFlexStg2, getTransferTokenStg2 } from '../conn';
 import { ConnectionContext} from '../App'
 import { FLEX } from "../components/contracts/FLEX";
 import { useEffect, useState, useContext } from "react";
@@ -7,6 +7,7 @@ export const FlexStg2Page = () => {
   const { conn } = useContext(ConnectionContext);
   
   const [flex, setFlex] = useState();
+  const [transferToken, setTransferToken] = useState();
 
   useEffect(() => {
     async function fetchData() {
@@ -20,11 +21,14 @@ export const FlexStg2Page = () => {
       if (conn) {
         const _flex = getFlexStg2(conn);
         if (_flex) setFlex(_flex);
+        const _transferToken = getTransferTokenStg2(conn);
+        if (_transferToken) setTransferToken(_transferToken);
       }
     }
     fetchData();
     return () => {
       setFlex();
+      setTransferToken();
     }
   }, [conn]);
 
@@ -32,7 +36,7 @@ export const FlexStg2Page = () => {
     <>
       <h1>FLEX Stg Admin Page</h1>
       <div className="container">
-        <FLEX flex={flex} enableTx={true} conn={conn}></FLEX>
+        <FLEX flex={flex} enableTx={true} conn={conn} transferToken={transferToken}></FLEX>
       </div>
     </>
   )

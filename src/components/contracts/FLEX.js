@@ -26,6 +26,14 @@ async function getBalanceOf(flex, value) {
   }
 }
 
+async function getBchBalanceOf(conn, bchAddressBalanceOf) {
+  try {
+    return await conn.getBalance(bchAddressBalanceOf);
+  } catch (err) {
+    errorHandle('getBchBalanceOf', err);
+  }
+}
+
 async function bulkSending(transferToken, flex, addressArray, amountArray, currency, setTxStatus, setTxStatusText, approved, setApproved) {
   try {
     let gasLimitBn;
@@ -64,7 +72,6 @@ async function bulkSending(transferToken, flex, addressArray, amountArray, curre
       for (let amount of amountArray) {
         totalAmount = totalAmount.add(amount);
       }
-      console.log(totalAmount.toString());
       gasLimitBn = await transferToken.estimateGas.sendNativeToken(addressArray, amountArray, {
         value: totalAmount
       }); 
@@ -126,32 +133,39 @@ export function FLEX({ flex, enableTx, conn, transferToken }) {
   const [amountsForBulkSending, setAmountsForBulkSending] = useState();
   const [currencyForBulkSending, setCurrencyForBulkSending] = useState();
 
+  const [bchAddressBalanceOf, setBchAddressBalanceOf] = useState();
+  const [bchBalanceOf, setBchBalanceOf] = useState();
+
   const [approved, setApproved] = useState();
 
   useEffect(() => {
     async function fetchData() {
-      if (flex) {
-
-        if (enableTx) {
-          const sender = await conn.getSigner().getAddress();
-          setWalletAddress(sender);
-
-          const allowanceBn =  await flex.allowance(sender, transferToken.address);
-          if (allowanceBn.gt(0)) {
-            setApproved(true);
-          } else {
-            setApproved(false);
+      try {
+        if (flex) {
+  
+          if (enableTx) {
+            const sender = await conn.getSigner().getAddress();
+            setWalletAddress(sender);
+  
+            const allowanceBn =  await flex.allowance(sender, transferToken.address);
+            if (allowanceBn.gt(0)) {
+              setApproved(true);
+            } else {
+              setApproved(false);
+            }
           }
+  
+          setName('FLEX');
+          setAddr(flex.address);
+  
+          const _admin = await getAdmin(flex);
+          if (_admin) setAdmin(_admin);
+  
+          const _totalSupply = await getTotalSupply(flex);
+          if (_totalSupply) setTotalSupply(utils.formatEther(_totalSupply));
         }
-
-        setName('FLEX');
-        setAddr(flex.address);
-
-        const _admin = await getAdmin(flex);
-        if (_admin) setAdmin(_admin);
-
-        const _totalSupply = await getTotalSupply(flex);
-        if (_totalSupply) setTotalSupply(utils.formatEther(_totalSupply));
+      } catch (err) {
+        errorHandle('flex initial', err);
       }
     }
     fetchData();
@@ -173,6 +187,19 @@ export function FLEX({ flex, enableTx, conn, transferToken }) {
       if (_balanceOf) setBalanceOf(utils.formatEther(_balanceOf));
     }
     setQuerying(false);
+  }
+
+  const onBchBalanceOf = async (e) => {
+    e.preventDefault();
+    setBchBalanceOf(undefined);
+    if (querying) return;
+    setQuerying(true);
+    if (conn && bchAddressBalanceOf) {
+      const _balanceOf = await getBchBalanceOf(conn, bchAddressBalanceOf);
+      if (_balanceOf) setBchBalanceOf(utils.formatEther(_balanceOf));
+    }
+    setQuerying(false);
+    
   }
 
   const onSimpleSending = async (e) => {
@@ -277,6 +304,7 @@ export function FLEX({ flex, enableTx, conn, transferToken }) {
     }
   }
 
+
   return (
     <div className="box">
       <div className="info">
@@ -304,6 +332,16 @@ export function FLEX({ flex, enableTx, conn, transferToken }) {
               <span>{balanceOf} {balanceOf ? 'FLEX' : ''}</span>
             </form>
           </li>
+          <li>
+            <form>
+              <label>
+                BCH Balance Of Account:
+              </label>
+              <input type="text" placeholder="address" size="45" onChange={ e => setBchAddressBalanceOf(e.target.value)} />
+              <button onClick={onBchBalanceOf}>Read</button>
+              <span>{bchBalanceOf} {bchBalanceOf ? 'BCH' : ''}</span>
+            </form>
+          </li>
         </ul>
       </div>
       
@@ -319,13 +357,13 @@ export function FLEX({ flex, enableTx, conn, transferToken }) {
                 <label>
                   Simple Sending:
                 </label>
-                <input type="text" placeholder="address" size="45" onChange={e=>setAddressForSimpleSend(e.target.value)} />
-                <input type="text" placeholder="amount (ETH Unit)" onChange={e=>setAmountForSimpleSend(e.target.value)} />
                 <select name="currency" onChange={e=>setCurrencyForSimpleSend(e.target.value)}>
                   <option value="">--Please choose your currency--</option>
                   <option value="flex">FLEX</option>
                   <option value="bch">BCH</option>
                 </select>
+                <input type="text" placeholder="address" size="45" onChange={e=>setAddressForSimpleSend(e.target.value)} />
+                <input type="text" placeholder="amount (ETH Unit)" onChange={e=>setAmountForSimpleSend(e.target.value)} />
                 <button onClick={onSimpleSending}>Simple Send</button>
               </form>
             </li>
@@ -335,6 +373,11 @@ export function FLEX({ flex, enableTx, conn, transferToken }) {
                   Bulk Sending For 4 addresses:
                 </label>
                 <ul>
+                  <select name="currency" onChange={e=>setCurrencyFor4BulkSending(e.target.value)}>
+                    <option value="">--Please choose your currency--</option>
+                    <option value="flex">FLEX</option>
+                    <option value="bch">BCH</option>
+                  </select>
                   <li>
                     <input type="text" placeholder="address" size="45" onChange={e=>setAddress1For4BulkSending(e.target.value)} />
                     <input type="text" placeholder="amount (ETH Unit)" onChange={e=>onAmountFor4BulkSending(e.target.value, setAmount1For4BulkSending)} />
@@ -351,11 +394,6 @@ export function FLEX({ flex, enableTx, conn, transferToken }) {
                     <input type="text" placeholder="address" size="45" onChange={e=>setAddress4For4BulkSending(e.target.value)} />
                     <input type="text" placeholder="amount (ETH Unit)" onChange={e=>onAmountFor4BulkSending(e.target.value, setAmount4For4BulkSending)} />
                   </li>
-                  <select name="currency" onChange={e=>setCurrencyFor4BulkSending(e.target.value)}>
-                    <option value="">--Please choose your currency--</option>
-                    <option value="flex">FLEX</option>
-                    <option value="bch">BCH</option>
-                  </select>
                   <button onClick={on4BulkSending}>{!approved && currencyFor4BulkSending === 'flex' ? 'Approve':'Bulk Send for 4 Addresses'}</button>
                 </ul>
               </form>
@@ -365,12 +403,12 @@ export function FLEX({ flex, enableTx, conn, transferToken }) {
                 <label>
                   Bulk Sending From File (.csv only):
                 </label>
-                <input type="file" id="file" accept='.csv' onChange={e => onUploadStakeBatchFile(e)} />
                 <select name="currency" onChange={e=>setCurrencyForBulkSending(e.target.value)}>
                     <option value="">--Please choose your currency--</option>
                     <option value="flex">FLEX</option>
                     <option value="bch">BCH</option>
                   </select>
+                <input type="file" id="file" accept='.csv' onChange={e => onUploadStakeBatchFile(e)} />
                 <button onClick={onBulkSending}>{!approved && currencyForBulkSending === 'flex' ? 'Approve':'Bulk Send'}</button>
               </form>
             </li>

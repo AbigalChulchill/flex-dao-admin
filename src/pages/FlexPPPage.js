@@ -28,6 +28,7 @@ export const FlexPPPage = () => {
     fetchData();
     return () => {
       setFlex();
+      setTransferToken();
     }
   }, [conn]);
 

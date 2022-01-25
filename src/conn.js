@@ -52,6 +52,9 @@ export const getMultiCallFlexPP = () => {
 export const getMultiCallVeFlexPP = () => {
   return new MultiCallContract(config.flex_dao_pp.veFLEX, veFlex.abi);
 }
+export const getMultiCallDailyPayoutPP = () => {
+  return new MultiCallContract(config.flex_dao_pp.daily_payout, dailyPayout.abi);
+}
 
 
 export const getFlexStg1 = ( conn ) => {

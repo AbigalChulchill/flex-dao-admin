@@ -2,63 +2,12 @@ import { useEffect, useState } from "react";
 import { utils } from "ethers";
 import {errorHandle, tsToLocalStr } from "../../utils";
 
-async function getAdmin(payout) {
-  try {
-    return await payout.owner();
-  } catch(err) {
-    errorHandle('getAdmin', err);
-  }
-}
-
-async function getToken(payout) {
-  try {
-    return await payout.token();
-  } catch(err) {
-    errorHandle('getToken', err);
-  }
-}
-
-async function getVested(payout) {
-  try {
-    return await payout.vested();
-  } catch(err) {
-    errorHandle('getVested', err);
-  }
-}
-
-async function getEpochLen(payout) {
-  try {
-    const _epochLen = await payout.EPOCH_BLOCKS();
-    return _epochLen.toString();
-  } catch(err) {
-    errorHandle('getEpochLen', err);
-  }
-}
-
-async function getStartBlockHeight(payout) {
-  try {
-    const _startBlockHeight = await payout.startBlockHeight();
-    return _startBlockHeight.toString();
-  } catch(err) {
-    errorHandle('getStartBlockHeight', err);
-  }
-}
-
 async function getCurrentEpoch(payout) {
   try {
     const _currentEpoch = await payout.getCurrentEpoch();
     return _currentEpoch.toString();
   } catch(err) {
     errorHandle('getCurrentEpoch', err);
-  }
-}
-
-async function getCurrentActiveEpoch(payout) {
-  try {
-    const _currentActiveEpoch = await payout.currentEpoch();
-    return _currentActiveEpoch.sub(1).toString();
-  } catch(err) {
-    errorHandle('getCurrentActiveEpoch', err);
   }
 }
 
@@ -131,7 +80,7 @@ function getCurrentExpectEpoch(startTs) {
   return Math.floor((now - startTs) / oneDay);
 }
 
-export function Payout({payout, conn, flex, startTs}) {
+export function Payout({payout, conn, flex, startTs, initialData}) {
 
   const [querying, setQuerying] = useState();
 
@@ -172,29 +121,23 @@ export function Payout({payout, conn, flex, startTs}) {
   
   useEffect( () => {
     async function fetchData() {
-      if (payout) {
+      if (payout && initialData) {
         setName('Daily Payout');
         setAddr(payout.address);
 
-        const _admin = await getAdmin(payout);
-        if (_admin) setAdmin(_admin);
-        
-        const _token = await getToken(payout);
-        if (_token) setToken(_token);
-  
-        const _veFlex = await getVested(payout);
-        if (_veFlex) setVeFlex(_veFlex);
-  
-        const _epochLen = await getEpochLen(payout);
-        if (_epochLen) setEpochLen(_epochLen);
+        const {dailyPayoutAdmin, dailyPayoutToken, dailyPayoutVested, dailyPayoutEpochLen, dailyPayoutStartBlockHeight, dailyPayoutActiveEpoch} = initialData;
+        if (dailyPayoutAdmin) setAdmin(dailyPayoutAdmin);
+        if (dailyPayoutToken) setToken(dailyPayoutToken);
+        if (dailyPayoutVested) setVeFlex(dailyPayoutVested);
+        if (dailyPayoutEpochLen) setEpochLen(dailyPayoutEpochLen.toString());
+        if (dailyPayoutActiveEpoch) setCurrentActiveEpoch(dailyPayoutActiveEpoch.sub(1).toString());
 
         const _balance = await getFlexBalance(flex, payout.address);
         if (_balance) setContractBalance(utils.formatEther(_balance));
   
-        const _startBlockHeight = await getStartBlockHeight(payout);
-        if (_startBlockHeight) {
-          setStartBlockHeight(_startBlockHeight);
-          const _startTime = await queryBlockTimestamp(conn, _startBlockHeight);
+        if (dailyPayoutStartBlockHeight) {
+          setStartBlockHeight(dailyPayoutStartBlockHeight.toString());
+          const _startTime = await queryBlockTimestamp(conn, dailyPayoutStartBlockHeight.toString());
           if (_startTime) setStartTime(_startTime);
         }
 
@@ -204,8 +147,6 @@ export function Payout({payout, conn, flex, startTs}) {
         const _currentEpoch = await getCurrentEpoch(payout);
         if(_currentEpoch) setCurrentEpoch(_currentEpoch);
   
-        const _currentActiveEpoch = await getCurrentActiveEpoch(payout);
-        if(_currentActiveEpoch) setCurrentActiveEpoch(_currentActiveEpoch);
       }
     }
     fetchData();
@@ -223,7 +164,7 @@ export function Payout({payout, conn, flex, startTs}) {
       setCurrentEpoch();
       setCurrentActiveEpoch();
     }
-  }, [payout, conn, flex, startTs]);
+  }, [payout, conn, flex, startTs, initialData]);
 
   const onHistoryReward = async (e) => {
     e.preventDefault();

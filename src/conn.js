@@ -8,6 +8,7 @@ import * as DistributorStg1 from './contracts/DistributorStg1.json'
 import * as increaseStake from './contracts/IncreaseStake.json'
 import * as transferToken from './contracts/TransferToken.json'
 import * as config from './config.json'
+import { Provider as MultiCallProvider, Contract as MultiCallContract, setMulticallAddress } from 'ethers-multicall';
 
 export const getConn = () => {
   return new Promise((resolve, _) => {
@@ -39,6 +40,14 @@ export const getIncreaseStakePP = ( conn ) => {
 }
 export const getTransferTokenPP = ( conn ) => {
   return new Contract(config.flex_dao_pp.transfer_token, transferToken.abi, conn.getSigner())
+}
+export const getMultiCallPP = async ( conn ) => {
+  setMulticallAddress(10001, config.flex_dao_pp.multi_call);
+  const callProvider = new MultiCallProvider(conn, 10001);
+  return callProvider;
+}
+export const getMultiCallFlexPP = () => {
+  return new MultiCallContract(config.flex_dao_pp.flex, flex.abi);
 }
 
 
@@ -75,6 +84,11 @@ export const getIncreaseStakeStg2 = ( conn ) => {
 export const getTransferTokenStg2 = ( conn ) => {
   return new Contract(config.flex_dao_stg2.transfer_token, transferToken.abi, conn.getSigner())
 }
+export const getMultiCallStg2 = async ( conn ) => {
+  setMulticallAddress(10000, config.flex_dao_stg2.multi_call);
+  const callProvider = new MultiCallProvider(conn, 10000);
+  return callProvider;
+}
 
 
 export const getFlexStg3 = ( conn ) => {
@@ -109,4 +123,8 @@ export const getIncreaseStakeProd = ( conn ) => {
 export const getTransferTokenProd = ( conn ) => {
   return new Contract(config.flex_dao_prod.transfer_token, transferToken.abi, conn.getSigner())
 }
-
+export const getMultiCallProd = async ( conn ) => {
+  setMulticallAddress(10000, config.flex_dao_stg2.multi_call);
+  const callProvider = new MultiCallProvider(conn, 10000);
+  return callProvider;
+}

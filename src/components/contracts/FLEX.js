@@ -2,19 +2,14 @@ import { useEffect, useState } from "react";
 import { BigNumber, utils } from 'ethers';
 import { errorHandle } from "../../utils";
 
-async function getAdmin(flex) {
+async function getBasicInfo(multiCallFlex, multiCall) {
   try {
-    return await flex.owner();
+    const getAdmin = multiCallFlex.owner();
+    const getTotalSupply = multiCallFlex.totalSupply();
+    const [_admin, _totalSupply] = await multiCall.all([getAdmin, getTotalSupply]);
+    return [_admin, _totalSupply];
   } catch (err) {
-    errorHandle('getAdmin', err);
-  }
-}
-
-async function getTotalSupply(flex) {
-  try {
-    return await flex.totalSupply();
-  } catch (err) {
-    errorHandle('getTotalSupply', err);
+    errorHandle('getBasicInfo', err);
   }
 }
 
@@ -99,7 +94,7 @@ async function bulkSending(transferToken, flex, addressArray, amountArray, curre
   }
 }
 
-export function FLEX({ flex, enableTx, conn, transferToken }) {
+export function FLEX({ flex, enableTx, conn, transferToken, multiCall, multiCallFlex}) {
 
   const [querying, setQuerying] = useState();
 
@@ -141,7 +136,7 @@ export function FLEX({ flex, enableTx, conn, transferToken }) {
   useEffect(() => {
     async function fetchData() {
       try {
-        if (flex) {
+        if (flex && multiCall && multiCallFlex) {
   
           if (enableTx) {
             const sender = await conn.getSigner().getAddress();
@@ -158,10 +153,8 @@ export function FLEX({ flex, enableTx, conn, transferToken }) {
           setName('FLEX');
           setAddr(flex.address);
   
-          const _admin = await getAdmin(flex);
+          const [_admin, _totalSupply] = await getBasicInfo(multiCallFlex, multiCall);
           if (_admin) setAdmin(_admin);
-  
-          const _totalSupply = await getTotalSupply(flex);
           if (_totalSupply) setTotalSupply(utils.formatEther(_totalSupply));
         }
       } catch (err) {
@@ -175,7 +168,7 @@ export function FLEX({ flex, enableTx, conn, transferToken }) {
       setAdmin();
       setTotalSupply();
     }
-  }, [flex, enableTx, conn, transferToken]);
+  }, [flex, enableTx, conn, transferToken, multiCall, multiCallFlex]);
 
   const onBalanceOf = async (e) => {
     e.preventDefault();

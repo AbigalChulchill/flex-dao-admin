@@ -6,6 +6,7 @@
     "daily_mini_distributor": "0xA6899eBdF3bed78a7859C9ec9D9F5a8Ff10cB270",
     "increase_stake": "0x0aCD7b498DFd6b25Be7F2Fcf46E6A8f2cA9fF37C",
     "transfer_token": "0xA3Fa16C6dE7Fc0B8694a6f47D173D17F12f4e19d",
+    "multi_call": "0x3064Be21ed159d7415E177f4d2fd214d709F0449",
     "qurterly_payout": "",
     "qurterly_mini_payout": "",
     "payout_start_ts": ""
@@ -26,6 +27,7 @@
     "daily_mini_distributor": "0x30DfEC4d5Cd6f819492A04c34E20f5F15171e934",
     "increase_stake": "0xC1cEBe0b8E747D03Cb8a66c0c995552B4d27e2c4",
     "transfer_token": "0x0014faBDde2116e0B20C8BA5B6De02C4b8e3de88",
+    "multi_call": "0x1b38EBAd553f218e2962Cb1C0539Abb5d6A37774",
     "qurterly_payout": "",
     "qurterly_mini_payout": "",
     "payout_start_ts": "1638316800"
@@ -46,6 +48,7 @@
     "daily_mini_distributor": "0x684c8CAA4466D72a2E4682843D29bFAEa9C4e0B2",
     "increase_stake": "0x237f08ad76e7624722F8DAbD876906bCBae3e330",
     "transfer_token": "0x0014faBDde2116e0B20C8BA5B6De02C4b8e3de88",
+    "multi_call": "0x1b38EBAd553f218e2962Cb1C0539Abb5d6A37774",
     "qurterly_payout": "",
     "qurterly_mini_payout": "",
     "payout_start_ts": "1639641600"

@@ -98,6 +98,18 @@ export const getMultiCallStg2 = async ( conn ) => {
   const callProvider = new MultiCallProvider(conn, 10000);
   return callProvider;
 }
+export const getMultiCallFlexStg2 = () => {
+  return new MultiCallContract(config.flex_dao_stg2.flex, flex.abi);
+}
+export const getMultiCallVeFlexStg2 = () => {
+  return new MultiCallContract(config.flex_dao_stg2.veFLEX, veFlex.abi);
+}
+export const getMultiCallDailyPayoutStg2 = () => {
+  return new MultiCallContract(config.flex_dao_stg2.daily_payout, dailyPayout.abi);
+}
+export const getMultiCallDailyDistributorStg2 = () => {
+  return new MultiCallContract(config.flex_dao_stg2.daily_mini_distributor, distributor.abi);
+}
 
 
 export const getFlexStg3 = ( conn ) => {
@@ -133,7 +145,19 @@ export const getTransferTokenProd = ( conn ) => {
   return new Contract(config.flex_dao_prod.transfer_token, transferToken.abi, conn.getSigner())
 }
 export const getMultiCallProd = async ( conn ) => {
-  setMulticallAddress(10000, config.flex_dao_stg2.multi_call);
+  setMulticallAddress(10000, config.flex_dao_prod.multi_call);
   const callProvider = new MultiCallProvider(conn, 10000);
   return callProvider;
+}
+export const getMultiCallFlexProd = () => {
+  return new MultiCallContract(config.flex_dao_prod.flex, flex.abi);
+}
+export const getMultiCallVeFlexProd = () => {
+  return new MultiCallContract(config.flex_dao_prod.veFLEX, veFlex.abi);
+}
+export const getMultiCallDailyPayoutProd = () => {
+  return new MultiCallContract(config.flex_dao_prod.daily_payout, dailyPayout.abi);
+}
+export const getMultiCallDailyDistributorProd = () => {
+  return new MultiCallContract(config.flex_dao_prod.daily_mini_distributor, distributor.abi);
 }

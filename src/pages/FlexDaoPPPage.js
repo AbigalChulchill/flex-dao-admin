@@ -8,7 +8,7 @@ import { useEffect, useState, useContext } from "react";
 
 import { errorHandle } from "../utils";
 
-const initialDataForPage = async (multiCall, multiCallFlex, multiCallVeFlex, multiCallDailyPayout, multiCallDailyDistributorPP) => {
+const initialDataForPage = async (multiCall, multiCallFlex, multiCallVeFlex, multiCallDailyPayout, multiCallDailyDistributor) => {
   try {
     const getFlexAdmin = multiCallFlex.owner();
     const getFlexTotalSupply = multiCallFlex.totalSupply();
@@ -25,10 +25,10 @@ const initialDataForPage = async (multiCall, multiCallFlex, multiCallVeFlex, mul
     const getDailyPayoutStartBlockHeight = multiCallDailyPayout.startBlockHeight();
     const getDailyPayoutActiveEpoch = multiCallDailyPayout.currentEpoch();
 
-    const getDailyDistributorAdmin = multiCallDailyDistributorPP.admin();
-    const getDailyDistributorName = multiCallDailyDistributorPP.name();
-    const getDailyDistributorToken = multiCallDailyDistributorPP.flex();
-    const getDailyDistributorPayout = multiCallDailyDistributorPP.payout();
+    const getDailyDistributorAdmin = multiCallDailyDistributor.admin();
+    const getDailyDistributorName = multiCallDailyDistributor.name();
+    const getDailyDistributorToken = multiCallDailyDistributor.flex();
+    const getDailyDistributorPayout = multiCallDailyDistributor.payout();
 
     const [flexAdmin, 
       flexTotalSupply,

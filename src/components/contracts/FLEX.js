@@ -2,17 +2,6 @@ import { useEffect, useState } from "react";
 import { BigNumber, utils } from 'ethers';
 import { errorHandle } from "../../utils";
 
-async function getBasicInfo(multiCallFlex, multiCall) {
-  try {
-    const getAdmin = multiCallFlex.owner();
-    const getTotalSupply = multiCallFlex.totalSupply();
-    const [_admin, _totalSupply] = await multiCall.all([getAdmin, getTotalSupply]);
-    return [_admin, _totalSupply];
-  } catch (err) {
-    errorHandle('getBasicInfo', err);
-  }
-}
-
 async function getBalanceOf(flex, value) {
   try {
     return await flex.balanceOf(value);
@@ -94,7 +83,7 @@ async function bulkSending(transferToken, flex, addressArray, amountArray, curre
   }
 }
 
-export function FLEX({ flex, enableTx, conn, transferToken, multiCall, multiCallFlex}) {
+export function FLEX({ flex, enableTx, conn, transferToken, initialData}) {
 
   const [querying, setQuerying] = useState();
 
@@ -136,7 +125,7 @@ export function FLEX({ flex, enableTx, conn, transferToken, multiCall, multiCall
   useEffect(() => {
     async function fetchData() {
       try {
-        if (flex && multiCall && multiCallFlex) {
+        if (flex && initialData) {
   
           if (enableTx) {
             const sender = await conn.getSigner().getAddress();
@@ -153,9 +142,9 @@ export function FLEX({ flex, enableTx, conn, transferToken, multiCall, multiCall
           setName('FLEX');
           setAddr(flex.address);
   
-          const [_admin, _totalSupply] = await getBasicInfo(multiCallFlex, multiCall);
-          if (_admin) setAdmin(_admin);
-          if (_totalSupply) setTotalSupply(utils.formatEther(_totalSupply));
+          const {flexAdmin,flexTotalSupply} = initialData;
+          if (flexAdmin) setAdmin(flexAdmin);
+          if (flexTotalSupply) setTotalSupply(utils.formatEther(flexTotalSupply));
         }
       } catch (err) {
         errorHandle('flex initial', err);
@@ -168,7 +157,7 @@ export function FLEX({ flex, enableTx, conn, transferToken, multiCall, multiCall
       setAdmin();
       setTotalSupply();
     }
-  }, [flex, enableTx, conn, transferToken, multiCall, multiCallFlex]);
+  }, [flex, enableTx, conn, transferToken, initialData]);
 
   const onBalanceOf = async (e) => {
     e.preventDefault();

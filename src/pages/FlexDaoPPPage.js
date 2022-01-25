@@ -8,6 +8,16 @@ import { useEffect, useState, useContext } from "react";
 
 import { errorHandle } from "../utils";
 
+const initialDataForPage = async (multiCallFlex, multiCall) => {
+  const getFlexAdmin = multiCallFlex.owner();
+  const getFlexTotalSupply = multiCallFlex.totalSupply();
+  const [_flexAdmin, _flexTotalSupply] = await multiCall.all([getFlexAdmin, getFlexTotalSupply]);
+  return {
+    flexAdmin: _flexAdmin,
+    flexTotalSupply: _flexTotalSupply
+  }
+}
+
 export const FlexDaoPPPage = () => {
   const { conn } = useContext(ConnectionContext);
 
@@ -16,8 +26,7 @@ export const FlexDaoPPPage = () => {
   const [distributor, setDistributor] = useState();
   const [flex, setFlex] = useState();
   const [increaseStake, setIncreaseStake] = useState();
-  const [multiCall, setMultiCall] = useState();
-  const [multiCallFlex, setMultiCallFlex] = useState();
+  const [initialData, setInitialData] = useState();
 
   useEffect(() => {
     async function fetchData() {
@@ -41,9 +50,11 @@ export const FlexDaoPPPage = () => {
           const _increaseStake = getIncreaseStakePP(conn);
           if (_increaseStake) setIncreaseStake(_increaseStake);
           const _multiCall = await getMultiCallPP(conn);
-          if (_multiCall) setMultiCall(_multiCall);
           const _multiCallFlex = getMultiCallFlexPP();
-          if (_multiCallFlex) setMultiCallFlex(_multiCallFlex);
+          if (_multiCallFlex && _multiCall) {
+            const _initialData = await initialDataForPage(_multiCallFlex, _multiCall);
+            if (_initialData) setInitialData(_initialData);
+          }
         }
       } catch (err) {
         errorHandle("initial FLEXDAO PP page", err);
@@ -56,8 +67,7 @@ export const FlexDaoPPPage = () => {
       setDistributor();
       setFlex();
       setIncreaseStake();
-      setMultiCall();
-      setMultiCallFlex();
+      setInitialData();
     }
   }, [conn]);
 
@@ -65,7 +75,7 @@ export const FlexDaoPPPage = () => {
     <>
       <h1>FLEX DAO PP Admin Page</h1>
       <div className="container">
-        <FLEX flex={flex} multiCall={multiCall} multiCallFlex={multiCallFlex}></FLEX>
+        <FLEX flex={flex} initialData={initialData}></FLEX>
         <VeFLEX veflex={veFlex}  flex={flex} conn={conn} increaseStake={increaseStake}></VeFLEX>
         <Payout payout={dailyPayout} conn={conn} flex={flex}></Payout>
         <Distributor distributor={distributor} flex={flex}></Distributor>

@@ -49,6 +49,9 @@ export const getMultiCallPP = async ( conn ) => {
 export const getMultiCallFlexPP = () => {
   return new MultiCallContract(config.flex_dao_pp.flex, flex.abi);
 }
+export const getMultiCallVeFlexPP = () => {
+  return new MultiCallContract(config.flex_dao_pp.veFLEX, veFlex.abi);
+}
 
 
 export const getFlexStg1 = ( conn ) => {

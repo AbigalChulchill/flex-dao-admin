@@ -2,38 +2,6 @@ import { useEffect, useState } from "react";
 import { utils } from "ethers";
 import { errorHandle, tsToLocalStr } from "../../utils";
 
-async function getAdmin(veflex) {
-  try {
-    return await veflex.admin();
-  } catch (err) {
-    errorHandle('getAdmin', err);
-  }
-}
-
-async function getToken(veflex) {
-  try {
-    return await veflex.token();
-  } catch (err) {
-    errorHandle('getToken', err);
-  }
-}
-
-async function getSupply(veflex) {
-  try {
-    return await veflex.supply();
-  } catch (err) {
-    errorHandle('getSupply', err);
-  }
-}
-
-async function getTotalSupply(veflex) {
-  try {
-    return await veflex.totalSupply()
-  } catch (err) {
-    errorHandle('getTotalSupply', err);
-  }
-}
-
 async function getLocked(veflex, value) {
   try {
     return await veflex.locked(value);
@@ -169,7 +137,7 @@ async function depositForInBatch(increaseStake, flex, addressForDepositForInBatc
   }
 }
 
-export function VeFLEX({ veflex, flex, conn, increaseStake }) {
+export function VeFLEX({ veflex, flex, conn, increaseStake, initialData }) {
 
   const [querying, setQuerying] = useState();
 
@@ -235,7 +203,7 @@ export function VeFLEX({ veflex, flex, conn, increaseStake }) {
   useEffect(() => {
     async function fetchData() {
       try {
-        if (veflex && flex) {
+        if (veflex && flex && initialData) {
 
           console.log(`increaseStake works for veFlex: ${await increaseStake.vestingToken()}`);
           console.log(`increaseStake works for flex token: ${await increaseStake.token()}`);
@@ -259,17 +227,11 @@ export function VeFLEX({ veflex, flex, conn, increaseStake }) {
           setName('veFlex');
           setAddr(veflex.address);
   
-          const _admin = await getAdmin(veflex);
-          if (_admin) setAdmin(_admin);
-  
-          const _token = await getToken(veflex);
-          if (_token) setToken(_token);
-  
-          const _supply = await getSupply(veflex);
-          if (_supply) setSupply(utils.formatEther(_supply));
-  
-          const _totalSupply = await getTotalSupply(veflex);
-          if (_totalSupply) setTotalSupply(utils.formatEther(_totalSupply));
+          const {veFlexAdmin, veFlexToken, veFlexSupply, veFlexTotalSupply} = initialData;
+          if (veFlexAdmin) setAdmin(veFlexAdmin);
+          if (veFlexToken) setToken(veFlexToken);
+          if (veFlexSupply) setSupply(utils.formatEther(veFlexSupply));
+          if (veFlexTotalSupply) setTotalSupply(utils.formatEther(veFlexTotalSupply));
   
         }
       } catch (err) {
@@ -288,7 +250,7 @@ export function VeFLEX({ veflex, flex, conn, increaseStake }) {
       setSupply();
       setTotalSupply();
     }
-  }, [veflex, flex, conn, increaseStake]);
+  }, [veflex, flex, conn, increaseStake, initialData]);
 
   const onLocked = async (e) => {
     e.preventDefault();

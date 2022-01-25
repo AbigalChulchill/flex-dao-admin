@@ -126,7 +126,14 @@ export function FLEX({ flex, enableTx, conn, transferToken, initialData}) {
     async function fetchData() {
       try {
         if (flex && initialData) {
+          
+          setName('FLEX');
+          setAddr(flex.address);
   
+          const {flexAdmin,flexTotalSupply} = initialData;
+          if (flexAdmin) setAdmin(flexAdmin);
+          if (flexTotalSupply) setTotalSupply(utils.formatEther(flexTotalSupply));
+
           if (enableTx) {
             const sender = await conn.getSigner().getAddress();
             setWalletAddress(sender);
@@ -138,13 +145,6 @@ export function FLEX({ flex, enableTx, conn, transferToken, initialData}) {
               setApproved(false);
             }
           }
-  
-          setName('FLEX');
-          setAddr(flex.address);
-  
-          const {flexAdmin,flexTotalSupply} = initialData;
-          if (flexAdmin) setAdmin(flexAdmin);
-          if (flexTotalSupply) setTotalSupply(utils.formatEther(flexTotalSupply));
         }
       } catch (err) {
         errorHandle('flex initial', err);

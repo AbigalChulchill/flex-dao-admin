@@ -205,6 +205,15 @@ export function VeFLEX({ veflex, flex, conn, increaseStake, initialData }) {
       try {
         if (veflex && flex && initialData) {
 
+          setName('veFlex');
+          setAddr(veflex.address);
+  
+          const {veFlexAdmin, veFlexToken, veFlexSupply, veFlexTotalSupply} = initialData;
+          if (veFlexAdmin) setAdmin(veFlexAdmin);
+          if (veFlexToken) setToken(veFlexToken);
+          if (veFlexSupply) setSupply(utils.formatEther(veFlexSupply));
+          if (veFlexTotalSupply) setTotalSupply(utils.formatEther(veFlexTotalSupply));
+
           console.log(`increaseStake works for veFlex: ${await increaseStake.vestingToken()}`);
           console.log(`increaseStake works for flex token: ${await increaseStake.token()}`);
 
@@ -223,16 +232,6 @@ export function VeFLEX({ veflex, flex, conn, increaseStake, initialData }) {
           } else {
             setTextDepositFor('Approve');
           }
-          
-          setName('veFlex');
-          setAddr(veflex.address);
-  
-          const {veFlexAdmin, veFlexToken, veFlexSupply, veFlexTotalSupply} = initialData;
-          if (veFlexAdmin) setAdmin(veFlexAdmin);
-          if (veFlexToken) setToken(veFlexToken);
-          if (veFlexSupply) setSupply(utils.formatEther(veFlexSupply));
-          if (veFlexTotalSupply) setTotalSupply(utils.formatEther(veFlexTotalSupply));
-  
         }
       } catch (err) {
         errorHandle('veFlex init', err);

@@ -1,4 +1,4 @@
-import { getDailyPayoutPP, getVeFlexPP, getDailyDistributorPP, getFlexPP, getIncreaseStakePP, getMultiCallPP, getMultiCallFlexPP, getMultiCallVeFlexPP, getMultiCallDailyPayoutPP } from '../conn';
+import { getDailyPayoutPP, getVeFlexPP, getDailyDistributorPP, getFlexPP, getIncreaseStakePP, getMultiCallPP, getMultiCallFlexPP, getMultiCallVeFlexPP, getMultiCallDailyPayoutPP, getMultiCallDailyDistributorPP } from '../conn';
 import { ConnectionContext} from '../App'
 import { Payout } from '../components/contracts/Payout';
 import { VeFLEX } from '../components/contracts/VeFLEX';
@@ -8,7 +8,7 @@ import { useEffect, useState, useContext } from "react";
 
 import { errorHandle } from "../utils";
 
-const initialDataForPage = async (multiCall, multiCallFlex, multiCallVeFlex, multiCallDailyPayout) => {
+const initialDataForPage = async (multiCall, multiCallFlex, multiCallVeFlex, multiCallDailyPayout, multiCallDailyDistributorPP) => {
   try {
     const getFlexAdmin = multiCallFlex.owner();
     const getFlexTotalSupply = multiCallFlex.totalSupply();
@@ -25,6 +25,11 @@ const initialDataForPage = async (multiCall, multiCallFlex, multiCallVeFlex, mul
     const getDailyPayoutStartBlockHeight = multiCallDailyPayout.startBlockHeight();
     const getDailyPayoutActiveEpoch = multiCallDailyPayout.currentEpoch();
 
+    const getDailyDistributorAdmin = multiCallDailyDistributorPP.admin();
+    const getDailyDistributorName = multiCallDailyDistributorPP.name();
+    const getDailyDistributorToken = multiCallDailyDistributorPP.flex();
+    const getDailyDistributorPayout = multiCallDailyDistributorPP.payout();
+
     const [flexAdmin, 
       flexTotalSupply,
       veFlexAdmin,
@@ -36,7 +41,11 @@ const initialDataForPage = async (multiCall, multiCallFlex, multiCallVeFlex, mul
       dailyPayoutVested,
       dailyPayoutEpochLen,
       dailyPayoutStartBlockHeight,
-      dailyPayoutActiveEpoch
+      dailyPayoutActiveEpoch,
+      dailyDistributorAdmin,
+      dailyDistributorName,
+      dailyDistributorToken,
+      dailyDistributorPayout
     ] = await multiCall.all([getFlexAdmin,
                           getFlexTotalSupply,
                           getVeFlexAdmin,
@@ -48,7 +57,11 @@ const initialDataForPage = async (multiCall, multiCallFlex, multiCallVeFlex, mul
                           getDailyPayoutVested,
                           getDailyPayoutEpochLen,
                           getDailyPayoutStartBlockHeight,
-                          getDailyPayoutActiveEpoch
+                          getDailyPayoutActiveEpoch,
+                          getDailyDistributorAdmin,
+                          getDailyDistributorName,
+                          getDailyDistributorToken,
+                          getDailyDistributorPayout
                         ]);
     return {
       flexAdmin, 
@@ -62,7 +75,11 @@ const initialDataForPage = async (multiCall, multiCallFlex, multiCallVeFlex, mul
       dailyPayoutVested,
       dailyPayoutEpochLen,
       dailyPayoutStartBlockHeight,
-      dailyPayoutActiveEpoch
+      dailyPayoutActiveEpoch,
+      dailyDistributorAdmin,
+      dailyDistributorName,
+      dailyDistributorToken,
+      dailyDistributorPayout
     }
   } catch (err) {
     errorHandle('initialDataForPage', err);
@@ -104,8 +121,9 @@ export const FlexDaoPPPage = () => {
           const _multiCallFlex = getMultiCallFlexPP();
           const _multiCallVeFlex = getMultiCallVeFlexPP();
           const _multiCallDailyPayout = getMultiCallDailyPayoutPP();
-          if (_multiCall && _multiCallFlex && _multiCallVeFlex && _multiCallDailyPayout) {
-            const _initialData = await initialDataForPage(_multiCall, _multiCallFlex, _multiCallVeFlex, _multiCallDailyPayout);
+          const _multiCallDailyDistributor = getMultiCallDailyDistributorPP();
+          if (_multiCall && _multiCallFlex && _multiCallVeFlex && _multiCallDailyPayout && _multiCallDailyDistributor) {
+            const _initialData = await initialDataForPage(_multiCall, _multiCallFlex, _multiCallVeFlex, _multiCallDailyPayout, _multiCallDailyDistributor);
             if (_initialData) setInitialData(_initialData);
           }
         }
@@ -131,7 +149,7 @@ export const FlexDaoPPPage = () => {
         <FLEX flex={flex} initialData={initialData}></FLEX>
         <VeFLEX veflex={veFlex}  flex={flex} conn={conn} increaseStake={increaseStake} initialData={initialData}></VeFLEX>
         <Payout payout={dailyPayout} conn={conn} flex={flex} initialData={initialData}></Payout>
-        <Distributor distributor={distributor} flex={flex}></Distributor>
+        <Distributor distributor={distributor} flex={flex} initialData={initialData}></Distributor>
       </div>
     </>
   )

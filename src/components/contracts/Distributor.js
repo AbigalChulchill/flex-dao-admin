@@ -2,38 +2,6 @@ import { useEffect, useState } from "react";
 import { utils } from 'ethers';
 import { errorHandle,  } from "../../utils";
 
-async function getAdmin(distributor) {
-  try {
-    return await distributor.admin();
-  } catch (err) {
-    errorHandle('getAdmin', err);
-  }
-}
-
-async function getName(distributor) {
-  try {
-    return await distributor.name();
-  } catch (err) {
-    errorHandle('getName', err);
-  }
-}
-
-async function getToken(distributor) {
-  try {
-    return await distributor.flex();
-  } catch (err) {
-    errorHandle('getToken', err);
-  }
-}
-
-async function getPayout(distributor) {
-  try {
-    return await distributor.payout();
-  } catch (err) {
-    errorHandle('getPayout', err);
-  }
-}
-
 async function getIsDistributor(distributor, value) {
   try {
     const _isDistributor = await distributor.isDistributor(value);
@@ -51,7 +19,7 @@ async function getFlexBalance(flex, address) {
   }
 }
 
-export function Distributor({ distributor, flex }) {
+export function Distributor({ distributor, flex, initialData }) {
 
   const [querying, setQuerying] = useState();
 
@@ -68,23 +36,17 @@ export function Distributor({ distributor, flex }) {
 
   useEffect(() => {
     async function fetchData() {
-      if (distributor) {
-        const _name = await getName(distributor);
-        if (_name) setName(_name);
+      if (distributor && initialData) {
 
         setAddr(distributor.address);
 
-        const _admin = await getAdmin(distributor);
-        if (_admin) setAdmin(_admin);
-
-        const _token = await getToken(distributor);
-        if (_token) setToken(_token);
-
+        const {dailyDistributorAdmin, dailyDistributorName, dailyDistributorToken, dailyDistributorPayout} = initialData;
+        if (dailyDistributorAdmin) setAdmin(dailyDistributorAdmin);
+        if (dailyDistributorName) setName(dailyDistributorName);
+        if (dailyDistributorToken) setToken(dailyDistributorToken);
+        if (dailyDistributorPayout) setPayout(dailyDistributorPayout);
         const _balance = await getFlexBalance(flex, distributor.address);
         if (_balance) setBalance(utils.formatEther(_balance));
-
-        const _payout = await getPayout(distributor);
-        if (_payout) setPayout(_payout);
       }
     }
     fetchData();
@@ -96,7 +58,7 @@ export function Distributor({ distributor, flex }) {
       setBalance();
       setPayout();
     }
-  }, [distributor, flex]);
+  }, [distributor, flex, initialData]);
 
   const onIsDistributor = async (e) => {
     e.preventDefault();

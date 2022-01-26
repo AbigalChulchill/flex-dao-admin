@@ -1,4 +1,4 @@
-import { getDailyPayoutPP, getVeFlexPP, getDailyDistributorPP, getFlexPP, getIncreaseStakePP, getMultiCallPP, getMultiCallFlexPP, getMultiCallVeFlexPP, getMultiCallDailyPayoutPP, getMultiCallDailyDistributorPP } from '../conn';
+import { getDailyPayoutPP, getVeFlexPP, getDailyDistributorPP, getFlexPP, getIncreaseStakePP, getMultiCallPP, getMultiCallFlexPP, getMultiCallVeFlexPP, getMultiCallDailyPayoutPP, getMultiCallDailyDistributorPP, getMultiCallIncreaseStakePP } from '../conn';
 import { ConnectionContext} from '../App'
 import { Payout } from '../components/contracts/Payout';
 import { VeFLEX } from '../components/contracts/VeFLEX';
@@ -8,7 +8,7 @@ import { useEffect, useState, useContext } from "react";
 
 import { errorHandle } from "../utils";
 
-const initialDataForPage = async (multiCall, multiCallFlex, multiCallVeFlex, multiCallDailyPayout, multiCallDailyDistributor) => {
+const initialDataForPage = async (multiCall, multiCallFlex, multiCallVeFlex, multiCallDailyPayout, multiCallDailyDistributor, multiCallIncreaseStake) => {
   try {
     const getFlexAdmin = multiCallFlex.owner();
     const getFlexTotalSupply = multiCallFlex.totalSupply();
@@ -30,6 +30,10 @@ const initialDataForPage = async (multiCall, multiCallFlex, multiCallVeFlex, mul
     const getDailyDistributorToken = multiCallDailyDistributor.flex();
     const getDailyDistributorPayout = multiCallDailyDistributor.payout();
 
+    const getIncreaseStakeAdmin = multiCallIncreaseStake.owner();
+    const getIncreaseStakeVestingToken = multiCallIncreaseStake.vestingToken();
+    const getIncreaseStakeToken = multiCallIncreaseStake.token();
+
     const [flexAdmin, 
       flexTotalSupply,
       veFlexAdmin,
@@ -45,7 +49,10 @@ const initialDataForPage = async (multiCall, multiCallFlex, multiCallVeFlex, mul
       dailyDistributorAdmin,
       dailyDistributorName,
       dailyDistributorToken,
-      dailyDistributorPayout
+      dailyDistributorPayout,
+      increaseStakeAdmin,
+      increaseStakeVestingToken,
+      increaseStakeToken
     ] = await multiCall.all([getFlexAdmin,
                           getFlexTotalSupply,
                           getVeFlexAdmin,
@@ -61,7 +68,10 @@ const initialDataForPage = async (multiCall, multiCallFlex, multiCallVeFlex, mul
                           getDailyDistributorAdmin,
                           getDailyDistributorName,
                           getDailyDistributorToken,
-                          getDailyDistributorPayout
+                          getDailyDistributorPayout,
+                          getIncreaseStakeAdmin,
+                          getIncreaseStakeVestingToken,
+                          getIncreaseStakeToken
                         ]);
     return {
       flexAdmin, 
@@ -79,7 +89,10 @@ const initialDataForPage = async (multiCall, multiCallFlex, multiCallVeFlex, mul
       dailyDistributorAdmin,
       dailyDistributorName,
       dailyDistributorToken,
-      dailyDistributorPayout
+      dailyDistributorPayout,
+      increaseStakeAdmin,
+      increaseStakeVestingToken,
+      increaseStakeToken
     }
   } catch (err) {
     errorHandle('initialDataForPage', err);
@@ -122,8 +135,9 @@ export const FlexDaoPPPage = () => {
           const _multiCallVeFlex = getMultiCallVeFlexPP();
           const _multiCallDailyPayout = getMultiCallDailyPayoutPP();
           const _multiCallDailyDistributor = getMultiCallDailyDistributorPP();
-          if (_multiCall && _multiCallFlex && _multiCallVeFlex && _multiCallDailyPayout && _multiCallDailyDistributor) {
-            const _initialData = await initialDataForPage(_multiCall, _multiCallFlex, _multiCallVeFlex, _multiCallDailyPayout, _multiCallDailyDistributor);
+          const _multiCallIncreaseStake = getMultiCallIncreaseStakePP();
+          if (_multiCall && _multiCallFlex && _multiCallVeFlex && _multiCallDailyPayout && _multiCallDailyDistributor && _multiCallIncreaseStake) {
+            const _initialData = await initialDataForPage(_multiCall, _multiCallFlex, _multiCallVeFlex, _multiCallDailyPayout, _multiCallDailyDistributor, _multiCallIncreaseStake);
             if (_initialData) setInitialData(_initialData);
           }
         }

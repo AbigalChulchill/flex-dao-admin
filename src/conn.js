@@ -58,6 +58,12 @@ export const getMultiCallDailyPayoutPP = () => {
 export const getMultiCallDailyDistributorPP = () => {
   return new MultiCallContract(config.flex_dao_pp.daily_mini_distributor, distributor.abi);
 }
+export const getMultiCallIncreaseStakePP = () => {
+  return new MultiCallContract(config.flex_dao_pp.increase_stake, increaseStake.abi);
+}
+export const getMultiCallTransferTokenPP = () => {
+  return new MultiCallContract(config.flex_dao_pp.transfer_token, transferToken.abi);
+}
 
 
 export const getFlexStg1 = ( conn ) => {
@@ -110,6 +116,12 @@ export const getMultiCallDailyPayoutStg2 = () => {
 export const getMultiCallDailyDistributorStg2 = () => {
   return new MultiCallContract(config.flex_dao_stg2.daily_mini_distributor, distributor.abi);
 }
+export const getMultiCallIncreaseStakeStg2 = () => {
+  return new MultiCallContract(config.flex_dao_stg2.increase_stake, increaseStake.abi);
+}
+export const getMultiCallTransferTokenStg2 = () => {
+  return new MultiCallContract(config.flex_dao_stg2.transfer_token, transferToken.abi);
+}
 
 
 export const getFlexStg3 = ( conn ) => {
@@ -160,4 +172,10 @@ export const getMultiCallDailyPayoutProd = () => {
 }
 export const getMultiCallDailyDistributorProd = () => {
   return new MultiCallContract(config.flex_dao_prod.daily_mini_distributor, distributor.abi);
+}
+export const getMultiCallIncreaseStakeProd = () => {
+  return new MultiCallContract(config.flex_dao_prod.increase_stake, increaseStake.abi);
+}
+export const getMultiCallTransferTokenProd = () => {
+  return new MultiCallContract(config.flex_dao_prod.transfer_token, transferToken.abi);
 }

@@ -156,6 +156,11 @@ export function VeFLEX({ veflex, flex, conn, increaseStake, initialData }) {
   
   const [addressBalanceOf, setAddressBalanceOf] = useState();
   const [balanceOf, setBalanceOf] = useState();
+
+  const [increaseStakeContractAddress, setIncreaseStakeContractAddress] = useState();
+  const [increaseStakeContractAdmin, setIncreaseStakeContractAdmin] = useState();
+  const [increaseStakeContractVestingToken, setIncreaseStakeContractVestingToken] = useState();
+  const [increaseStakeContractToken, setIncreaseStakeContractToken] = useState();
   
   const [heightTotalSupplyAt, setHeightTotalSupplyAt] = useState();
   const [totalSupplyAt, setTotalSupplyAt] = useState();
@@ -203,19 +208,19 @@ export function VeFLEX({ veflex, flex, conn, increaseStake, initialData }) {
   useEffect(() => {
     async function fetchData() {
       try {
-        if (veflex && flex && initialData) {
+        if (veflex && flex && increaseStake && initialData) {
 
           setName('veFlex');
           setAddr(veflex.address);
-  
-          const {veFlexAdmin, veFlexToken, veFlexSupply, veFlexTotalSupply} = initialData;
+          setIncreaseStakeContractAddress(increaseStake.address);
+          const {veFlexAdmin, veFlexToken, veFlexSupply, veFlexTotalSupply, increaseStakeAdmin, increaseStakeVestingToken, increaseStakeToken} = initialData;
           if (veFlexAdmin) setAdmin(veFlexAdmin);
           if (veFlexToken) setToken(veFlexToken);
           if (veFlexSupply) setSupply(utils.formatEther(veFlexSupply));
           if (veFlexTotalSupply) setTotalSupply(utils.formatEther(veFlexTotalSupply));
-
-          console.log(`increaseStake works for veFlex: ${await increaseStake.vestingToken()}`);
-          console.log(`increaseStake works for flex token: ${await increaseStake.token()}`);
+          if (increaseStakeAdmin) setIncreaseStakeContractAdmin(increaseStakeAdmin);
+          if (increaseStakeVestingToken) setIncreaseStakeContractVestingToken(increaseStakeVestingToken);
+          if (increaseStakeToken) setIncreaseStakeContractToken(increaseStakeToken);
 
           const sender = await conn.getSigner().getAddress();
           setWalletAddress(sender);
@@ -510,6 +515,14 @@ export function VeFLEX({ veflex, flex, conn, increaseStake, initialData }) {
         </div>
         <ul>
           <p>Connected wallet: {walletAddress}</p>
+          <p>Increase Stake Contract info:</p>
+          <ul>
+            <li>address: {increaseStakeContractAddress}</li>
+            <li>admin: {increaseStakeContractAdmin}</li>
+            <li>veFlex: {increaseStakeContractVestingToken}</li>
+            <li>flex: {increaseStakeContractToken}</li>
+          </ul>
+          <p></p>
           <li>
             <form>
               <label>

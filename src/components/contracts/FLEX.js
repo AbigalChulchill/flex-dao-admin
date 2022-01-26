@@ -128,27 +128,28 @@ export function FLEX({ flex, enableTx, conn, transferToken, initialData}) {
   useEffect(() => {
     async function fetchData() {
       try {
-        if (flex && initialData && transferToken) {
+        if (flex && initialData) {
           
           setName('FLEX');
           setAddr(flex.address);
-          setTransferTokenContractAddress(transferToken.address);
-
+          
           const {flexAdmin,flexTotalSupply, transferTokenAdmin} = initialData;
           if (flexAdmin) setAdmin(flexAdmin);
           if (flexTotalSupply) setTotalSupply(utils.formatEther(flexTotalSupply));
-          if (transferTokenAdmin) setTransferTokenContractAdmin(transferTokenAdmin);
-
+          
           if (enableTx) {
             const sender = await conn.getSigner().getAddress();
             setWalletAddress(sender);
-  
+            
             const allowanceBn =  await flex.allowance(sender, transferToken.address);
             if (allowanceBn.gt(0)) {
               setApproved(true);
             } else {
               setApproved(false);
             }
+            
+            if (transferToken) setTransferTokenContractAddress(transferToken.address);
+            if (transferTokenAdmin) setTransferTokenContractAdmin(transferTokenAdmin);
           }
         }
       } catch (err) {

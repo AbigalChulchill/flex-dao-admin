@@ -91,6 +91,9 @@ export function FLEX({ flex, enableTx, conn, transferToken, initialData}) {
   const [addr, setAddr] = useState();
   const [admin, setAdmin] = useState();
   const [totalSupply, setTotalSupply] = useState();
+  
+  const [transferTokenContractAddress, setTransferTokenContractAddress] = useState();
+  const [transferTokenContractAdmin, setTransferTokenContractAdmin] = useState();
 
   const [addressBalanceOf, setAddressBalanceOf] = useState();
   const [balanceOf, setBalanceOf] = useState();
@@ -125,14 +128,16 @@ export function FLEX({ flex, enableTx, conn, transferToken, initialData}) {
   useEffect(() => {
     async function fetchData() {
       try {
-        if (flex && initialData) {
+        if (flex && initialData && transferToken) {
           
           setName('FLEX');
           setAddr(flex.address);
-  
-          const {flexAdmin,flexTotalSupply} = initialData;
+          setTransferTokenContractAddress(transferToken.address);
+
+          const {flexAdmin,flexTotalSupply, transferTokenAdmin} = initialData;
           if (flexAdmin) setAdmin(flexAdmin);
           if (flexTotalSupply) setTotalSupply(utils.formatEther(flexTotalSupply));
+          if (transferTokenAdmin) setTransferTokenContractAdmin(transferTokenAdmin);
 
           if (enableTx) {
             const sender = await conn.getSigner().getAddress();
@@ -334,6 +339,12 @@ export function FLEX({ flex, enableTx, conn, transferToken, initialData}) {
           </div>
           <ul>
             <p>Connected wallet: {walletAddress}</p>
+            <p>Transfer Token Contract info:</p>
+            <ul>
+              <li>address: {transferTokenContractAddress}</li>
+              <li>admin: {transferTokenContractAdmin}</li>
+            </ul>
+            <p></p>
             <li>
               <form>
                 <label>

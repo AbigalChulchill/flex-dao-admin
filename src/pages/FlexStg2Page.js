@@ -1,28 +1,33 @@
-import { getFlexStg2, getTransferTokenStg2, getMultiCallStg2, getMultiCallFlexStg2 } from '../conn';
+import { getFlexStg2, getTransferTokenStg2, getMultiCallStg2, getMultiCallFlexStg2, getMultiCallTransferTokenStg2 } from '../conn';
 import { ConnectionContext} from '../App'
 import { FLEX } from "../components/contracts/FLEX";
 import { useEffect, useState, useContext } from "react";
 
 import { errorHandle } from "../utils";
 
-const initialDataForPage = async (multiCall, multiCallFlex) => {
+const initialDataForPage = async (multiCall, multiCallFlex, multiCallTransferToken) => {
   try {
     const getFlexAdmin = multiCallFlex.owner();
     const getFlexTotalSupply = multiCallFlex.totalSupply();
+    const getTransferAdmin = multiCallTransferToken.owner();
 
     const [flexAdmin, 
       flexTotalSupply,
+      transferTokenAdmin
     ] = await multiCall.all([getFlexAdmin,
-                          getFlexTotalSupply
+                          getFlexTotalSupply,
+                          getTransferAdmin
                         ]);
     return {
       flexAdmin, 
-      flexTotalSupply
+      flexTotalSupply,
+      transferTokenAdmin
     }
   } catch (err) {
     errorHandle('initialDataForPage', err);
   }
 }
+
 
 export const FlexStg2Page = () => {
   const { conn } = useContext(ConnectionContext);
@@ -48,8 +53,9 @@ export const FlexStg2Page = () => {
           if (_transferToken) setTransferToken(_transferToken);
           const _multiCall = await getMultiCallStg2(conn);
           const _multiCallFlex = getMultiCallFlexStg2();
-          if (_multiCall && _multiCallFlex) {
-            const _initialData = await initialDataForPage(_multiCall, _multiCallFlex);
+          const _multiCallTransferToken = getMultiCallTransferTokenStg2();
+          if (_multiCall && _multiCallFlex && _multiCallTransferToken) {
+            const _initialData = await initialDataForPage(_multiCall, _multiCallFlex, _multiCallTransferToken);
             if (_initialData) setInitialData(_initialData);
           }
         }

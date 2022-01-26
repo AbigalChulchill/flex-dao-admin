@@ -1,23 +1,27 @@
-import { getFlexProd, getTransferTokenProd, getMultiCallProd, getMultiCallFlexProd } from '../conn';
+import { getFlexProd, getTransferTokenProd, getMultiCallProd, getMultiCallFlexProd, getMultiCallTransferTokenProd } from '../conn';
 import { ConnectionContext} from '../App'
 import { FLEX } from "../components/contracts/FLEX";
 import { useEffect, useState, useContext } from "react";
 
 import { errorHandle } from "../utils";
 
-const initialDataForPage = async (multiCall, multiCallFlex) => {
+const initialDataForPage = async (multiCall, multiCallFlex, multiCallTransferToken) => {
   try {
     const getFlexAdmin = multiCallFlex.owner();
     const getFlexTotalSupply = multiCallFlex.totalSupply();
+    const getTransferAdmin = multiCallTransferToken.owner();
 
     const [flexAdmin, 
       flexTotalSupply,
+      transferTokenAdmin
     ] = await multiCall.all([getFlexAdmin,
-                          getFlexTotalSupply
+                          getFlexTotalSupply,
+                          getTransferAdmin
                         ]);
     return {
       flexAdmin, 
-      flexTotalSupply
+      flexTotalSupply,
+      transferTokenAdmin
     }
   } catch (err) {
     errorHandle('initialDataForPage', err);
@@ -48,8 +52,9 @@ export const FlexProdPage = () => {
           if (_transferToken) setTransferToken(_transferToken);
           const _multiCall = await getMultiCallProd(conn);
           const _multiCallFlex = getMultiCallFlexProd();
-          if (_multiCall && _multiCallFlex) {
-            const _initialData = await initialDataForPage(_multiCall, _multiCallFlex);
+          const _multiCallTransferToken = getMultiCallTransferTokenProd();
+          if (_multiCall && _multiCallFlex && _multiCallTransferToken) {
+            const _initialData = await initialDataForPage(_multiCall, _multiCallFlex, _multiCallTransferToken);
             if (_initialData) setInitialData(_initialData);
           }
         }

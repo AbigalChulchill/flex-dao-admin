@@ -394,23 +394,25 @@ export function VeFLEX({ veflex, flex, conn, increaseStake, initialData }) {
       setDepositEventsLoading(false);
     }
     
-    const uniAddresses = new Map();
-    for (let event of _depositEvents) {
-      if (!uniAddresses.has(event.args.provider)) {
-        uniAddresses.set(event.args.provider, undefined)
+    if (window.localStorage.getItem("advanceMode") === "true") {
+      const uniAddresses = new Map();
+      for (let event of _depositEvents) {
+        if (!uniAddresses.has(event.args.provider)) {
+          uniAddresses.set(event.args.provider, undefined)
+        }
       }
-    }
-    console.log(`unique address: ${uniAddresses.size}`)
-
-    let count = 0
-    for (let addr of uniAddresses.keys()) {
-      const _locked = await veflex.locked(addr);
-      if (!_locked.amount.eq(0)) {
-        console.log(`${addr}  ${utils.formatEther(_locked.amount)}  ${_locked.end.toString()}`);
-        count++;
+      console.log(`unique address: ${uniAddresses.size}`)
+  
+      let count = 0
+      for (let addr of uniAddresses.keys()) {
+        const _locked = await veflex.locked(addr);
+        if (!_locked.amount.eq(0)) {
+          console.log(`${addr}  ${utils.formatEther(_locked.amount)}  ${_locked.end.toString()}`);
+          count++;
+        }
       }
+      console.log(`total: ${count}`);
     }
-    console.log(`total: ${count}`);
   }
 
   const onQueryWithdrawHistory = async () => {

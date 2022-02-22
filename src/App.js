@@ -3,7 +3,7 @@ import { useEffect, useState, createContext } from 'react';
 
 import { SideNav } from './components/layout/SideNav';
 import { FlexPage } from './pages/FlexPage';
-// import { FlexUsdPage } from './pages/FlexUsdPage';
+import { FlexUSDPage } from './pages/FlexUSDPage';
 import { FlexDaoPage } from './pages/FlexDaoPage';
 import { getConn } from './conn';
 import { errorHandle } from "./utils";
@@ -46,9 +46,9 @@ function App() {
             <Route path='/flex'>
               <FlexPage />
             </Route>
-            {/* <Route path='/flex-usd'>
-              <FlexUsdPage />
-            </Route> */}
+            <Route path='/flexusd'>
+              <FlexUSDPage />
+            </Route>
             <Route path='/flex-dao'>
               <FlexDaoPage/>
             </Route>

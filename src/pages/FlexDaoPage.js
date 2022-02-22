@@ -1,10 +1,10 @@
 import { Route, Switch, Redirect } from 'react-router-dom';
 import { TopNav } from '../components/layout/TopNav'
-import { FlexDaoPPPage } from '../pages/FlexDaoPPPage';
+import { FlexDaoPPPage } from './FlexDaoPPPage';
 // import { FlexDaoStg1Page } from '../pages/FlexDaoStg1Page';
-import { FlexDaoStg2Page } from '../pages/FlexDaoStg2Page';
+import { FlexDaoStg2Page } from './FlexDaoStg2Page';
 // import { FlexDaoStg3Page } from '../pages/FlexDaoStg3Page';
-import { FlexDaoProdPage } from '../pages/FlexDaoProdPage';
+import { FlexDaoProdPage } from './FlexDaoProdPage';
 
 export const FlexDaoPage = () => {
   return (

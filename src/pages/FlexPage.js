@@ -1,8 +1,8 @@
 import { Route, Switch, Redirect } from 'react-router-dom';
 import { TopNav } from '../components/layout/TopNav'
-import { FlexPPPage } from '../pages/FlexPPPage';
-import { FlexStg2Page } from '../pages/FlexStg2Page';
-import { FlexProdPage } from '../pages/FlexProdPage';
+import { FlexPPPage } from './FlexPPPage';
+import { FlexStg2Page } from './FlexStg2Page';
+import { FlexProdPage } from './FlexProdPage';
 
 export const FlexPage = () => {
   return (

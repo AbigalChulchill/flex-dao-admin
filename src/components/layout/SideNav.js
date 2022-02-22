@@ -10,9 +10,9 @@ export const SideNav = () => {
         <div className="item">
           <Link to="/flex">FLEX</Link>
         </div>
-        {/* <div className="item">
-          <Link to="/flex-usd">FLEXUSD</Link>
-        </div> */}
+        <div className="item">
+          <Link to="/flexusd">FLEXUSD</Link>
+        </div>
         <div className="item">
           <Link to="/flex-dao">FLEXDAO</Link>
         </div>

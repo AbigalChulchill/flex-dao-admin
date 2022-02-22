@@ -7,6 +7,7 @@ import * as distributor from './contracts/Distributor.json'
 import * as DistributorStg1 from './contracts/DistributorStg1.json'
 import * as increaseStake from './contracts/IncreaseStake.json'
 import * as transferToken from './contracts/TransferToken.json'
+import * as flexUSD from './contracts/FlexUSDImplV2.json'
 import * as config from './config.json'
 import { Provider as MultiCallProvider, Contract as MultiCallContract, setMulticallAddress } from 'ethers-multicall';
 
@@ -178,4 +179,16 @@ export const getMultiCallIncreaseStakeProd = () => {
 }
 export const getMultiCallTransferTokenProd = () => {
   return new MultiCallContract(config.flex_dao_prod.transfer_token, transferToken.abi);
+}
+
+export const getFlexUSDAvaxPP = ( conn ) => {
+  return new Contract(config.flexusd.avax.pp.address, flexUSD.abi, conn.getSigner());
+}
+export const getMultiCallAvaxPP = async ( conn ) => {
+  setMulticallAddress(config.flexusd.avax.pp.chain_id, config.flexusd.avax.pp.multi_call);
+  const callProvider = new MultiCallProvider(conn, config.flexusd.avax.pp.chain_id);
+  return callProvider;
+}
+export const getMultiCallFlexUSDAvaxPP = () => {
+  return new MultiCallContract(config.flexusd.avax.pp.address, flexUSD.abi);
 }

@@ -52,5 +52,16 @@
     "qurterly_payout": "",
     "qurterly_mini_payout": "",
     "payout_start_ts": "1639641600"
+  },
+  "flexusd": {
+    "avax": {
+      "pp": {
+        "address": "0xA9bB3b5334347F9a56bebb3f590E8dF97fC091f9",
+        "url": "https://testnet.snowtrace.io/address/0xA9bB3b5334347F9a56bebb3f590E8dF97fC091f9",
+        "multi_call": "0xc787b7D1c74Bc70b35b50303bd02Bd51909c1Fc9",
+        "chain_id": "43113",
+        "network_name": "Avalanche testnet - FUJI C-Cahin"
+      }
+    }
   }
 }

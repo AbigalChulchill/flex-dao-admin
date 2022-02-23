@@ -96,7 +96,7 @@ export function Distributor({ distributor, flex, initialData }) {
               <label>
                 Is Distributor:
               </label>
-              <input type="text" placeholder="address" size="45" onChange={e=>setAddressIsDistributor(e.target.value)} />
+              <input type="text" placeholder="address" size="50" onChange={e=>setAddressIsDistributor(e.target.value)} />
               <button onClick={onIsDistributor}>Read</button>
               <span>{isDistributor}</span>
             </form>

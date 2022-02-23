@@ -9,15 +9,27 @@ import { errorHandle } from "../utils";
 const initialDataForPage = async (multiCall, multiCallFlexUSD) => {
   try {
     const getFlexUSDAdmin = multiCallFlexUSD.owner();
+    const getFlexUSDName = multiCallFlexUSD.name();
+    const getFlexUSDSymbol = multiCallFlexUSD.symbol();
+    const getFlexUSDMultiplier = multiCallFlexUSD.multiplier();
     const getFlexUSDTotalSupply = multiCallFlexUSD.totalSupply();
 
-    const [flexUSDAdmin, 
+    const [flexUSDAdmin,
+      flexUSDName,
+      flexUSDSymbol,
+      flexUSDMultiplier,
       flexUSDTotalSupply
     ] = await multiCall.all([getFlexUSDAdmin,
+                            getFlexUSDName,
+                            getFlexUSDSymbol,
+                            getFlexUSDMultiplier,
                             getFlexUSDTotalSupply
                         ]);
     return {
-      flexUSDAdmin, 
+      flexUSDAdmin,
+      flexUSDName,
+      flexUSDSymbol,
+      flexUSDMultiplier,
       flexUSDTotalSupply
     }
   } catch (err) {
@@ -67,7 +79,7 @@ export const FlexUSDPPPage = () => {
       <h1>FLEXUSD PP Admin Page</h1>
       <h3>{config.flexusd.avax.pp.network_name}</h3>
       <div className="container">
-        <FlexUSD flexUSD={flexUSD} initialData={initialData}></FlexUSD>
+        <FlexUSD flexUSD={flexUSD} initialData={initialData} conn={conn}></FlexUSD>
       </div>
     </>
   )

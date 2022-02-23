@@ -473,7 +473,7 @@ export function VeFLEX({ veflex, flex, conn, increaseStake, initialData }) {
               <label>
                 Stake Detail For Address:
               </label>
-              <input type="text" placeholder="address" size="45" onChange={e=>setAddressLocked(e.target.value)} />
+              <input type="text" placeholder="address" size="50" onChange={e=>setAddressLocked(e.target.value)} />
               <button onClick={onLocked}>Read</button>
               {locked ? `staked ${locked[0]} FLEX, end at: ${new Date(locked[1] * 1000).toLocaleString()} Local Time` : ""}
             </form>
@@ -483,7 +483,7 @@ export function VeFLEX({ veflex, flex, conn, increaseStake, initialData }) {
               <label>
                 Account Latest Balance:
               </label>
-              <input type="text" placeholder="address" size="45" onChange={e=>setAddressBalanceOf(e.target.value)} />
+              <input type="text" placeholder="address" size="50" onChange={e=>setAddressBalanceOf(e.target.value)} />
               <button onClick={onBalanceOf}>Read</button>
               <span>{balanceOf} {balanceOf?"veFLEX":""}</span>
             </form>
@@ -503,7 +503,7 @@ export function VeFLEX({ veflex, flex, conn, increaseStake, initialData }) {
               <label>
                 History Account Balance At Block Height:
               </label>
-              <input type="text" placeholder="address" size="45" onChange={e=>setAddressBalanceOfAt(e.target.value)} />
+              <input type="text" placeholder="address" size="50" onChange={e=>setAddressBalanceOfAt(e.target.value)} />
               <input type="text" placeholder="block height (uint)" onChange={e=>setHeightBalanceOfAt(e.target.value)} />
               <button onClick={onBalanceOfAt}>Read</button>
               <span>{balanceOfAt} {balanceOfAt?"veFLEX":""}</span>
@@ -540,7 +540,7 @@ export function VeFLEX({ veflex, flex, conn, increaseStake, initialData }) {
               <label>
                 Stake For Other Address:
               </label>
-              <input type="text" placeholder="address" size="45" onChange={e=>setAddressDepositFor(e.target.value)} />
+              <input type="text" placeholder="address" size="50" onChange={e=>setAddressDepositFor(e.target.value)} />
               <input type="text" placeholder="amount (FLEX)" onChange={e=>setAmountDepositFor(e.target.value)} />
               <button onClick={onDepositFor}>{textDepositFor}</button>
             </form>
@@ -552,22 +552,22 @@ export function VeFLEX({ veflex, flex, conn, increaseStake, initialData }) {
               </label>
               <ul>
                 <li>
-                  <input type="text" placeholder="address" size="45" onChange={e=>onAddress4DepositFor(e.target.value, setAddress1DepositFor, setLocked1)} />
+                  <input type="text" placeholder="address" size="50" onChange={e=>onAddress4DepositFor(e.target.value, setAddress1DepositFor, setLocked1)} />
                   <input type="text" placeholder="amount (FLEX)" onChange={e=>onAmountForDeposit(e.target.value, setAmount1DepositFor)} />
                   {locked1 ? `staked ${locked1[0]} FLEX, end at: ${new Date(locked1[1] * 1000).toLocaleString()} Local Time` : ""}
                 </li>
                 <li>
-                  <input type="text" placeholder="address" size="45" onChange={e=>onAddress4DepositFor(e.target.value, setAddress2DepositFor, setLocked2)} />
+                  <input type="text" placeholder="address" size="50" onChange={e=>onAddress4DepositFor(e.target.value, setAddress2DepositFor, setLocked2)} />
                   <input type="text" placeholder="amount (FLEX)" onChange={e=>onAmountForDeposit(e.target.value, setAmount2DepositFor)} />
                   {locked2 ? `staked ${locked2[0]} FLEX, end at: ${new Date(locked2[1] * 1000).toLocaleString()} Local Time` : ""}
                 </li>
                 <li>
-                  <input type="text" placeholder="address" size="45" onChange={e=>onAddress4DepositFor(e.target.value, setAddress3DepositFor, setLocked3)} />
+                  <input type="text" placeholder="address" size="50" onChange={e=>onAddress4DepositFor(e.target.value, setAddress3DepositFor, setLocked3)} />
                   <input type="text" placeholder="amount (FLEX)" onChange={e=>onAmountForDeposit(e.target.value, setAmount3DepositFor)} />
                   {locked3 ? `staked ${locked3[0]} FLEX, end at: ${new Date(locked3[1] * 1000).toLocaleString()} Local Time` : ""}
                 </li>
                 <li>
-                  <input type="text" placeholder="address" size="45" onChange={e=>onAddress4DepositFor(e.target.value, setAddress4DepositFor, setLocked4)} />
+                  <input type="text" placeholder="address" size="50" onChange={e=>onAddress4DepositFor(e.target.value, setAddress4DepositFor, setLocked4)} />
                   <input type="text" placeholder="amount (FLEX)" onChange={e=>onAmountForDeposit(e.target.value, setAmount4DepositFor)} />
                   {locked4 ? `staked ${locked4[0]} FLEX, end at: ${new Date(locked4[1] * 1000).toLocaleString()} Local Time` : ""}
                 </li>

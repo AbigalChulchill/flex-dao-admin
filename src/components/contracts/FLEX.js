@@ -315,7 +315,7 @@ export function FLEX({ flex, enableTx, conn, transferToken, initialData}) {
               <label>
                 Account Balance Of:
               </label>
-              <input type="text" placeholder="address" size="45" onChange={ e => setAddressBalanceOf(e.target.value)} />
+              <input type="text" placeholder="address" size="50" onChange={ e => setAddressBalanceOf(e.target.value)} />
               <button onClick={onBalanceOf}>Read</button>
               <span>{balanceOf} {balanceOf ? 'FLEX' : ''}</span>
             </form>
@@ -325,7 +325,7 @@ export function FLEX({ flex, enableTx, conn, transferToken, initialData}) {
               <label>
                 BCH Balance Of Account:
               </label>
-              <input type="text" placeholder="address" size="45" onChange={ e => setBchAddressBalanceOf(e.target.value)} />
+              <input type="text" placeholder="address" size="50" onChange={ e => setBchAddressBalanceOf(e.target.value)} />
               <button onClick={onBchBalanceOf}>Read</button>
               <span>{bchBalanceOf} {bchBalanceOf ? 'BCH' : ''}</span>
             </form>
@@ -356,7 +356,7 @@ export function FLEX({ flex, enableTx, conn, transferToken, initialData}) {
                   <option value="flex">FLEX</option>
                   <option value="bch">BCH</option>
                 </select>
-                <input type="text" placeholder="address" size="45" onChange={e=>setAddressForSimpleSend(e.target.value)} />
+                <input type="text" placeholder="address" size="50" onChange={e=>setAddressForSimpleSend(e.target.value)} />
                 <input type="text" placeholder="amount (ETH Unit)" onChange={e=>setAmountForSimpleSend(e.target.value)} />
                 <button onClick={onSimpleSending}>Simple Send</button>
               </form>
@@ -373,19 +373,19 @@ export function FLEX({ flex, enableTx, conn, transferToken, initialData}) {
                     <option value="bch">BCH</option>
                   </select>
                   <li>
-                    <input type="text" placeholder="address" size="45" onChange={e=>setAddress1For4BulkSending(e.target.value)} />
+                    <input type="text" placeholder="address" size="50" onChange={e=>setAddress1For4BulkSending(e.target.value)} />
                     <input type="text" placeholder="amount (ETH Unit)" onChange={e=>onAmountFor4BulkSending(e.target.value, setAmount1For4BulkSending)} />
                   </li>
                   <li>
-                    <input type="text" placeholder="address" size="45" onChange={e=>setAddress2For4BulkSending(e.target.value)} />
+                    <input type="text" placeholder="address" size="50" onChange={e=>setAddress2For4BulkSending(e.target.value)} />
                     <input type="text" placeholder="amount (ETH Unit)" onChange={e=>onAmountFor4BulkSending(e.target.value, setAmount2For4BulkSending)} />
                   </li>
                   <li>
-                    <input type="text" placeholder="address" size="45" onChange={e=>setAddress3For4BulkSending(e.target.value)} />
+                    <input type="text" placeholder="address" size="50" onChange={e=>setAddress3For4BulkSending(e.target.value)} />
                     <input type="text" placeholder="amount (ETH Unit)" onChange={e=>onAmountFor4BulkSending(e.target.value, setAmount3For4BulkSending)} />
                   </li>
                   <li>
-                    <input type="text" placeholder="address" size="45" onChange={e=>setAddress4For4BulkSending(e.target.value)} />
+                    <input type="text" placeholder="address" size="50" onChange={e=>setAddress4For4BulkSending(e.target.value)} />
                     <input type="text" placeholder="amount (ETH Unit)" onChange={e=>onAmountFor4BulkSending(e.target.value, setAmount4For4BulkSending)} />
                   </li>
                   <button onClick={on4BulkSending}>{!approved && currencyFor4BulkSending === 'flex' ? 'Approve':'Bulk Send for 4 Addresses'}</button>

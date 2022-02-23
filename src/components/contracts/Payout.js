@@ -319,7 +319,7 @@ export function Payout({payout, conn, flex, startTs, initialData}) {
               <label>
                 Claimable Amount:
               </label>
-              <input type="text" placeholder="address" size="45" onChange={e=>setAddressClaimable(e.target.value)} />
+              <input type="text" placeholder="address" size="50" onChange={e=>setAddressClaimable(e.target.value)} />
               <button onClick={onClaimable}>Read</button>
               {claimable} {claimable?"FLEX":""}
             </form>
@@ -329,7 +329,7 @@ export function Payout({payout, conn, flex, startTs, initialData}) {
               <label>
                 Is Distributor:
               </label>
-              <input type="text" placeholder="address" size="45" onChange={e=>setAddressIsdistributor(e.target.value)} />
+              <input type="text" placeholder="address" size="50" onChange={e=>setAddressIsdistributor(e.target.value)} />
               <button onClick={onIsDistributor}>Read</button>
               {isDistributor}
             </form>
@@ -339,7 +339,7 @@ export function Payout({payout, conn, flex, startTs, initialData}) {
               <label>
                 Is Operator:
               </label>
-              <input type="text" placeholder="address" size="45" onChange={e=>setAddressIsOperator(e.target.value)} />
+              <input type="text" placeholder="address" size="50" onChange={e=>setAddressIsOperator(e.target.value)} />
               <button onClick={onIsOperator}>Read</button>
               {isOperator}
             </form>

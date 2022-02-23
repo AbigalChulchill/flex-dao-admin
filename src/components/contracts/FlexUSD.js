@@ -105,7 +105,7 @@ export function FlexUSD({ flexUSD, initialData, conn}) {
         if (err.data && err.data.message) {
           setTxStatusText(err.data.message);
         }
-        if (err.message) {
+        else if (err.message) {
           setTxStatusText(err.message);
           if (err.message.includes('transaction was replaced')) {
             setTxStatus(false);
@@ -138,7 +138,7 @@ export function FlexUSD({ flexUSD, initialData, conn}) {
         if (err.data && err.data.message) {
           setTxStatusText(err.data.message);
         }
-        if (err.message) {
+        else if (err.message) {
           setTxStatusText(err.message);
           if (err.message.includes('transaction was replaced')) {
             setTxStatus(false);
@@ -171,7 +171,7 @@ export function FlexUSD({ flexUSD, initialData, conn}) {
         if (err.data && err.data.message) {
           setTxStatusText(err.data.message);
         }
-        if (err.message) {
+        else if (err.message) {
           setTxStatusText(err.message);
           if (err.message.includes('transaction was replaced')) {
             setTxStatus(false);
@@ -204,7 +204,7 @@ export function FlexUSD({ flexUSD, initialData, conn}) {
         if (err.data && err.data.message) {
           setTxStatusText(err.data.message);
         }
-        if (err.message) {
+        else if (err.message) {
           setTxStatusText(err.message);
           if (err.message.includes('transaction was replaced')) {
             setTxStatus(false);

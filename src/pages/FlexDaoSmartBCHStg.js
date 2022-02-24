@@ -99,7 +99,7 @@ const initialDataForPage = async (multiCall, multiCallFlex, multiCallVeFlex, mul
     errorHandle('initialDataForPage', err);
   }
 }
-export const FlexDaoStg2Page = () => {
+export const FlexDaoSmartBCHStg = () => {
   const { conn } = useContext(ConnectionContext);
   
   const [dailyPayout, setDailyPayout] = useState();
@@ -157,7 +157,6 @@ export const FlexDaoStg2Page = () => {
 
   return (
     <>
-      <h1>FLEX DAO Stg Admin Page</h1>
       <div className="container">
         <FLEX flex={flex} initialData={initialData}></FLEX>
         <VeFLEX veflex={veFlex} flex={flex} conn={conn} increaseStake={increaseStake} initialData={initialData}></VeFLEX>

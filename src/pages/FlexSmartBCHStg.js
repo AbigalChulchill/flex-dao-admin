@@ -29,7 +29,7 @@ const initialDataForPage = async (multiCall, multiCallFlex, multiCallTransferTok
 }
 
 
-export const FlexStg2Page = () => {
+export const FlexSmartBCHStg = () => {
   const { conn } = useContext(ConnectionContext);
   
   const [flex, setFlex] = useState();
@@ -72,7 +72,6 @@ export const FlexStg2Page = () => {
 
   return (
     <>
-      <h1>FLEX Stg Admin Page</h1>
       <div className="container">
         <FLEX flex={flex} enableTx={true} conn={conn} transferToken={transferToken} initialData={initialData}></FLEX>
       </div>

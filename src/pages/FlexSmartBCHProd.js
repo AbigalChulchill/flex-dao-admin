@@ -1,4 +1,4 @@
-import { getFlexPP, getTransferTokenPP, getMultiCallPP, getMultiCallFlexPP, getMultiCallTransferTokenPP } from '../conn';
+import { getFlexProd, getTransferTokenProd, getMultiCallProd, getMultiCallFlexProd, getMultiCallTransferTokenProd } from '../conn';
 import { ConnectionContext} from '../App'
 import { FLEX } from "../components/contracts/FLEX";
 import { useEffect, useState, useContext } from "react";
@@ -28,9 +28,9 @@ const initialDataForPage = async (multiCall, multiCallFlex, multiCallTransferTok
   }
 }
 
-export const FlexPPPage = () => {
+export const FlexSmartBCHProd = () => {
   const { conn } = useContext(ConnectionContext);
-
+  
   const [flex, setFlex] = useState();
   const [transferToken, setTransferToken] = useState();
   const [initialData, setInitialData] = useState();
@@ -39,27 +39,27 @@ export const FlexPPPage = () => {
     async function fetchData() {
       try {
         const ethereum = window.ethereum;
-        if (ethereum.networkVersion !== '10001') {
+        if (ethereum.networkVersion !== '10000') {
           await ethereum.request({
             method: "wallet_switchEthereumChain",
-            params: [{ chainId: '0x2711' }],
+            params: [{ chainId: '0x2710' }],
           });
         }
         if (conn) {
-          const _flex = getFlexPP(conn);
+          const _flex = getFlexProd(conn);
           if (_flex) setFlex(_flex);
-          const _transferToken = getTransferTokenPP(conn);
+          const _transferToken = getTransferTokenProd(conn);
           if (_transferToken) setTransferToken(_transferToken);
-          const _multiCall = await getMultiCallPP(conn);
-          const _multiCallFlex = getMultiCallFlexPP();
-          const _multiCallTransferToken = getMultiCallTransferTokenPP();
+          const _multiCall = await getMultiCallProd(conn);
+          const _multiCallFlex = getMultiCallFlexProd();
+          const _multiCallTransferToken = getMultiCallTransferTokenProd();
           if (_multiCall && _multiCallFlex && _multiCallTransferToken) {
             const _initialData = await initialDataForPage(_multiCall, _multiCallFlex, _multiCallTransferToken);
             if (_initialData) setInitialData(_initialData);
           }
         }
       } catch (err) {
-        errorHandle("initial FLEX PP page", err);
+        errorHandle("initial FLEX Prod page", err);
       }
     }
     fetchData();
@@ -71,7 +71,6 @@ export const FlexPPPage = () => {
 
   return (
     <>
-      <h1>FLEX PP Admin Page</h1>
       <div className="container">
         <FLEX flex={flex} enableTx={true} conn={conn} transferToken={transferToken} initialData={initialData}></FLEX>
       </div>

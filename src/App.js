@@ -1,12 +1,17 @@
 import { Layout, Menu } from 'antd';
-import { Route, Switch, Redirect, Link } from 'react-router-dom';
+import { Route, Switch, Link } from 'react-router-dom';
 import { useEffect, useState, createContext } from 'react';
 
-import { FlexPage } from './pages/FlexPage';
-import { FlexUSDPage } from './pages/FlexUSDPage';
-import { FlexDaoPage } from './pages/FlexDaoPage';
 import { getConn } from './conn';
 import { errorHandle } from "./utils";
+
+import { FlexDaoSmartBCHPP } from './pages/FlexDaoSmartBCHPP'
+import { FlexDaoSmartBCHProd } from './pages/FlexDaoSmartBCHProd'
+import { FlexDaoSmartBCHStg } from './pages/FlexDaoSmartBCHStg'
+import { FlexSmartBCHPP } from './pages/FlexSmartBCHPP'
+import { FlexSmartBCHProd } from './pages/FlexSmartBCHProd'
+import { FlexSmartBCHStg } from './pages/FlexSmartBCHStg'
+import { FlexUSDAvaxPP } from './pages/FlexUSDAvaxPP'
 
 import './App.css';
 
@@ -55,7 +60,7 @@ function App() {
                     <Link to="/flex/smartbch/pp">PP</Link>
                   </Menu.Item>
                   <Menu.Item key="2">
-                    <Link to="/flex/smartbch/stage">Stage</Link>
+                    <Link to="/flex/smartbch/stg">Stage</Link>
                   </Menu.Item>
                   <Menu.Item key="3">
                     <Link to="/flex/smartbch/prod">Prod</Link>
@@ -68,7 +73,7 @@ function App() {
                     <Link to="/flexdao/smartbch/pp">PP</Link>
                   </Menu.Item>
                   <Menu.Item key="5">
-                    <Link to="/flexdao/smartbch/stage">Stage</Link>
+                    <Link to="/flexdao/smartbch/stg">Stage</Link>
                   </Menu.Item>
                   <Menu.Item key="6">
                     <Link to="/flexdao/smartbch/prod">Prod</Link >  
@@ -81,7 +86,7 @@ function App() {
                     <Link to="/flexusd/ethereum/pp">PP</Link>
                   </Menu.Item>
                   <Menu.Item key="8">
-                    <Link to="/flexusd/ethereum/stage">Stage</Link>
+                    <Link to="/flexusd/ethereum/stg">Stage</Link>
                   </Menu.Item>
                   <Menu.Item key="9">
                     <Link to="/flexusd/ethereum/prod">Prod</Link>
@@ -92,7 +97,7 @@ function App() {
                     <Link to="/flexusd/smartbch/pp">PP</Link>
                   </Menu.Item>
                   <Menu.Item key="11">
-                    <Link to="/flexusd/smartbch/stage">Stage</Link>
+                    <Link to="/flexusd/smartbch/stg">Stage</Link>
                   </Menu.Item>
                   <Menu.Item key="12">
                     <Link to="/flexusd/smartbch/prod">Prod</Link>
@@ -100,13 +105,13 @@ function App() {
                 </SubMenu>
                 <SubMenu key="sub8" title="Avalanche">
                   <Menu.Item key="13">
-                    <Link to="/flexusd/avalanche/pp">PP</Link>  
+                    <Link to="/flexusd/avax/pp">PP</Link>  
                   </Menu.Item>
                   <Menu.Item key="14">
-                    <Link to="/flexusd/avalanche/stage">Stage</Link>
+                    <Link to="/flexusd/avax/stg">Stage</Link>
                   </Menu.Item>
                   <Menu.Item key="15">
-                    <Link to="/flexusd/avalanche/prod">Prod</Link>
+                    <Link to="/flexusd/avax/prod">Prod</Link>
                   </Menu.Item>
                 </SubMenu>
                 <SubMenu key="sub9" title="Polygon">
@@ -114,7 +119,7 @@ function App() {
                     <Link to="/flexusd/polygon/pp">PP</Link>
                   </Menu.Item>
                   <Menu.Item key="17">
-                    <Link to="/flexusd/polygon/stage">Stage</Link>
+                    <Link to="/flexusd/polygon/stg">Stage</Link>
                   </Menu.Item>
                   <Menu.Item key="18">
                     <Link to="/flexusd/polygon/prod">Prod</Link>
@@ -125,7 +130,7 @@ function App() {
                     <Link to="/flexusd/ftm/pp">PP</Link>
                   </Menu.Item>
                   <Menu.Item key="20">
-                    <Link to="/flexusd/ftm/stage">Stage</Link>
+                    <Link to="/flexusd/ftm/stg">Stage</Link>
                   </Menu.Item>
                   <Menu.Item key="21">
                     <Link to="/flexusd/ftm/prod">Prod</Link>
@@ -136,7 +141,7 @@ function App() {
                     <Link to="/flexusd/bsc/pp">PP</Link>
                   </Menu.Item>
                   <Menu.Item key="23">
-                    <Link to="/flexusd/bsc/stage">Stage</Link>
+                    <Link to="/flexusd/bsc/stg">Stage</Link>
                   </Menu.Item>
                   <Menu.Item key="24">
                     <Link to="/flexusd/bsc/prod">Prod</Link>
@@ -151,17 +156,26 @@ function App() {
             </Header>
             <Content style={{ margin: '0 16px' }}>
               <Switch>
-                <Route path='/' exact>
-                  <Redirect to='/flex-dao' />
+                <Route path='/flex/smartbch/pp'>
+                  <FlexSmartBCHPP />
                 </Route>
-                <Route path='/flex'>
-                  <FlexPage />
+                <Route path='/flex/smartbch/prod'>
+                  <FlexSmartBCHProd />
                 </Route>
-                <Route path='/flexusd'>
-                  <FlexUSDPage />
+                <Route path='/flex/smartbch/stg'>
+                  <FlexSmartBCHStg />
                 </Route>
-                <Route path='/flex-dao'>
-                  <FlexDaoPage/>
+                <Route path='/flexdao/smartbch/pp'>
+                  <FlexDaoSmartBCHPP />
+                </Route>
+                <Route path='/flexdao/smartbch/prod'>
+                  <FlexDaoSmartBCHProd />
+                </Route>
+                <Route path='/flexdao/smartbch/stg'>
+                  <FlexDaoSmartBCHStg />
+                </Route>
+                <Route path='/flexusd/avax/pp'>
+                  <FlexUSDAvaxPP />
                 </Route>
               </Switch>
             </Content>

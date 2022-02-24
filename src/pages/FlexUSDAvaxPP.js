@@ -37,7 +37,7 @@ const initialDataForPage = async (multiCall, multiCallFlexUSD) => {
   }
 }
 
-export const FlexUSDPPPage = () => {
+export const FlexUSDAvaxPP = () => {
   const { conn } = useContext(ConnectionContext);
 
   const [flexUSD, setFlexUSD] = useState();
@@ -76,7 +76,6 @@ export const FlexUSDPPPage = () => {
 
   return (
     <>
-      <h1>FLEXUSD PP Admin Page</h1>
       <h3>{config.flexusd.avax.pp.network_name}</h3>
       <div className="container">
         <FlexUSD flexUSD={flexUSD} initialData={initialData} conn={conn}></FlexUSD>

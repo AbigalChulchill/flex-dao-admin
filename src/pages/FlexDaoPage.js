@@ -1,5 +1,4 @@
 import { Route, Switch, Redirect } from 'react-router-dom';
-import { TopNav } from '../components/layout/TopNav'
 import { FlexDaoPPPage } from './FlexDaoPPPage';
 // import { FlexDaoStg1Page } from '../pages/FlexDaoStg1Page';
 import { FlexDaoStg2Page } from './FlexDaoStg2Page';
@@ -9,8 +8,7 @@ import { FlexDaoProdPage } from './FlexDaoProdPage';
 export const FlexDaoPage = () => {
   return (
     <>
-      <TopNav category='FlexDaoPage'></TopNav>
-      <div className='subContent'>
+      <div>
         <Switch>
           <Route path='/flex-dao' exact>
             <Redirect to='/flex-dao/prod' />

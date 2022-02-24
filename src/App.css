@@ -1,8 +1,9 @@
 @import '~antd/dist/antd.css';
 
-.site-layout .site-layout-background {
+.header {
   background: #fff;
 }
-[data-theme="dark"] .site-layout .site-layout-background {
-  background: #141414;
+
+.header > h1 {
+  text-align: center;
 }

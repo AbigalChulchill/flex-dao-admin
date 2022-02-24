@@ -1,5 +1,4 @@
 import { Route, Switch, Redirect } from 'react-router-dom';
-import { TopNav } from '../components/layout/TopNav'
 import { FlexPPPage } from './FlexPPPage';
 import { FlexStg2Page } from './FlexStg2Page';
 import { FlexProdPage } from './FlexProdPage';
@@ -7,8 +6,7 @@ import { FlexProdPage } from './FlexProdPage';
 export const FlexPage = () => {
   return (
     <>
-      <TopNav category='FlexPage'></TopNav>
-      <div className='subContent'>
+      <div>
         <Switch>
           <Route path='/flex' exact>
             <Redirect to='/flex/prod' />

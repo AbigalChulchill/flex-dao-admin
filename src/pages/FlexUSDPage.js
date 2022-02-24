@@ -1,12 +1,10 @@
 import { Route, Switch, Redirect } from 'react-router-dom';
-import { TopNav } from '../components/layout/TopNav'
 import { FlexUSDPPPage } from './FlexUSDPPPage';
 
 export const FlexUSDPage = () => {
   return (
     <>
-      <TopNav category='FlexUSDPage'></TopNav>
-      <div className='subContent'>
+      <div>
         <Switch>
           <Route path='/flexusd' exact>
             <Redirect to='/flexusd/pp' />

@@ -12,6 +12,9 @@ import { FlexSmartBCHPP } from './pages/FlexSmartBCHPP'
 import { FlexSmartBCHProd } from './pages/FlexSmartBCHProd'
 import { FlexSmartBCHStg } from './pages/FlexSmartBCHStg'
 import { FlexUSDAvaxPP } from './pages/FlexUSDAvaxPP'
+import { FlexUSDPolygonPP } from './pages/FlexUSDPolygonPP'
+import { FlexUSDFTMPP } from './pages/FlexUSDFTMPP'
+import { FlexUSDBSCPP } from './pages/FlexUSDBSCPP'
 
 import './App.css';
 
@@ -176,6 +179,15 @@ function App() {
                 </Route>
                 <Route path='/flexusd/avax/pp'>
                   <FlexUSDAvaxPP />
+                </Route>
+                <Route path='/flexusd/polygon/pp'>
+                  <FlexUSDPolygonPP />
+                </Route>
+                <Route path='/flexusd/bsc/pp'>
+                  <FlexUSDBSCPP />
+                </Route>
+                <Route path='/flexusd/ftm/pp'>
+                  <FlexUSDFTMPP />
                 </Route>
               </Switch>
             </Content>

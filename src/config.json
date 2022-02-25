@@ -82,12 +82,42 @@
   "flexusd": {
     "avax": {
       "pp": {
-        "name": "flexusd avax pp",
-        "network_name": "Avalanche testnet - FUJI C-Cahin",
+        "name": "FlexUSD Avalanche PP",
+        "network_name": "Avalanche testNet - FUJI C-Chain",
         "chain_id": "43113",
         "explorer": "https://testnet.snowtrace.io/address/",
         "flexusd": "0xA9bB3b5334347F9a56bebb3f590E8dF97fC091f9",
         "multi_call": "0xc787b7D1c74Bc70b35b50303bd02Bd51909c1Fc9"
+      }
+    },
+    "polygon": {
+      "pp": {
+        "name": "FlexUSD Polygon PP",
+        "network_name": "Polygon Mumbai TestNet",
+        "chain_id": "80001",
+        "explorer": "https://mumbai.polygonscan.com/address/",
+        "flexusd": "0x97d63ae20feb2d4f7f20e9e4b8aba53eab0c83d1",
+        "multi_call": "0xDd652658B0Bb9EF5B6dB12F0984F8F1527c8f10d"
+      }
+    },
+    "ftm": {
+      "pp": {
+        "name": "FlexUSD Fantom Opera PP",
+        "network_name": "FTM TestNet",
+        "chain_id": "4002",
+        "explorer": "https://explorer.testnet.fantom.network/address/",
+        "flexusd": "0xA9bB3b5334347F9a56bebb3f590E8dF97fC091f9",
+        "multi_call": "0xaB098183D5F01E5EFae699bFa0fb2A51c16CC945"
+      }
+    },
+    "bsc": {
+      "pp": {
+        "name": "FlexUSD Binance Smart Chain PP",
+        "network_name": "BSC TestNet",
+        "chain_id": "97",
+        "explorer": "https://testnet.bscscan.com/address/",
+        "flexusd": "0xB226C60886e81920d3d913858678d8C9e71eC17E",
+        "multi_call": "0xaB098183D5F01E5EFae699bFa0fb2A51c16CC945"
       }
     }
   }

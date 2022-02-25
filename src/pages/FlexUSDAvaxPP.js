@@ -76,7 +76,7 @@ export const FlexUSDAvaxPP = () => {
 
   return (
     <>
-      <h3>{config.flexusd.avax.pp.network_name}</h3>
+      <h1>{config.flexusd.avax.pp.network_name}</h1>
       <div className="container">
         <FlexUSD flexUSD={flexUSD} initialData={initialData} conn={conn}></FlexUSD>
       </div>

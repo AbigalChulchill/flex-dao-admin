@@ -219,7 +219,7 @@ export function FlexUSD({ flexUSD, initialData, conn}) {
     <div className="box">
       <div className="info">
         <div className="bulletin">
-          == Contract Name: {contractName} - <a href={config.flexusd.avax.pp.url} target="_blank" rel="noreferrer" >Check on explorer</a> ==
+          == Contract Name: {contractName} - <a href={config.flexusd.avax.pp.explorer + config.flexusd.avax.pp.explorer} target="_blank" rel="noreferrer" >Check on explorer</a> ==
         </div>
         <ul>
           <li>Addr: {addr}</li>

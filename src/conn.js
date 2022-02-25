@@ -182,7 +182,7 @@ export const getMultiCallTransferTokenProd = () => {
 }
 
 export const getFlexUSDAvaxPP = ( conn ) => {
-  return new Contract(config.flexusd.avax.pp.address, flexUSD.abi, conn.getSigner());
+  return new Contract(config.flexusd.avax.pp.flexusd, flexUSD.abi, conn.getSigner());
 }
 export const getMultiCallAvaxPP = async ( conn ) => {
   setMulticallAddress(config.flexusd.avax.pp.chain_id, config.flexusd.avax.pp.multi_call);
@@ -190,5 +190,5 @@ export const getMultiCallAvaxPP = async ( conn ) => {
   return callProvider;
 }
 export const getMultiCallFlexUSDAvaxPP = () => {
-  return new MultiCallContract(config.flexusd.avax.pp.address, flexUSD.abi);
+  return new MultiCallContract(config.flexusd.avax.pp.flexusd, flexUSD.abi);
 }

@@ -80,7 +80,7 @@ function getCurrentExpectEpoch(startTs) {
   return Math.floor((now - startTs) / oneDay);
 }
 
-export function Payout({payout, conn, flex, startTs, initialData}) {
+export function Payout({payout, conn, flex, startTs, initialData, config}) {
 
   const [querying, setQuerying] = useState();
 
@@ -164,7 +164,7 @@ export function Payout({payout, conn, flex, startTs, initialData}) {
       setCurrentEpoch();
       setCurrentActiveEpoch();
     }
-  }, [payout, conn, flex, startTs, initialData]);
+  }, [payout, conn, flex, startTs, initialData, config]);
 
   const onHistoryReward = async (e) => {
     e.preventDefault();
@@ -273,7 +273,7 @@ export function Payout({payout, conn, flex, startTs, initialData}) {
     <div className="box">
       <div className="info">
         <div className="bulletin">
-          == Contract Name: {name} ==
+          == Contract Name: {name} - <a href={config.explorer + config.daily_payout} target="_blank" rel="noreferrer" >Check on explorer</a>==
         </div>
         <ul>
           <li>Contract Addr: {addr}</li>

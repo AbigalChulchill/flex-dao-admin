@@ -83,7 +83,7 @@ async function bulkSending(transferToken, flex, addressArray, amountArray, curre
   }
 }
 
-export function FLEX({ flex, enableTx, conn, transferToken, initialData}) {
+export function FLEX({ flex, enableTx, conn, transferToken, initialData, config}) {
 
   const [querying, setQuerying] = useState();
 
@@ -163,7 +163,7 @@ export function FLEX({ flex, enableTx, conn, transferToken, initialData}) {
       setAdmin();
       setTotalSupply();
     }
-  }, [flex, enableTx, conn, transferToken, initialData]);
+  }, [flex, enableTx, conn, transferToken, initialData, config]);
 
   const onBalanceOf = async (e) => {
     e.preventDefault();
@@ -297,7 +297,7 @@ export function FLEX({ flex, enableTx, conn, transferToken, initialData}) {
     <div className="box">
       <div className="info">
         <div className="bulletin">
-          == Contract Name: {name} ==
+          == Contract Name: {name} - <a href={config.explorer + config.flex} target="_blank" rel="noreferrer" >Check on explorer</a>==
         </div>
         <ul>
           <li>Contract Addr: {addr}</li>

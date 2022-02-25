@@ -19,7 +19,7 @@ async function getFlexBalance(flex, address) {
   }
 }
 
-export function Distributor({ distributor, flex, initialData }) {
+export function Distributor({ distributor, flex, initialData, config }) {
 
   const [querying, setQuerying] = useState();
 
@@ -58,7 +58,7 @@ export function Distributor({ distributor, flex, initialData }) {
       setBalance();
       setPayout();
     }
-  }, [distributor, flex, initialData]);
+  }, [distributor, flex, initialData, config]);
 
   const onIsDistributor = async (e) => {
     e.preventDefault();
@@ -76,7 +76,7 @@ export function Distributor({ distributor, flex, initialData }) {
     <div className="box">
       <div className="info">
         <div className="bulletin">
-          == Contract Name: {name} ==
+          == Contract Name: {name} - <a href={config.explorer + config.daily_mini_distributor} target="_blank" rel="noreferrer" >Check on explorer</a>==
         </div>
         <ul>
           <li>Contract Addr: {addr}</li>

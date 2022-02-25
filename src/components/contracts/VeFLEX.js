@@ -137,7 +137,7 @@ async function depositForInBatch(increaseStake, flex, addressForDepositForInBatc
   }
 }
 
-export function VeFLEX({ veflex, flex, conn, increaseStake, initialData }) {
+export function VeFLEX({ veflex, flex, conn, increaseStake, initialData, config }) {
 
   const [querying, setQuerying] = useState();
 
@@ -254,7 +254,7 @@ export function VeFLEX({ veflex, flex, conn, increaseStake, initialData }) {
       setSupply();
       setTotalSupply();
     }
-  }, [veflex, flex, conn, increaseStake, initialData]);
+  }, [veflex, flex, conn, increaseStake, initialData, config]);
 
   const onLocked = async (e) => {
     e.preventDefault();
@@ -453,7 +453,7 @@ export function VeFLEX({ veflex, flex, conn, increaseStake, initialData }) {
     <div className="box">
       <div className="info">
         <div className="bulletin">
-          == Contract Name: {name} ==
+          == Contract Name: {name} - <a href={config.explorer + config.veFlex} target="_blank" rel="noreferrer" >Check on explorer</a>==
         </div>
         <ul>
           <li>Contract Addr: {addr}</li>

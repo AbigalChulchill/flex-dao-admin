@@ -2,8 +2,6 @@ import { useEffect, useState } from "react";
 import { utils } from 'ethers';
 import { errorHandle } from "../../utils";
 
-import * as config from "../../config.json";
-
 async function getBalanceOf(flexUSD, value) {
   try {
     return await flexUSD.balanceOf(value);
@@ -12,7 +10,7 @@ async function getBalanceOf(flexUSD, value) {
   }
 }
 
-export function FlexUSD({ flexUSD, initialData, conn}) {
+export function FlexUSD({ flexUSD, initialData, conn, config }) {
   const [contractName, setContractName] = useState();
   const [addr, setAddr] = useState();
 
@@ -69,7 +67,7 @@ export function FlexUSD({ flexUSD, initialData, conn}) {
       setAdmin();
       setTotalSupply();
     }
-  }, [flexUSD, initialData, conn]);
+  }, [flexUSD, initialData, conn, config]);
 
   const onBalanceOf = async (e) => {
     e.preventDefault();
@@ -219,7 +217,7 @@ export function FlexUSD({ flexUSD, initialData, conn}) {
     <div className="box">
       <div className="info">
         <div className="bulletin">
-          == Contract Name: {contractName} - <a href={config.flexusd.avax.pp.explorer + config.flexusd.avax.pp.explorer} target="_blank" rel="noreferrer" >Check on explorer</a> ==
+          == Contract Name: {contractName} - <a href={config.explorer + config.flexusd} target="_blank" rel="noreferrer" >Check on explorer</a> ==
         </div>
         <ul>
           <li>Addr: {addr}</li>

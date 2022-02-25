@@ -1,10 +1,21 @@
-import { Payout } from '../components/contracts/Payout';
-import { VeFLEX } from '../components/contracts/VeFLEX';
-import { Distributor } from '../components/contracts/Distributor';
-import { FLEX } from "../components/contracts/FLEX";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
+import { Contract } from 'ethers';
+import { Provider as MultiCallProvider, Contract as MultiCallContract, setMulticallAddress } from 'ethers-multicall';
 
-import { errorHandle } from "../utils";
+import { ConnectionContext} from '../../App';
+
+import { Payout } from '../contracts/Payout';
+import { VeFLEX } from '../contracts/VeFLEX';
+import { Distributor } from '../contracts/Distributor';
+import { FLEX } from "../contracts/FLEX";
+
+import * as FlexABI from '../../contracts/FLEXCoin.json'
+import * as VeFlexABI from '../../contracts/veFLEX.json'
+import * as DailyPayoutABI from '../../contracts/DailyPayout.json'
+import * as DistributorABI from '../../contracts/Distributor.json'
+import * as IncreaseStakeABI from '../../contracts/IncreaseStake.json'
+
+import { errorHandle } from "../../utils";
 
 const initialDataForPage = async (multiCall, multiCallFlex, multiCallVeFlex, multiCallDailyPayout, multiCallDailyDistributor, multiCallIncreaseStake) => {
   try {
@@ -97,7 +108,54 @@ const initialDataForPage = async (multiCall, multiCallFlex, multiCallVeFlex, mul
   }
 }
 
-export const FlexDaoTemp = (config, getFuncs, conn) => {
+const getDailyPayout = (config, conn) => {
+  return new Contract(config.daily_payout, DailyPayoutABI.abi, conn.getSigner());
+}
+
+const getVeFlex = (config, conn) => {
+  return new Contract(config.veFlex, VeFlexABI.abi, conn.getSigner());
+}
+
+const getDailyDistributor = (config, conn) => {
+  return new Contract(config.daily_mini_distributor, DistributorABI.abi, conn.getSigner());
+}
+
+const getFlex = (config, conn) => {
+  return new Contract(config.flex, FlexABI.abi, conn.getSigner());
+}
+
+const getIncreaseStake = (config, conn) => {
+  return new Contract(config.increase_stake, IncreaseStakeABI.abi, conn.getSigner());
+}
+
+const getMultiCall = async (config, conn) => {
+  setMulticallAddress(config.chain_id, config.multi_call);
+  const callProvider = new MultiCallProvider(conn, config.chain_id);
+  return callProvider;
+}
+
+const getMultiCallFlex = (config) => {
+  return new MultiCallContract(config.flex, FlexABI.abi);
+}
+
+const getMultiCallVeFlex = (config) => {
+  return new MultiCallContract(config.veFlex, VeFlexABI.abi);
+}
+
+const getMultiCallDailyPayout = (config) => {
+  return new MultiCallContract(config.daily_payout, DailyPayoutABI.abi);
+}
+
+const getMultiCallDailyDistributor = (config) => {
+  return new MultiCallContract(config.daily_mini_distributor, DistributorABI.abi);
+}
+
+const getMultiCallIncreaseStake = (config) => {
+  return new MultiCallContract(config.increase_stake, IncreaseStakeABI.abi);
+}
+
+export const FlexDaoTpl = ( {config}) => {
+  const { conn } = useContext(ConnectionContext);
 
   const [dailyPayout, setDailyPayout] = useState();
   const [veFlex, setVeFlex] = useState();
@@ -113,26 +171,31 @@ export const FlexDaoTemp = (config, getFuncs, conn) => {
         if (ethereum.networkVersion !== config.chain_id) {
           await ethereum.request({
             method: "wallet_switchEthereumChain",
-            params: [{ chainId: "0x" + Number(config.chain_id) }],
+            params: [{ chainId: "0x" + Number(config.chain_id).toString(16) }],
           });
         }
-        if (conn) {
-          const _dailyPayout = getFuncs.dailyPayout(conn);
+        if (conn && config) {
+          const _dailyPayout = getDailyPayout(config, conn);
           if (_dailyPayout) setDailyPayout(_dailyPayout);
-          const _veFlex = getFuncs.veFlex(conn);
+
+          const _veFlex = getVeFlex(config, conn);
           if (_veFlex) setVeFlex(_veFlex);
-          const _distributor = getFuncs.dailyDistributor(conn);
+
+          const _distributor = getDailyDistributor(config, conn);
           if (_distributor) setDistributor(_distributor);
-          const _flex = getFuncs.flex(conn);
+
+          const _flex = getFlex(config, conn);
           if (_flex) setFlex(_flex);
-          const _increaseStake = getFuncs.increaseStake(conn);
+
+          const _increaseStake = getIncreaseStake(config, conn);
           if (_increaseStake) setIncreaseStake(_increaseStake);
-          const _multiCall = await getFuncs.multiCall(conn);
-          const _multiCallFlex = getFuncs.multiCallFlex();
-          const _multiCallVeFlex = getFuncs.multiCallVeFlex();
-          const _multiCallDailyPayout = getFuncs.multiCallDailyPayout();
-          const _multiCallDailyDistributor = getFuncs.multiCallDailyDistributor();
-          const _multiCallIncreaseStake = getFuncs.multiCallIncreaseStake();
+
+          const _multiCall = await getMultiCall(config, conn);
+          const _multiCallFlex = getMultiCallFlex(config);
+          const _multiCallVeFlex = getMultiCallVeFlex(config);
+          const _multiCallDailyPayout = getMultiCallDailyPayout(config);
+          const _multiCallDailyDistributor = getMultiCallDailyDistributor(config);
+          const _multiCallIncreaseStake = getMultiCallIncreaseStake(config);
           if (_multiCall && _multiCallFlex && _multiCallVeFlex && _multiCallDailyPayout && _multiCallDailyDistributor && _multiCallIncreaseStake) {
             const _initialData = await initialDataForPage(_multiCall, _multiCallFlex, _multiCallVeFlex, _multiCallDailyPayout, _multiCallDailyDistributor, _multiCallIncreaseStake);
             if (_initialData) setInitialData(_initialData);
@@ -151,15 +214,16 @@ export const FlexDaoTemp = (config, getFuncs, conn) => {
       setIncreaseStake();
       setInitialData();
     }
-  }, [config, getFuncs, conn]);
+  }, [config, conn]);
 
   return (
     <>
+      <h1>{config.name} @ {config.network_name}</h1>
       <div className="container">
-        <FLEX flex={flex} initialData={initialData}></FLEX>
-        <VeFLEX veflex={veFlex}  flex={flex} conn={conn} increaseStake={increaseStake} initialData={initialData}></VeFLEX>
-        <Payout payout={dailyPayout} conn={conn} flex={flex} initialData={initialData}></Payout>
-        <Distributor distributor={distributor} flex={flex} initialData={initialData}></Distributor>
+        <FLEX flex={flex} initialData={initialData} config={config}></FLEX>
+        <VeFLEX veflex={veFlex}  flex={flex} conn={conn} increaseStake={increaseStake} initialData={initialData} config={config}></VeFLEX>
+        <Payout payout={dailyPayout} conn={conn} flex={flex} initialData={initialData} config={config}></Payout>
+        <Distributor distributor={distributor} flex={flex} initialData={initialData} config={config}></Distributor>
       </div>
     </>
   )

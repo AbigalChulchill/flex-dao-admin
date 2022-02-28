@@ -453,7 +453,7 @@ export function VeFLEX({ veflex, flex, conn, increaseStake, initialData, config 
     <div className="box">
       <div className="info">
         <div className="bulletin">
-          == Contract Name: {name} - <a href={config.explorer + config.veFlex} target="_blank" rel="noreferrer" >Check on Explorer </a>==
+          == Contract Name: {name} - <a href={config.explorer + config.veFlex} target="_blank" rel="noreferrer" >Check on Explorer</a> - <a href="/ABI/veFLEX.json" target="_blank" rel="noreferrer" >Contract ABI</a> ==
         </div>
         <ul>
           <li>Contract Addr: {addr}</li>

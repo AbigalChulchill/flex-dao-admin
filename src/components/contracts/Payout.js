@@ -273,7 +273,7 @@ export function Payout({payout, conn, flex, startTs, initialData, config}) {
     <div className="box">
       <div className="info">
         <div className="bulletin">
-          == Contract Name: {name} - <a href={config.explorer + config.daily_payout} target="_blank" rel="noreferrer" >Check on explorer</a>==
+          == Contract Name: {name} - <a href={config.explorer + config.daily_payout} target="_blank" rel="noreferrer" >Check on Explorer </a>==
         </div>
         <ul>
           <li>Contract Addr: {addr}</li>

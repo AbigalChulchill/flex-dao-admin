@@ -217,7 +217,7 @@ export function FlexUSD({ flexUSD, initialData, conn, config }) {
     <div className="box">
       <div className="info">
         <div className="bulletin">
-          == Contract Name: {contractName} - <a href={config.explorer + config.flexusd} target="_blank" rel="noreferrer" >Check on explorer</a> ==
+          == Contract Name: {contractName} - <a href={config.explorer + config.flexusd} target="_blank" rel="noreferrer" >Check on Explorer </a> ==
         </div>
         <ul>
           <li>Addr: {addr}</li>

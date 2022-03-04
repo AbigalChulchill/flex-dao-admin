@@ -104,7 +104,7 @@ const initialDataForPage = async (multiCall, multiCallFlex, multiCallVeFlex, mul
       increaseStakeToken
     }
   } catch (err) {
-    errorHandle('initialDataForPage', err);
+    errorHandle('flexdao initialDataForPage', err);
   }
 }
 

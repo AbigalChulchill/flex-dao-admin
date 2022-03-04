@@ -30,7 +30,7 @@ const initialDataForPage = async (multiCall, multiCallFlex, multiCallTransferTok
       transferTokenAdmin
     }
   } catch (err) {
-    errorHandle('initialDataForPage', err);
+    errorHandle('flex initialDataForPage', err);
   }
 }
 

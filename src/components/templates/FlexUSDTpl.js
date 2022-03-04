@@ -6,13 +6,19 @@ import { ConnectionContext} from '../../App';
 
 import { FlexUSD } from "../contracts/FlexUSD";
 
-import * as FlexUSDABI from '../../contracts/FlexUSDImplV2.json'
+import * as FlexUSDABI from "../../contracts/FlexUSDImplV2.json";
+import * as FlexUSDEthABI from "../../contracts/FlexUSDEth.json";
 
 import { errorHandle } from "../../utils";
 
-const initialDataForPage = async (multiCall, multiCallFlexUSD) => {
+const initialDataForPage = async (multiCall, multiCallFlexUSD, config) => {
   try {
-    const getFlexUSDAdmin = multiCallFlexUSD.owner();
+    let getFlexUSDAdmin;
+    if (config.chain_id === "1") {
+      getFlexUSDAdmin = multiCallFlexUSD.admin();
+    } else {
+      getFlexUSDAdmin = multiCallFlexUSD.owner();
+    }
     const getFlexUSDName = multiCallFlexUSD.name();
     const getFlexUSDSymbol = multiCallFlexUSD.symbol();
     const getFlexUSDMultiplier = multiCallFlexUSD.multiplier();
@@ -37,12 +43,16 @@ const initialDataForPage = async (multiCall, multiCallFlexUSD) => {
       flexUSDTotalSupply
     }
   } catch (err) {
-    errorHandle('initialDataForPage', err);
+    errorHandle('flexusd initialDataForPage', err);
   }
 }
 
 const getFlexUSD = (config, conn) => {
-  return new Contract(config.flexusd, FlexUSDABI.abi, conn.getSigner());
+  if (config.chain_id === "1") {
+    return new Contract(config.flexusd, FlexUSDEthABI.abi, conn.getSigner());
+  } else {
+    return new Contract(config.flexusd, FlexUSDABI.abi, conn.getSigner());
+  }
 }
 
 const getMultiCall = async (config, conn) => {
@@ -52,7 +62,11 @@ const getMultiCall = async (config, conn) => {
 }
 
 const getMultiCallFlexUSD = (config) => {
-  return new MultiCallContract(config.flexusd, FlexUSDABI.abi);
+  if (config.chain_id === "1") {
+    return new MultiCallContract(config.flexusd, FlexUSDEthABI.abi);
+  } else {
+    return new MultiCallContract(config.flexusd, FlexUSDABI.abi);
+  }
 }
 
 export const FlexUSDTpl = ( {config} ) => {
@@ -74,11 +88,11 @@ export const FlexUSDTpl = ( {config} ) => {
         if (conn) {
           const _flexUSD = getFlexUSD(config, conn);
           if (_flexUSD) setFlexUSD(_flexUSD);
-   
+
           const _multiCall = await getMultiCall(config, conn);
           const _multiCallFlexUSD = getMultiCallFlexUSD(config);
-          if (_multiCall && _multiCallFlexUSD) {
-            const _initialData = await initialDataForPage(_multiCall, _multiCallFlexUSD);
+          if (_multiCall && _multiCallFlexUSD && config) {
+            const _initialData = await initialDataForPage(_multiCall, _multiCallFlexUSD, config);
             if (_initialData) setInitialData(_initialData);
           }
         }

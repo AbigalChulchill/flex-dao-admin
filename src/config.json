@@ -119,6 +119,32 @@
         "flexusd": "0xB226C60886e81920d3d913858678d8C9e71eC17E",
         "multi_call": "0xaB098183D5F01E5EFae699bFa0fb2A51c16CC945"
       }
+    },
+    "eth": {
+      "pp": {
+        "name": "FlexUSD Ethereum PP",
+        "network_name": "Ethereum Ropsten TestNet",
+        "chain_id": "3",
+        "explorer": "https://ropsten.etherscan.io/address/",
+        "flexusd": "0x1Df206C108D0284618b2b8497638d933F571Bb0F",
+        "multi_call": "0x53C43764255c17BD724F74c4eF150724AC50a3ed"
+      },
+      "stg": {
+        "name": "FlexUSD Ethereum Stg",
+        "network_name": "Ethereum MainNet",
+        "chain_id": "1",
+        "explorer": "https://etherscan.io/address/",
+        "flexusd": "0x8b6327a3050798b7a2843a6edd0b310e97bee113",
+        "multi_call": "0x5BA1e12693Dc8F9c48aAD8770482f4739bEeD696"
+      },
+      "prod": {
+        "name": "FlexUSD Ethereum Prod",
+        "network_name": "Ethereum MainNet",
+        "chain_id": "1",
+        "explorer": "https://etherscan.io/address/",
+        "flexusd": "0xa774FFB4AF6B0A91331C084E1aebAE6Ad535e6F3",
+        "multi_call": "0x5BA1e12693Dc8F9c48aAD8770482f4739bEeD696"
+      }
     }
   }
 }

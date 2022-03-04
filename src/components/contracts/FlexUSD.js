@@ -217,7 +217,7 @@ export function FlexUSD({ flexUSD, initialData, conn, config }) {
     <div className="box">
       <div className="info">
         <div className="bulletin">
-          == Contract Name: {contractName} - <a href={config.explorer + config.flexusd} target="_blank" rel="noreferrer" >Check on Explorer </a> - <a href="/ABI/FlexUSDImplV2.json" target="_blank" rel="noreferrer" >Logic ABI</a> - <a href="/ABI/FlexUSD.json" target="_blank" rel="noreferrer" >Proxy ABI</a> ==
+          == Contract Name: {contractName} - <a href={config.explorer + config.flexusd} target="_blank" rel="noreferrer" >Check on Explorer </a> - <a href={config.chain_id === "1"? "/ABI/FlexUSDEth.json" : "/ABI/FlexUSDImplV2.json"} target="_blank" rel="noreferrer" >Logic ABI</a> - <a href={config.chain_id === "1"? "/ABI/FlexUSDEthProx.json" : "/ABI/FlexUSD.json"} target="_blank" rel="noreferrer" >Proxy ABI</a> ==
         </div>
         <ul>
           <li>Addr: {addr}</li>

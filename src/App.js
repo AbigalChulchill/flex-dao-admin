@@ -5,17 +5,19 @@ import { useEffect, useState, createContext } from 'react';
 import { getConn } from './conn';
 import { errorHandle } from "./utils";
 
-import { FlexDaoSmartBCHPP } from './pages/FlexDaoSmartBCHPP'
-import { FlexDaoSmartBCHProd } from './pages/FlexDaoSmartBCHProd'
-import { FlexDaoSmartBCHStg } from './pages/FlexDaoSmartBCHStg'
-import { FlexSmartBCHPP } from './pages/FlexSmartBCHPP'
-import { FlexSmartBCHProd } from './pages/FlexSmartBCHProd'
-import { FlexSmartBCHStg } from './pages/FlexSmartBCHStg'
-import { FlexUSDAvaxPP } from './pages/FlexUSDAvaxPP'
-import { FlexUSDPolygonPP } from './pages/FlexUSDPolygonPP'
-import { FlexUSDFTMPP } from './pages/FlexUSDFTMPP'
-import { FlexUSDBSCPP } from './pages/FlexUSDBSCPP'
-
+import { FlexDaoSmartBCHPP } from './pages/FlexDaoSmartBCHPP';
+import { FlexDaoSmartBCHProd } from './pages/FlexDaoSmartBCHProd';
+import { FlexDaoSmartBCHStg } from './pages/FlexDaoSmartBCHStg';
+import { FlexSmartBCHPP } from './pages/FlexSmartBCHPP';
+import { FlexSmartBCHProd } from './pages/FlexSmartBCHProd';
+import { FlexSmartBCHStg } from './pages/FlexSmartBCHStg';
+import { FlexUSDAvaxPP } from './pages/FlexUSDAvaxPP';
+import { FlexUSDPolygonPP } from './pages/FlexUSDPolygonPP';
+import { FlexUSDFTMPP } from './pages/FlexUSDFTMPP';
+import { FlexUSDBSCPP } from './pages/FlexUSDBSCPP';
+import { FlexUSDETHStg } from './pages/FlexUSDETHStg';
+import { FlexUSDETHPP } from './pages/FlexUSDETHPP';
+import { FlexUSDETHProd } from './pages/FlexUSDETHProd';
 import './App.css';
 
 const { Header, Content, Footer, Sider } = Layout;
@@ -188,6 +190,15 @@ function App() {
                 </Route>
                 <Route path='/flexusd/ftm/pp'>
                   <FlexUSDFTMPP />
+                </Route>
+                <Route path='/flexusd/ethereum/pp'>
+                  <FlexUSDETHPP />
+                </Route>
+                <Route path='/flexusd/ethereum/stg'>
+                  <FlexUSDETHStg />
+                </Route>
+                <Route path='/flexusd/ethereum/prod'>
+                  <FlexUSDETHProd />
                 </Route>
               </Switch>
             </Content>

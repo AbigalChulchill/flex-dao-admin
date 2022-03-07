@@ -321,18 +321,19 @@ export function FlexUSD({ flexUSD, initialData, conn, config }) {
 
   const onFireblocksSetTotalSupply = () => {
     if (!apiSecret || !apiKey || !apiAccountId || !apiWalletId) {
-      showNoCredentialError();
+      return showNoCredentialError();
     }
+    
   }
   
   const onFireblocksMint = () => {
     if (!apiSecret || !apiKey || !apiAccountId || !apiWalletId) {
-      showNoCredentialError();
+      return showNoCredentialError();
     }
   }
   const onFireblocksBurn = () => {
     if (!apiSecret || !apiKey || !apiAccountId || !apiWalletId) {
-      showNoCredentialError();
+      return showNoCredentialError();
     }
   }
 

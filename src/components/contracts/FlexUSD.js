@@ -247,6 +247,12 @@ export function FlexUSD({ flexUSD, initialData, conn, config }) {
     }
   }
 
+  const addressInputStyle = {
+    style: {
+      width: "450px"
+    }
+  }
+
   const onInputCredential = (value) => {
     if (value) {
       setApiSecret(value.api_secret);
@@ -300,6 +306,34 @@ export function FlexUSD({ flexUSD, initialData, conn, config }) {
       ),
       onOk() {},
     });
+  }
+
+  const showNoCredentialError = () => {
+    Modal.error({
+      title: "Error",
+      content: (
+        <>
+          <p>Fireblocks Credentials are not provided!</p>
+        </>
+      )
+    });
+  }
+
+  const onFireblocksSetTotalSupply = () => {
+    if (!apiSecret || !apiKey || !apiAccountId || !apiWalletId) {
+      showNoCredentialError();
+    }
+  }
+  
+  const onFireblocksMint = () => {
+    if (!apiSecret || !apiKey || !apiAccountId || !apiWalletId) {
+      showNoCredentialError();
+    }
+  }
+  const onFireblocksBurn = () => {
+    if (!apiSecret || !apiKey || !apiAccountId || !apiWalletId) {
+      showNoCredentialError();
+    }
   }
 
   return (
@@ -473,8 +507,105 @@ export function FlexUSD({ flexUSD, initialData, conn, config }) {
                 </Form.Item>
               </Form>
             </div>
+            <div className="query">
+              <div className="words">
+                <p>API calls to contracts thru Fireblocks MPC</p>
+              </div>
+              <ul>
+                <li>
+                  <Form
+                    layout="inline"
+                    onFinish={onFireblocksSetTotalSupply}
+                  >
+                    <Form.Item
+                      label="setTotalSupply" 
+                      name="amount"                   
+                      rules={[
+                        {
+                          required: true,
+                          message: 'please input total supply',
+                        },
+                      ]}
+                    >
+                      <Input placeholder="amount (ETH Unit)" />
+                    </Form.Item>
+                    <Form.Item>
+                      <Button type="primary" htmlType="submit">Send</Button>
+                    </Form.Item>
+                  </Form>
+                </li>
+                <li>
+                  <Form
+                    layout="inline"
+                    onFinish={onFireblocksMint}
+                  >
+                    <Form.Item
+                      label="mint" 
+                      name="address"
+                      rules={[
+                        {
+                          required: true,
+                          message: 'please input address',
+                        },
+                      ]}
+                      {...addressInputStyle}
+                    >
+                      <Input placeholder="address" />
+                    </Form.Item>
+                    <Form.Item 
+                      name="amount"
+                      rules={[
+                        {
+                          required: true,
+                          message: 'please input amount',
+                        },
+                      ]}
+                    >
+                      <Input placeholder="amount (ETH Unit)" />
+                    </Form.Item>
+                    <Form.Item>
+                      <Button type="primary" htmlType="submit">Send</Button>
+                    </Form.Item>
+                  </Form>
+                </li>
+                <li>
+                  <Form
+                    layout="inline"
+                    onFinish={onFireblocksBurn}
+                  >
+                    <Form.Item 
+                      label="burn" 
+                      name="address"
+                      rules={[
+                        {
+                          required: true,
+                          message: 'please input address',
+                        },
+                      ]}
+                      {...addressInputStyle}
+                    >
+                      <Input placeholder="address" />
+                    </Form.Item>
+                    <Form.Item 
+                      name="amount"
+                      rules={[
+                        {
+                          required: true,
+                          message: 'please input amount',
+                        },
+                      ]}
+                    >
+                      <Input placeholder="amount (ETH Unit)" />
+                    </Form.Item>
+                    <Form.Item>
+                      <Button type="primary" htmlType="submit">Send</Button>
+                    </Form.Item>
+                  </Form>
+                </li>
+              </ul>
+            </div>
 
-          </div>
+        </div>
       </div>
     </>
   );

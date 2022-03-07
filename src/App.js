@@ -1,4 +1,4 @@
-import { Layout, Menu } from 'antd';
+import { Layout, Menu, Modal } from 'antd';
 import { Route, Switch, Link } from 'react-router-dom';
 import { useEffect, useState, createContext } from 'react';
 
@@ -18,33 +18,53 @@ import { FlexUSDBSCPP } from './pages/FlexUSDBSCPP';
 import { FlexUSDETHStg } from './pages/FlexUSDETHStg';
 import { FlexUSDETHPP } from './pages/FlexUSDETHPP';
 import { FlexUSDETHProd } from './pages/FlexUSDETHProd';
+import { GlobalConfig } from './pages/GlobalConfig';
 import './App.css';
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
 
-export const ConnectionContext = createContext(null);
+export const GlobalContext = createContext(null);
 
 function App() {
 
   const [conn, setConn] = useState();
+
+  const [apiSecret, setApiSecret] = useState();
+  const [apiKey, setApiKey] = useState();
+  const [apiAccountId, setApiAccountId] = useState();
+  const [apiWalletId, setApiWalletId] = useState();
+
   const [collapsed, setCollapsed] = useState();
 
   useEffect(() => {
     async function fetchData() {
       try {
+        window.ethereum.on('chainChanged', () => {
+          window.location.reload();
+        });
+        window.ethereum.on('accountsChanged', () => {
+          window.location.reload();
+        });
+
         const _conn = await getConn();
         if (_conn) {
           setConn(_conn);
-          window.ethereum.on('chainChanged', () => {
-            window.location.reload();
-          });
-          window.ethereum.on('accountsChanged', () => {
-            window.location.reload();
-          });
-        } 
+        }
+        
+        const localStorage = window.localStorage;
+        const api_secret = localStorage.getItem('api_secret');
+        const api_key = localStorage.getItem('api_key');
+        const api_account_id = localStorage.getItem('api_account_id');
+        const api_wallet_id = localStorage.getItem('api_wallet_id');
+        if (api_secret && api_key && api_account_id && api_wallet_id) {
+          setApiSecret(api_secret);
+          setApiKey(api_key);
+          setApiAccountId(api_account_id);
+          setApiWalletId(api_wallet_id);
+        }
       } catch (err) {
-        errorHandle('init connection with blockchain', err);
+        errorHandle('initializing the site', err);
       }
     }
     fetchData();
@@ -54,8 +74,71 @@ function App() {
     setCollapsed(collapsed);
   }
 
+  const onInputCredential = (value) => {
+    if (value) {
+      setApiSecret(value.api_secret);
+      setApiKey(value.api_key);
+      setApiAccountId(value.api_account_id);
+      setApiWalletId(value.api_wallet_id);
+
+      const localStorage = window.localStorage;
+      localStorage.setItem('api_secret', value.api_secret);
+      localStorage.setItem('api_key', value.api_key);
+      localStorage.setItem('api_account_id', value.api_account_id);
+      localStorage.setItem('api_wallet_id', value.api_wallet_id);
+
+      Modal.info({
+        title: "INFO",
+        content: (
+          <>
+            <p>The credential has been applied and saved on browser local storage</p>
+            <p>If you want to remove it from local storage, click Clear button</p>
+          </>
+        ),
+        onOk() {},
+      });
+    }
+  }
+
+  const onResetCredential = (form) => {
+    form.setFieldsValue({
+      api_secret: '',
+      api_key: '',
+      api_account_id: '',
+      api_wallet_id: '',
+    })
+
+    setApiSecret();
+    setApiKey();
+    setApiAccountId();
+    setApiWalletId();
+
+    localStorage.removeItem('api_secret');
+    localStorage.removeItem('api_key');
+    localStorage.removeItem('api_account_id');
+    localStorage.removeItem('api_wallet_id');
+
+    Modal.info({
+      title: "INFO",
+      content: (
+        <>
+          <p>The credential has been removed from browser local storage</p>
+        </>
+      ),
+      onOk() {},
+    });
+  }
+
   return (
-    <ConnectionContext.Provider value={{conn}}> 
+    <GlobalContext.Provider value={{
+      conn,
+      apiSecret,
+      apiKey,
+      apiAccountId,
+      apiWalletId,
+      onInputCredential,
+      onResetCredential
+    }}> 
         <Layout style={{ minHeight: '100vh' }}>
           <Sider collapsible collapsed={collapsed} onCollapse={onCollapse}>
             <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
@@ -157,55 +240,58 @@ function App() {
           </Sider>
           <Layout className="site-layout">
             <Header className="header">
-              <h1>CoinFLEX Contracts Tools</h1>
+              <h1><Link to="/">CoinFLEX Contracts Tools</Link></h1>
             </Header>
             <Content style={{ margin: '0 16px' }}>
               <Switch>
-                <Route path='/flex/smartbch/pp'>
+                <Route exact path='/flex/smartbch/pp'>
                   <FlexSmartBCHPP />
                 </Route>
-                <Route path='/flex/smartbch/prod'>
+                <Route exact path='/flex/smartbch/prod'>
                   <FlexSmartBCHProd />
                 </Route>
-                <Route path='/flex/smartbch/stg'>
+                <Route exact path='/flex/smartbch/stg'>
                   <FlexSmartBCHStg />
                 </Route>
-                <Route path='/flexdao/smartbch/pp'>
+                <Route exact path='/flexdao/smartbch/pp'>
                   <FlexDaoSmartBCHPP />
                 </Route>
-                <Route path='/flexdao/smartbch/prod'>
+                <Route exact path='/flexdao/smartbch/prod'>
                   <FlexDaoSmartBCHProd />
                 </Route>
-                <Route path='/flexdao/smartbch/stg'>
+                <Route exact path='/flexdao/smartbch/stg'>
                   <FlexDaoSmartBCHStg />
                 </Route>
-                <Route path='/flexusd/avax/pp'>
+                <Route exact path='/flexusd/avax/pp'>
                   <FlexUSDAvaxPP />
                 </Route>
-                <Route path='/flexusd/polygon/pp'>
+                <Route exact path='/flexusd/polygon/pp'>
                   <FlexUSDPolygonPP />
                 </Route>
-                <Route path='/flexusd/bsc/pp'>
+                <Route exact path='/flexusd/bsc/pp'>
                   <FlexUSDBSCPP />
                 </Route>
-                <Route path='/flexusd/ftm/pp'>
+                <Route exact path='/flexusd/ftm/pp'>
                   <FlexUSDFTMPP />
                 </Route>
-                <Route path='/flexusd/ethereum/pp'>
+                <Route exact path='/flexusd/ethereum/pp'>
                   <FlexUSDETHPP />
                 </Route>
-                <Route path='/flexusd/ethereum/stg'>
+                <Route exact path='/flexusd/ethereum/stg'>
                   <FlexUSDETHStg />
                 </Route>
-                <Route path='/flexusd/ethereum/prod'>
+                <Route exact path='/flexusd/ethereum/prod'>
                   <FlexUSDETHProd />
+                </Route>
+                <Route path='/'>
+                  <GlobalConfig />
                 </Route>
               </Switch>
             </Content>
             <Footer style={{ textAlign: 'center' }}>CoinFLEX contracts tools ©2022 Created by Team De-Fi</Footer>
           </Layout>
         </Layout>
-    </ConnectionContext.Provider>
+    </GlobalContext.Provider>
   );
 }
 

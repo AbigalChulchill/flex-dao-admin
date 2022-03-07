@@ -2,7 +2,7 @@ import { useEffect, useState, useContext } from "react";
 import { Contract } from 'ethers';
 import { Provider as MultiCallProvider, Contract as MultiCallContract, setMulticallAddress } from 'ethers-multicall';
 
-import { ConnectionContext} from '../../App';
+import { GlobalContext} from '../../App';
 
 import { FlexUSD } from "../contracts/FlexUSD";
 
@@ -70,7 +70,7 @@ const getMultiCallFlexUSD = (config) => {
 }
 
 export const FlexUSDTpl = ( {config} ) => {
-  const { conn } = useContext(ConnectionContext);
+  const { conn } = useContext(GlobalContext);
 
   const [flexUSD, setFlexUSD] = useState();
   const [initialData, setInitialData] = useState();

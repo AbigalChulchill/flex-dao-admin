@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { utils } from 'ethers';
-import { Form, Input, Button, Space, Modal } from "antd";
-import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
+import { Form, Input, Button, Modal} from "antd";
 import { errorHandle } from "../../utils";
 
 async function getBalanceOf(flexUSD, value) {
@@ -64,31 +63,6 @@ export function FlexUSD({ flexUSD, initialData, conn, config }) {
 
           const sender = await conn.getSigner().getAddress();
           setWalletAddress(sender);
-
-          const localStorage = window.localStorage;
-          const api_secret = localStorage.getItem('api_secret');
-          const api_key = localStorage.getItem('api_key');
-          const api_account_id = localStorage.getItem('api_account_id');
-          const api_wallet_id = localStorage.getItem('api_wallet_id');
-          if (api_secret && api_key && api_account_id && api_wallet_id) {
-            setApiSecret(api_secret);
-            setApiKey(api_key);
-            setApiAccountId(api_account_id);
-            setApiWalletId(api_wallet_id);
-
-            form.setFieldsValue({
-              api_secret: api_secret
-            });
-            form.setFieldsValue({
-              api_key: api_key
-            });
-            form.setFieldsValue({
-              api_account_id: api_account_id
-            });
-            form.setFieldsValue({
-              api_wallet_id: api_wallet_id
-            });
-          }
         }
       } catch (err) {
         errorHandle('flexUSD initial', err);
@@ -253,61 +227,6 @@ export function FlexUSD({ flexUSD, initialData, conn, config }) {
     }
   }
 
-  const onInputCredential = (value) => {
-    if (value) {
-      setApiSecret(value.api_secret);
-      setApiKey(value.api_key);
-      setApiAccountId(value.api_account_id);
-      setApiWalletId(value.api_wallet_id);
-
-      const localStorage = window.localStorage;
-      localStorage.setItem('api_secret', value.api_secret);
-      localStorage.setItem('api_key', value.api_key);
-      localStorage.setItem('api_account_id', value.api_account_id);
-      localStorage.setItem('api_wallet_id', value.api_wallet_id);
-
-      Modal.info({
-        title: "INFO",
-        content: (
-          <>
-            <p>The credential has been applied and saved on browser local storage</p>
-            <p>If you want to remove it from local storage, click Clear button</p>
-          </>
-        ),
-        onOk() {},
-      });
-    }
-  }
-
-  const onResetCredential = () => {
-    form.setFieldsValue({
-      api_secret: '',
-      api_key: '',
-      api_account_id: '',
-      api_wallet_id: '',
-    })
-
-    setApiSecret();
-    setApiKey();
-    setApiAccountId();
-    setApiWalletId();
-
-    localStorage.removeItem('api_secret');
-    localStorage.removeItem('api_key');
-    localStorage.removeItem('api_account_id');
-    localStorage.removeItem('api_wallet_id');
-
-    Modal.info({
-      title: "INFO",
-      content: (
-        <>
-          <p>The credential has been removed from browser local storage</p>
-        </>
-      ),
-      onOk() {},
-    });
-  }
-
   const showNoCredentialError = () => {
     Modal.error({
       title: "Error",
@@ -420,94 +339,6 @@ export function FlexUSD({ flexUSD, initialData, conn, config }) {
       </div>
       <div className="box">
         <div className="info">
-            <div className="bulletin">
-              == Fireblocks MPC Service ==
-            </div>
-            <div className="query">
-              <div className="words">
-                <p>Credentials will be loaded from local storage of explorer if exist, otherwise please provide it!</p>
-              </div>
-              <Form
-                form={form}
-                onFinish={onInputCredential}
-                wrapperCol={{ span: 8 }}
-                labelCol={{ span: 4 }}
-                initialValues={{
-                  size: "small"
-                }}
-              >
-                <Form.Item
-                  label="API Secret"
-                  name="api_secret"
-                  rules={[
-                    {
-                      required: true,
-                      message: 'please input api secret',
-                    },
-                  ]}
-                >
-                  <Input.Password
-                    iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
-                  />
-                </Form.Item>
-                <Form.Item
-                  label="API Key"
-                  name="api_key"
-                  rules={[
-                    {
-                      required: true,
-                      message: 'please input api key',
-                    },
-                  ]}
-                >
-                  <Input.Password
-                    iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
-                  />
-                </Form.Item>
-                <Form.Item
-                  label="Vault Account Id"
-                  name="api_account_id"
-                  rules={[
-                    {
-                      required: true,
-                      message: 'please input vault account id',
-                    },
-                  ]}
-                  wrapperCol={{ span: 4}}
-                >
-                  <Input.Password
-                    iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
-                  />
-                </Form.Item>
-                <Form.Item
-                  label="External Wallet Id"
-                  name="api_wallet_id"
-                  rules={[
-                    {
-                      required: true,
-                      message: 'please input external wallet id',
-                    },
-                  ]}
-                  wrapperCol={{ span: 4}}
-                >
-                  <Input.Password
-                    iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
-                  />
-                </Form.Item>
-                <Form.Item
-                  wrapperCol={{ offset: 4}}
-                >
-                  <Space size={120}>
-                    <Button type="primary" htmlType="submit">
-                      Apply
-                    </Button>
-                    <Button type="primary" danger htmlType="button" onClick={onResetCredential}>
-                      Clear
-                    </Button>
-                  </Space>
-                </Form.Item>
-              </Form>
-            </div>
             <div className="query">
               <div className="words">
                 <p>API calls to contracts thru Fireblocks MPC</p>

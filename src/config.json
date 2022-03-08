@@ -145,6 +145,32 @@
         "flexusd": "0xa774FFB4AF6B0A91331C084E1aebAE6Ad535e6F3",
         "multi_call": "0x5BA1e12693Dc8F9c48aAD8770482f4739bEeD696"
       }
+    },
+    "smartbch": {
+      "pp": {
+        "name": "FlexUSD SmartBCH PP",
+        "network_name": "Smartbch Amber Testnet",
+        "chain_id": "10001",
+        "explorer": "https://www.smartscan.cash/address/",
+        "flexusd": "0xFed990d491D8c563ce3d636D7536d7F9a3E2De12",
+        "multi_call": "0x3064Be21ed159d7415E177f4d2fd214d709F0449"
+      },
+      "stg": {
+        "name": "FlexUSD SmartBCH Stg",
+        "network_name": "Smartbch MainNet",
+        "chain_id": "10000",
+        "explorer": "https://www.smartscan.cash/address/",
+        "flexusd": "0x7A4B43dE058073F49774eA527Fc24Abd29e2738D",
+        "multi_call": "0x1b38EBAd553f218e2962Cb1C0539Abb5d6A37774"
+      },
+      "prod": {
+        "name": "FlexUSD SmartBCH Prod",
+        "network_name": "Smartbch MainNet",
+        "chain_id": "10000",
+        "explorer": "https://www.smartscan.cash/address/",
+        "flexusd": "0x7b2B3C5308ab5b2a1d9a94d20D35CCDf61e05b72",
+        "multi_call": "0x1b38EBAd553f218e2962Cb1C0539Abb5d6A37774"
+      }
     }
   }
 }

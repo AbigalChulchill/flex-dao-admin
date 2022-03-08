@@ -18,6 +18,9 @@ import { FlexUSDBSCPP } from './pages/FlexUSDBSCPP';
 import { FlexUSDETHStg } from './pages/FlexUSDETHStg';
 import { FlexUSDETHPP } from './pages/FlexUSDETHPP';
 import { FlexUSDETHProd } from './pages/FlexUSDETHProd';
+import { FlexUSDSmartBCHPP } from './pages/FlexUSDSmartBCHPP';
+import { FlexUSDSmartBCHStg } from './pages/FlexUSDSmartBCHStg';
+import { FlexUSDSmartBCHProd } from './pages/FlexUSDSmartBCHProd';
 import { GlobalConfig } from './pages/GlobalConfig';
 import './App.css';
 
@@ -258,6 +261,15 @@ function App() {
                 </Route>
                 <Route exact path='/flexusd/ethereum/prod'>
                   <FlexUSDETHProd />
+                </Route>
+                <Route exact path='/flexusd/smartbch/pp'>
+                  <FlexUSDSmartBCHPP />
+                </Route>
+                <Route exact path='/flexusd/smartbch/stg'>
+                  <FlexUSDSmartBCHStg />
+                </Route>
+                <Route exact path='/flexusd/smartbch/prod'>
+                  <FlexUSDSmartBCHProd />
                 </Route>
                 <Route exact path='/'>
                   <GlobalConfig />

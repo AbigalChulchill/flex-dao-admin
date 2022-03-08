@@ -74,7 +74,7 @@ export function FlexUSD({ flexUSD, initialData, conn, config }) {
     setModalText('Querying ...');
     setConfirmLoading(true);
     const _balanceOf = await getBalanceOf(flexUSD, address);
-    setModalText(`${address}: ${_balanceOf} FlexUSD`)
+    setModalText(`${address}: ${utils.formatEther(_balanceOf)} FlexUSD`)
     setConfirmLoading(false);
   }
 
@@ -86,15 +86,16 @@ export function FlexUSD({ flexUSD, initialData, conn, config }) {
         setModalText('chain is not ready');
         return;
       }
+      setModalText("Sign and start to send on extension wallet ...");
+      setConfirmLoading(true);
       const gasLimitBn = await flexUSD.estimateGas.initialize(amountBn);
       const tx = await flexUSD.initialize(amountBn, {
         gasLimit: gasLimitBn,
       })
       setModalText(`Sending Tx ... : ${tx.hash}`);
-      setConfirmLoading(true);
       const receipt = await tx.wait(2);
       setConfirmLoading(false);
-      setModalText(`confirmed - ${receipt.transactionHash} - ${receipt.confirmations} blocks`);
+      setModalText(`Confirmed - ${receipt.transactionHash} - ${receipt.confirmations} blocks`);
     } catch (err) {
       setConfirmLoading(false);
       if (typeof(err) === 'string') {
@@ -119,15 +120,16 @@ export function FlexUSD({ flexUSD, initialData, conn, config }) {
         setModalText('chain is not ready');
         return;
       }
+      setModalText("Sign and start to send on extension wallet ...");
+      setConfirmLoading(true);
       const gasLimitBn = await flexUSD.estimateGas.setTotalSupply(amountBn);
       const tx = await flexUSD.setTotalSupply(amountBn, {
         gasLimit: gasLimitBn,
       })
       setModalText(`Sending Tx ... : ${tx.hash}`);
-      setConfirmLoading(true);
       const receipt = await tx.wait(2);
       setConfirmLoading(false);
-      setModalText(`confirmed - ${receipt.transactionHash} - ${receipt.confirmations} blocks`);
+      setModalText(`Confirmed - ${receipt.transactionHash} - ${receipt.confirmations} blocks`);
     } catch (err) {
       setConfirmLoading(false);
       if (typeof(err) === 'string') {
@@ -153,15 +155,16 @@ export function FlexUSD({ flexUSD, initialData, conn, config }) {
         setModalText('chain is not ready');
         return;
       }
+      setModalText("Sign and start to send on extension wallet ...");
+      setConfirmLoading(true);
       const gasLimitBn = await flexUSD.estimateGas.mint(address, amountBn);
       const tx = await flexUSD.mint(address, amountBn, {
         gasLimit: gasLimitBn,
       })
       setModalText(`Sending Tx ... : ${tx.hash}`);
-      setConfirmLoading(true);
       const receipt = await tx.wait(2);
       setConfirmLoading(false);
-      setModalText(`confirmed - ${receipt.transactionHash} - ${receipt.confirmations} blocks`);
+      setModalText(`Confirmed - ${receipt.transactionHash} - ${receipt.confirmations} blocks`);
     } catch (err) {
       setConfirmLoading(false);
       if (typeof(err) === 'string') {
@@ -187,15 +190,16 @@ export function FlexUSD({ flexUSD, initialData, conn, config }) {
         setModalText('chain is not ready');
         return;
       }
+      setModalText("Sign and start to send on extension wallet ...");
+      setConfirmLoading(true);
       const gasLimitBn = await flexUSD.estimateGas.burn(address, amountBn);
       const tx = await flexUSD.burn(address, amountBn, {
         gasLimit: gasLimitBn,
       })
       setModalText(`Sending Tx ... : ${tx.hash}`);
-      setConfirmLoading(true);
       const receipt = await tx.wait(2);
       setConfirmLoading(false);
-      setModalText(`confirmed - ${receipt.transactionHash} - ${receipt.confirmations} blocks`);
+      setModalText(`Confirmed - ${receipt.transactionHash} - ${receipt.confirmations} blocks`);
     } catch (err) {
       setConfirmLoading(false);
       if (typeof(err) === 'string') {

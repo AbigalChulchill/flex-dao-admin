@@ -1,7 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { utils } from 'ethers';
-import { Form, Input, Button, Modal} from "antd";
+import { Form, Input, Button, Modal, List, Divider} from "antd";
 import { errorHandle } from "../../utils";
+
+import { GlobalContext} from '../../App';
 
 async function getBalanceOf(flexUSD, value) {
   try {
@@ -12,6 +14,8 @@ async function getBalanceOf(flexUSD, value) {
 }
 
 export function FlexUSD({ flexUSD, initialData, conn, config }) {
+  const { apiSecret, apiKey, apiAccountId, apiWalletId } = useContext(GlobalContext);
+
   const [contractName, setContractName] = useState();
   const [addr, setAddr] = useState();
 
@@ -21,30 +25,13 @@ export function FlexUSD({ flexUSD, initialData, conn, config }) {
   const [multiplier, setMultiplier] = useState();
   const [totalSupply, setTotalSupply] = useState();
 
-  const [querying, setQuerying] = useState();
-
-  const [addressBalanceOf, setAddressBalanceOf] = useState();
-  const [balanceOf, setBalanceOf] = useState();
-
-  const [txStatus, setTxStatus] = useState();
-  const [txStatusText, setTxStatusText] = useState();
   const [walletAddress, setWalletAddress] = useState();
-
-  const [amountForInitialize, setAmountForInitialize] = useState();
-  const [amountForSetTotalSupply, setAmountForSetTotalSupply] = useState();
-
-  const [addressForMint, setAddressForMint] = useState();
-  const [amountForMint, setAmountForMint] = useState();
-
-  const [addressForBurn, setAddressForBurn] = useState();
-  const [amountForBurn, setAmountForBurn] = useState();
 
   const [form] = Form.useForm();
 
-  const [apiSecret, setApiSecret] = useState();
-  const [apiKey, setApiKey] = useState();
-  const [apiAccountId, setApiAccountId] = useState();
-  const [apiWalletId, setApiWalletId] = useState();
+  const [visible, setVisible] = useState();
+  const [confirmLoading, setConfirmLoading] = useState();
+  const [modalText, setModalText] = useState();
   
   useEffect(() => {
     async function fetchData() {
@@ -77,144 +64,148 @@ export function FlexUSD({ flexUSD, initialData, conn, config }) {
     }
   }, [flexUSD, initialData, conn, config, form]);
 
-  const onBalanceOf = async (e) => {
-    e.preventDefault();
-    setBalanceOf(undefined);
-    if (querying) return;
-    setQuerying(true);
-    if (flexUSD && addressBalanceOf) {
-      const _balanceOf = await getBalanceOf(flexUSD, addressBalanceOf);
-      if (_balanceOf) setBalanceOf(utils.formatEther(_balanceOf));
+  const onBalanceOf = async (values) => {
+    const address = values.address.trim();
+    setVisible(true);
+    if (!flexUSD || !address) {
+      setModalText('chain is not ready');
+      return;
     }
-    setQuerying(false);
+    setModalText('Querying ...');
+    setConfirmLoading(true);
+    const _balanceOf = await getBalanceOf(flexUSD, address);
+    setModalText(`${address}: ${_balanceOf} FlexUSD`)
+    setConfirmLoading(false);
   }
 
-  const onInitialize = async (e) => {
+  const onInitialize = async (values) => {
     try {
-      e.preventDefault();
-      if (amountForInitialize) {
-        setTxStatus(true);
-        const amountBn = utils.parseEther(amountForInitialize);
-        const gasLimitBn = await flexUSD.estimateGas.initialize(amountBn);
-        const tx = await flexUSD.initialize(amountBn, {
-          gasLimit: gasLimitBn,
-        })
-        setTxStatusText(`pending - ${tx.hash}`);
-        const receipt = await tx.wait(2);
-        setTxStatus(false);
-        setTxStatusText(`confirmed - ${receipt.transactionHash} - ${receipt.confirmations} blocks`);
+      setVisible(true);
+      const amountBn = utils.parseEther(values.amount);
+      if (!flexUSD || !amountBn) {
+        setModalText('chain is not ready');
+        return;
       }
+      const gasLimitBn = await flexUSD.estimateGas.initialize(amountBn);
+      const tx = await flexUSD.initialize(amountBn, {
+        gasLimit: gasLimitBn,
+      })
+      setModalText(`Sending Tx ... : ${tx.hash}`);
+      setConfirmLoading(true);
+      const receipt = await tx.wait(2);
+      setConfirmLoading(false);
+      setModalText(`confirmed - ${receipt.transactionHash} - ${receipt.confirmations} blocks`);
     } catch (err) {
+      setConfirmLoading(false);
       if (typeof(err) === 'string') {
-        setTxStatusText(err);
+        setModalText(err);
       } else {
         if (err.data && err.data.message) {
-          setTxStatusText(err.data.message);
+          setModalText(err.data.message);
         }
         else if (err.message) {
-          setTxStatusText(err.message);
-          if (err.message.includes('transaction was replaced')) {
-            setTxStatus(false);
-          }
+          setModalText(err.message);
         }
       }
       errorHandle('onInitialize', err);
     }
   }
 
-  const onSetTotalSupply = async (e) => {
+  const onSetTotalSupply = async (values) => {
     try {
-      e.preventDefault();
-      if (amountForSetTotalSupply) {
-        setTxStatus(true);
-        const amountBn = utils.parseEther(amountForSetTotalSupply);
-        const gasLimitBn = await flexUSD.estimateGas.setTotalSupply(amountBn);
-        const tx = await flexUSD.setTotalSupply(amountBn, {
-          gasLimit: gasLimitBn,
-        })
-        setTxStatusText(`pending - ${tx.hash}`);
-        const receipt = await tx.wait(2);
-        setTxStatus(false);
-        setTxStatusText(`confirmed - ${receipt.transactionHash} - ${receipt.confirmations} blocks`);
+      setVisible(true);
+      const amountBn = utils.parseEther(values.amount);
+      if (!flexUSD || !amountBn) {
+        setModalText('chain is not ready');
+        return;
       }
+      const gasLimitBn = await flexUSD.estimateGas.setTotalSupply(amountBn);
+      const tx = await flexUSD.setTotalSupply(amountBn, {
+        gasLimit: gasLimitBn,
+      })
+      setModalText(`Sending Tx ... : ${tx.hash}`);
+      setConfirmLoading(true);
+      const receipt = await tx.wait(2);
+      setConfirmLoading(false);
+      setModalText(`confirmed - ${receipt.transactionHash} - ${receipt.confirmations} blocks`);
     } catch (err) {
+      setConfirmLoading(false);
       if (typeof(err) === 'string') {
-        setTxStatusText(err);
+        setModalText(err);
       } else {
         if (err.data && err.data.message) {
-          setTxStatusText(err.data.message);
+          setModalText(err.data.message);
         }
         else if (err.message) {
-          setTxStatusText(err.message);
-          if (err.message.includes('transaction was replaced')) {
-            setTxStatus(false);
-          }
+          setModalText(err.message);
         }
       }
       errorHandle('onSetTotalSupply', err);
     }
   }
 
-  const onMint = async (e) => {
+  const onMint = async (values) => {
     try {
-      e.preventDefault();
-      if (addressForMint && amountForMint) {
-        setTxStatus(true);
-        const amountBn = utils.parseEther(amountForMint);
-        const gasLimitBn = await flexUSD.estimateGas.mint(addressForMint, amountBn);
-        const tx = await flexUSD.mint(addressForMint, amountBn, {
-          gasLimit: gasLimitBn,
-        })
-        setTxStatusText(`pending - ${tx.hash}`);
-        const receipt = await tx.wait(2);
-        setTxStatus(false);
-        setTxStatusText(`confirmed - ${receipt.transactionHash} - ${receipt.confirmations} blocks`);
+      setVisible(true);
+      const address = values.address.trim();
+      const amountBn = utils.parseEther(values.amount);
+      if (!flexUSD || !amountBn || !address) {
+        setModalText('chain is not ready');
+        return;
       }
+      const gasLimitBn = await flexUSD.estimateGas.mint(address, amountBn);
+      const tx = await flexUSD.mint(address, amountBn, {
+        gasLimit: gasLimitBn,
+      })
+      setModalText(`Sending Tx ... : ${tx.hash}`);
+      setConfirmLoading(true);
+      const receipt = await tx.wait(2);
+      setConfirmLoading(false);
+      setModalText(`confirmed - ${receipt.transactionHash} - ${receipt.confirmations} blocks`);
     } catch (err) {
+      setConfirmLoading(false);
       if (typeof(err) === 'string') {
-        setTxStatusText(err);
+        setModalText(err);
       } else {
         if (err.data && err.data.message) {
-          setTxStatusText(err.data.message);
+          setModalText(err.data.message);
         }
         else if (err.message) {
-          setTxStatusText(err.message);
-          if (err.message.includes('transaction was replaced')) {
-            setTxStatus(false);
-          }
+          setModalText(err.message);
         }
       }
       errorHandle('onMint', err);
     }
   }
-
-  const onBurn = async (e) => {
+  
+  const onBurn = async (values) => {
     try {
-      e.preventDefault();
-      if (addressForBurn && amountForBurn) {
-        setTxStatus(true);
-        const amountBn = utils.parseEther(amountForBurn);
-        const gasLimitBn = await flexUSD.estimateGas.burn(addressForBurn, amountBn);
-        const tx = await flexUSD.burn(addressForBurn, amountBn, {
-          gasLimit: gasLimitBn,
-        })
-        setTxStatusText(`pending - ${tx.hash}`);
-        const receipt = await tx.wait(2);
-        setTxStatus(false);
-        setTxStatusText(`confirmed - ${receipt.transactionHash} - ${receipt.confirmations} blocks`);
+      setVisible(true);
+      const address = values.address.trim();
+      const amountBn = utils.parseEther(values.amount);
+      if (!flexUSD || !amountBn || !address) {
+        setModalText('chain is not ready');
+        return;
       }
+      const gasLimitBn = await flexUSD.estimateGas.burn(address, amountBn);
+      const tx = await flexUSD.burn(address, amountBn, {
+        gasLimit: gasLimitBn,
+      })
+      setModalText(`Sending Tx ... : ${tx.hash}`);
+      setConfirmLoading(true);
+      const receipt = await tx.wait(2);
+      setConfirmLoading(false);
+      setModalText(`confirmed - ${receipt.transactionHash} - ${receipt.confirmations} blocks`);
     } catch (err) {
+      setConfirmLoading(false);
       if (typeof(err) === 'string') {
-        setTxStatusText(err);
+        setModalText(err);
       } else {
         if (err.data && err.data.message) {
-          setTxStatusText(err.data.message);
+          setModalText(err.data.message);
         }
         else if (err.message) {
-          setTxStatusText(err.message);
-          if (err.message.includes('transaction was replaced')) {
-            setTxStatus(false);
-          }
+          setModalText(err.message);
         }
       }
       errorHandle('onBurn', err);
@@ -223,7 +214,13 @@ export function FlexUSD({ flexUSD, initialData, conn, config }) {
 
   const addressInputStyle = {
     style: {
-      width: "450px"
+      width: "600px"
+    }
+  }
+
+  const amountInputStyle = {
+    style: {
+      width: "300px"
     }
   }
 
@@ -256,189 +253,318 @@ export function FlexUSD({ flexUSD, initialData, conn, config }) {
     }
   }
 
+  const handleOk = () => {
+    setVisible(false);
+  };
+
+  const handleCancel = () => {
+    setVisible(false);
+  };
+
+  const listData = [
+    {
+      title: 'Address',
+      value: addr
+    },
+    {
+      title: 'Admin',
+      value: admin
+    },
+    {
+      title: 'Name',
+      value: name
+    },
+    {
+      title: 'Symbol',
+      value: symbol
+    },
+    {
+      title: 'Multiplier',
+      value: multiplier
+    },
+    {
+      title: 'Total Supply',
+      value: `${totalSupply} FlexUSD`
+    }
+  ]
+
   return (
     <>
       <div className="box">
-        <div className="info">
-          <div className="bulletin">
-            == Contract Name: {contractName} - <a href={config.explorer + config.flexusd} target="_blank" rel="noreferrer" >Check on Explorer </a> - <a href={config.chain_id === "1"? "/ABI/FlexUSDEth.json" : "/ABI/FlexUSDImplV2.json"} target="_blank" rel="noreferrer" >Logic ABI</a> - <a href={config.chain_id === "1"? "/ABI/FlexUSDEthProx.json" : "/ABI/FlexUSD.json"} target="_blank" rel="noreferrer" >Proxy ABI</a> ==
-          </div>
-          <ul>
-            <li>Addr: {addr}</li>
-            <li>Admin: {admin}</li>
-            <li>Name: {name}</li>
-            <li>Symbol: {symbol}</li>
-            <li>Multiplier: {multiplier}</li>
-            <li>Total Supply: {totalSupply} FlexUSD</li>
-          </ul>
-        </div>
-        <div className="query">
-          <div className={"status-" + (querying ? "on" : "off")}>
-            == Query Status: {querying ? "Querying" : "Not Query"} ==
-          </div>
-          <ul>
-            <li>
-              <form>
-                <label>
-                  Account Balance Of:
-                </label>
-                <input type="text" placeholder="address" size="50" onChange={ e => setAddressBalanceOf(e.target.value)} />
-                <button onClick={onBalanceOf}>Read</button>
-                <span>{balanceOf} {balanceOf ? 'FlexUSD' : ''}</span>
-              </form>
-            </li>
-          </ul>
-        </div>
-        <div className="query">
-          <div className={"status-" + (txStatus ? "on" : "off")}>
-            == Tx Status: {txStatusText} ==
-          </div>
-          <ul>
+        <Divider orientation="left">
+          {contractName} - <a href={config.explorer + config.flexusd} target="_blank" rel="noreferrer" >Check on Explorer </a> - <a href={config.chain_id === "1"? "/ABI/FlexUSDEth.json" : "/ABI/FlexUSDImplV2.json"} target="_blank" rel="noreferrer" >Logic ABI</a> - <a href={config.chain_id === "1"? "/ABI/FlexUSDEthProx.json" : "/ABI/FlexUSD.json"} target="_blank" rel="noreferrer" >Proxy ABI</a>
+        </Divider>
+        <List
+          dataSource={listData}
+          bordered
+          grid={{ column: 2 }}
+          renderItem={item => 
+            <List.Item>
+              <List.Item.Meta 
+                title={item.title}
+                description={item.value}
+              />
+            </List.Item>
+          }
+        />
+        <Divider orientation="left">
+          Read From Contract
+        </Divider>
+        <ul>
+          <li>
+            <Form
+              layout="inline"
+              onFinish={onBalanceOf}
+            >
+              <Form.Item
+                label="FlexUSD Balance" 
+                name="address"                   
+                rules={[
+                  {
+                    required: true,
+                    message: 'please input address',
+                  },
+                ]}
+                {...addressInputStyle}
+              >
+                <Input placeholder="address" />
+              </Form.Item>
+              <Form.Item>
+                <Button type="primary" htmlType="submit">Read</Button>
+              </Form.Item>
+            </Form>
+          </li>
+        </ul>
+        <Divider orientation="left">
+          Write To Contract
+        </Divider>
+        <ul>
+          <li>
             <p>Connected wallet: {walletAddress}</p>
-            <p></p>
-            <li>
-              <form>
-                <label>
-                  initialize:
-                </label>
-                <input type="text" placeholder="amount (ETH Unit)" onChange={e=>setAmountForInitialize(e.target.value)} />
-                <button onClick={onInitialize}>Write</button>
-              </form>
-            </li>
-            <li>
-              <form>
-                <label>
-                  setTotalSupply:
-                </label>
-                <input type="text" placeholder="amount (ETH Unit)" onChange={e=>setAmountForSetTotalSupply(e.target.value)} />
-                <button onClick={onSetTotalSupply}>Write</button>
-              </form>
-            </li>
-            <li>
-              <form>
-                <label>
-                  mint:
-                </label>
-                <input type="text" placeholder="address" size="50" onChange={e=>setAddressForMint(e.target.value)} />
-                <input type="text" placeholder="amount (ETH Unit)" onChange={e=>setAmountForMint(e.target.value)} />
-                <button onClick={onMint}>Write</button>
-              </form>
-            </li>
-            <li>
-              <form>
-                <label>
-                  burn:
-                </label>
-                <input type="text" placeholder="address" size="50" onChange={e=>setAddressForBurn(e.target.value)} />
-                <input type="text" placeholder="amount (ETH Unit)" onChange={e=>setAmountForBurn(e.target.value)} />
-                <button onClick={onBurn}>Write</button>
-              </form>
-            </li>
-          </ul>
-        </div>
+          </li>
+          <li>
+            <Form
+              layout="inline"
+              onFinish={onInitialize}
+            >
+              <Form.Item
+                label="initialize" 
+                name="amount"                   
+                rules={[
+                  {
+                    required: true,
+                    message: 'please input amount in ETH unit',
+                  },
+                ]}
+                {...amountInputStyle}
+              >
+                <Input placeholder="amount (ETH Unit)" />
+              </Form.Item>
+              <Form.Item>
+                <Button type="primary" htmlType="submit">Write</Button>
+              </Form.Item>
+            </Form>
+          </li>
+          <li>
+            <Form
+              layout="inline"
+              onFinish={onSetTotalSupply}
+            >
+              <Form.Item
+                label="setTotalSupply" 
+                name="amount"                   
+                rules={[
+                  {
+                    required: true,
+                    message: 'please input amount in ETH unit',
+                  },
+                ]}
+                {...amountInputStyle}
+              >
+                <Input placeholder="amount (ETH Unit)" />
+              </Form.Item>
+              <Form.Item>
+                <Button type="primary" htmlType="submit">Write</Button>
+              </Form.Item>
+            </Form>
+          </li>
+          <li>
+            <Form
+              layout="inline"
+              onFinish={onMint}
+            >
+              <Form.Item
+                label="mint" 
+                name="address"                   
+                rules={[
+                  {
+                    required: true,
+                    message: 'please input address',
+                  },
+                ]}
+                {...addressInputStyle}
+              >
+                <Input placeholder="address" />
+              </Form.Item>
+              <Form.Item
+                name="amount"                   
+                rules={[
+                  {
+                    required: true,
+                    message: 'please input amount in ETH unit',
+                  },
+                ]}
+              >
+                <Input placeholder="amount (ETH Unit)" />
+              </Form.Item>
+              <Form.Item>
+                <Button type="primary" htmlType="submit">Write</Button>
+              </Form.Item>
+            </Form>
+          </li>
+          <li>
+            <Form
+              layout="inline"
+              onFinish={onBurn}
+            >
+              <Form.Item
+                label="burn" 
+                name="address"                   
+                rules={[
+                  {
+                    required: true,
+                    message: 'please input address',
+                  },
+                ]}
+                {...addressInputStyle}
+              >
+                <Input placeholder="address" />
+              </Form.Item>
+              <Form.Item
+                name="amount"                   
+                rules={[
+                  {
+                    required: true,
+                    message: 'please input amount in ETH unit',
+                  },
+                ]}
+              >
+                <Input placeholder="amount (ETH Unit)" />
+              </Form.Item>
+              <Form.Item>
+                <Button type="primary" htmlType="submit">Write</Button>
+              </Form.Item>
+            </Form>
+          </li>
+        </ul>
       </div>
       <div className="box">
-        <div className="info">
-            <div className="query">
-              <div className="words">
-                <p>API calls to contracts thru Fireblocks MPC</p>
-              </div>
-              <ul>
-                <li>
-                  <Form
-                    layout="inline"
-                    onFinish={onFireblocksSetTotalSupply}
-                  >
-                    <Form.Item
-                      label="setTotalSupply" 
-                      name="amount"                   
-                      rules={[
-                        {
-                          required: true,
-                          message: 'please input total supply',
-                        },
-                      ]}
-                    >
-                      <Input placeholder="amount (ETH Unit)" />
-                    </Form.Item>
-                    <Form.Item>
-                      <Button type="primary" htmlType="submit">Send</Button>
-                    </Form.Item>
-                  </Form>
-                </li>
-                <li>
-                  <Form
-                    layout="inline"
-                    onFinish={onFireblocksMint}
-                  >
-                    <Form.Item
-                      label="mint" 
-                      name="address"
-                      rules={[
-                        {
-                          required: true,
-                          message: 'please input address',
-                        },
-                      ]}
-                      {...addressInputStyle}
-                    >
-                      <Input placeholder="address" />
-                    </Form.Item>
-                    <Form.Item 
-                      name="amount"
-                      rules={[
-                        {
-                          required: true,
-                          message: 'please input amount',
-                        },
-                      ]}
-                    >
-                      <Input placeholder="amount (ETH Unit)" />
-                    </Form.Item>
-                    <Form.Item>
-                      <Button type="primary" htmlType="submit">Send</Button>
-                    </Form.Item>
-                  </Form>
-                </li>
-                <li>
-                  <Form
-                    layout="inline"
-                    onFinish={onFireblocksBurn}
-                  >
-                    <Form.Item 
-                      label="burn" 
-                      name="address"
-                      rules={[
-                        {
-                          required: true,
-                          message: 'please input address',
-                        },
-                      ]}
-                      {...addressInputStyle}
-                    >
-                      <Input placeholder="address" />
-                    </Form.Item>
-                    <Form.Item 
-                      name="amount"
-                      rules={[
-                        {
-                          required: true,
-                          message: 'please input amount',
-                        },
-                      ]}
-                    >
-                      <Input placeholder="amount (ETH Unit)" />
-                    </Form.Item>
-                    <Form.Item>
-                      <Button type="primary" htmlType="submit">Send</Button>
-                    </Form.Item>
-                  </Form>
-                </li>
-              </ul>
-            </div>
-
-        </div>
+        <Divider orientation="left">
+          API calls to contracts thru Fireblocks MPC
+        </Divider>
+        <ul>
+          <li>
+            <Form
+              layout="inline"
+              onFinish={onFireblocksSetTotalSupply}
+            >
+              <Form.Item
+                label="setTotalSupply" 
+                name="amount"                   
+                rules={[
+                  {
+                    required: true,
+                    message: 'please input total supply',
+                  },
+                ]}
+              >
+                <Input placeholder="amount (ETH Unit)" />
+              </Form.Item>
+              <Form.Item>
+                <Button type="primary" htmlType="submit">Send</Button>
+              </Form.Item>
+            </Form>
+          </li>
+          <li>
+            <Form
+              layout="inline"
+              onFinish={onFireblocksMint}
+            >
+              <Form.Item
+                label="mint" 
+                name="address"
+                rules={[
+                  {
+                    required: true,
+                    message: 'please input address',
+                  },
+                ]}
+                {...addressInputStyle}
+              >
+                <Input placeholder="address" />
+              </Form.Item>
+              <Form.Item 
+                name="amount"
+                rules={[
+                  {
+                    required: true,
+                    message: 'please input amount',
+                  },
+                ]}
+              >
+                <Input placeholder="amount (ETH Unit)" />
+              </Form.Item>
+              <Form.Item>
+                <Button type="primary" htmlType="submit">Send</Button>
+              </Form.Item>
+            </Form>
+          </li>
+          <li>
+            <Form
+              layout="inline"
+              onFinish={onFireblocksBurn}
+            >
+              <Form.Item 
+                label="burn" 
+                name="address"
+                rules={[
+                  {
+                    required: true,
+                    message: 'please input address',
+                  },
+                ]}
+                {...addressInputStyle}
+              >
+                <Input placeholder="address" />
+              </Form.Item>
+              <Form.Item 
+                name="amount"
+                rules={[
+                  {
+                    required: true,
+                    message: 'please input amount',
+                  },
+                ]}
+              >
+                <Input placeholder="amount (ETH Unit)" />
+              </Form.Item>
+              <Form.Item>
+                <Button type="primary" htmlType="submit">Send</Button>
+              </Form.Item>
+            </Form>
+          </li>
+        </ul>
       </div>
+      <Modal
+        title="Result"
+        visible={visible}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        confirmLoading={confirmLoading}
+        maskClosable={false}
+      >
+        <p>{modalText}</p>
+      </Modal>
     </>
   );
 }

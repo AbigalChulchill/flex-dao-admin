@@ -218,8 +218,8 @@ export const FlexDaoTpl = ( {config}) => {
 
   return (
     <>
-      <h1>{config.name} @ {config.network_name}</h1>
       <div className="container">
+        <h1>{config.name} @ {config.network_name}</h1>
         <FLEX flex={flex} initialData={initialData} config={config}></FLEX>
         <VeFLEX veflex={veFlex}  flex={flex} conn={conn} increaseStake={increaseStake} initialData={initialData} config={config}></VeFLEX>
         <Payout payout={dailyPayout} conn={conn} flex={flex} initialData={initialData} config={config}></Payout>

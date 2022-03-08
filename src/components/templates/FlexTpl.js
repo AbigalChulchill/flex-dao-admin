@@ -101,8 +101,8 @@ export const FlexTpl = ( {config}) => {
 
   return (
     <>
-      <h1>{config.name} @ {config.network_name}</h1>
       <div className="container">
+        <h1>{config.name} @ {config.network_name}</h1>
         <FLEX flex={flex} enableTx={true} conn={conn} transferToken={transferToken} initialData={initialData} config={config}></FLEX>
       </div>
     </>

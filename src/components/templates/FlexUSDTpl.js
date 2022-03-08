@@ -108,8 +108,8 @@ export const FlexUSDTpl = ( {config} ) => {
 
   return (
     <>
-      <h1>{config.name} @ {config.network_name}</h1>
       <div className="container">
+        <h1>{config.name} @ {config.network_name}</h1>
         <FlexUSD flexUSD={flexUSD} initialData={initialData} conn={conn} config={config}></FlexUSD>
       </div>
     </>

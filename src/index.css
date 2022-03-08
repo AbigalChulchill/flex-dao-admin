@@ -1,22 +1,11 @@
-.box {
+.container {
   margin: 20px;
+}
+
+.box {
+  margin-top: 20px;
   border: solid 1px;
   border-radius: 5px;
-}
-
-.info {
-  margin: 5px;
-}
-
-.bulletin {
-  margin: 5px;
-}
-
-.query {
-  margin: 5px;
-  padding-top: 10px;
-
-  border-top: dotted 1px;
 }
 
 .events {

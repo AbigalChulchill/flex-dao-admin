@@ -123,7 +123,7 @@ export function GlobalConfig() {
             />
           </Form.Item>
           <Form.Item
-            wrapperCol={{ offset: 2}}
+            wrapperCol={{ offset: 4}}
           >
             <Space size={150}>
               <Button type="primary" htmlType="submit">

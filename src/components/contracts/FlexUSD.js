@@ -1,10 +1,8 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState } from "react";
 import { utils } from 'ethers';
-import { Form, Input, Button, Modal, List, Divider, message, Typography, Tooltip} from "antd";
-import { CopyOutlined } from '@ant-design/icons';
+import { Form, Input, Button, Modal, List, Divider, message, Typography } from "antd";
 
 import { errorHandle } from "../../utils";
-import { GlobalContext} from '../../App';
 
 const { Paragraph } = Typography;
 
@@ -16,9 +14,7 @@ async function getBalanceOf(flexUSD, value) {
   }
 }
 
-export function FlexUSD({ flexUSD, initialData, conn, config }) {
-  const { apiSecret, apiKey, apiAccountId, apiWalletId } = useContext(GlobalContext);
-
+export function FlexUSD({ flexUSD, initialData, conn, config, bridge }) {
   const [contractName, setContractName] = useState();
   const [addr, setAddr] = useState();
 
@@ -65,20 +61,35 @@ export function FlexUSD({ flexUSD, initialData, conn, config }) {
       setAdmin();
       setTotalSupply();
     }
-  }, [flexUSD, initialData, conn, config, form]);
+  }, [flexUSD, initialData, conn, config, form, bridge]);
 
   const onBalanceOf = async (values) => {
-    const address = values.address.trim();
-    setVisible(true);
-    if (!flexUSD || !address) {
-      setModalText('chain is not ready');
-      return;
+    try {
+      const address = values.address.trim();
+      setVisible(true);
+      if (!flexUSD || !address) {
+        setModalText('chain is not ready');
+        return;
+      }
+      setModalText('Querying ...');
+      setConfirmLoading(true);
+      const _balanceOf = await getBalanceOf(flexUSD, address);
+      setModalText(`${address}: ${utils.formatEther(_balanceOf)} FlexUSD`)
+      setConfirmLoading(false);
+    } catch (err) {
+      setConfirmLoading(false);
+      if (typeof(err) === 'string') {
+        setModalText(err);
+      } else {
+        if (err.data && err.data.message) {
+          setModalText(err.data.message);
+        }
+        else if (err.message) {
+          setModalText(err.message);
+        }
+      }
+      errorHandle('onInitialize', err);
     }
-    setModalText('Querying ...');
-    setConfirmLoading(true);
-    const _balanceOf = await getBalanceOf(flexUSD, address);
-    setModalText(`${address}: ${utils.formatEther(_balanceOf)} FlexUSD`)
-    setConfirmLoading(false);
   }
 
   const onInitialize = async (values) => {
@@ -232,21 +243,25 @@ export function FlexUSD({ flexUSD, initialData, conn, config }) {
   }
 
   const onFireblocksSetTotalSupply = () => {
-    if (!apiSecret || !apiKey || !apiAccountId || !apiWalletId) {
+    if (!bridge) {
       return message.error('Fireblocks Credentials are not provided!');
     }
+    console.log(bridge);
     
   }
   
   const onFireblocksMint = () => {
-    if (!apiSecret || !apiKey || !apiAccountId || !apiWalletId) {
+    if (!bridge) {
       return message.error('Fireblocks Credentials are not provided!');
     }
+    console.log(bridge);
   }
+
   const onFireblocksBurn = () => {
-    if (!apiSecret || !apiKey || !apiAccountId || !apiWalletId) {
+    if (!bridge) {
       return message.error('Fireblocks Credentials are not provided!');
     }
+    console.log(bridge);
   }
 
   const handleOk = () => {
@@ -284,6 +299,25 @@ export function FlexUSD({ flexUSD, initialData, conn, config }) {
     }
   ]
 
+  const addressTypeRules = [
+    {
+      required: true,
+      message: 'please input address',
+    },
+    {
+      validator: (_, value) =>
+        utils.isAddress(value.trim()) ? Promise.resolve() : Promise.reject(new Error('It is not a valid address')),
+    },
+  ]
+
+  const amountTypeRules = [
+    {
+      required: true,
+      message: 'please input amount',
+      pattern: new RegExp(/^\d*\.?\d*$/),
+    },
+  ]
+
   return (
     <>
       <div className="box">
@@ -315,23 +349,12 @@ export function FlexUSD({ flexUSD, initialData, conn, config }) {
               <Form.Item
                 label="FlexUSD Balance" 
                 name="address"                   
-                rules={[
-                  {
-                    required: true,
-                    message: 'please input address',
-                  },
-                ]}
+                rules={addressTypeRules}
                 {...addressInputStyle}
               >
-                <Input.Group compact>
-                  <Input
-                    style={{ width: 'calc(100% - 35px)' }} 
-                    placeholder="address" 
-                  />
-                  <Tooltip title="copy address">
-                    <Button icon={<CopyOutlined />} />
-                  </Tooltip>
-                </Input.Group>
+                <Input
+                  placeholder="address" 
+                />
               </Form.Item>
               <Form.Item>
                 <Button type="primary" htmlType="submit">Read</Button>
@@ -344,9 +367,9 @@ export function FlexUSD({ flexUSD, initialData, conn, config }) {
         </Divider>
         <ul>
           <li>
-            <p>Connected wallet: 
+            <div>Connected wallet: 
               <Paragraph copyable>{walletAddress}</Paragraph>
-            </p>
+            </div>
           </li>
           <li>
             <Form
@@ -356,12 +379,7 @@ export function FlexUSD({ flexUSD, initialData, conn, config }) {
               <Form.Item
                 label="initialize" 
                 name="amount"                   
-                rules={[
-                  {
-                    required: true,
-                    message: 'please input amount in ETH unit',
-                  },
-                ]}
+                rules={amountTypeRules}
                 {...amountInputStyle}
               >
                 <Input placeholder="amount (ETH Unit)" />
@@ -379,12 +397,7 @@ export function FlexUSD({ flexUSD, initialData, conn, config }) {
               <Form.Item
                 label="setTotalSupply" 
                 name="amount"                   
-                rules={[
-                  {
-                    required: true,
-                    message: 'please input amount in ETH unit',
-                  },
-                ]}
+                rules={amountTypeRules}
                 {...amountInputStyle}
               >
                 <Input placeholder="amount (ETH Unit)" />
@@ -402,32 +415,16 @@ export function FlexUSD({ flexUSD, initialData, conn, config }) {
               <Form.Item
                 label="mint" 
                 name="address"                   
-                rules={[
-                  {
-                    required: true,
-                    message: 'please input address',
-                  },
-                ]}
+                rules={addressTypeRules}
                 {...addressInputStyle}
               >
-                <Input.Group compact>
-                  <Input
-                    style={{ width: 'calc(100% - 35px)' }} 
-                    placeholder="address" 
-                  />
-                  <Tooltip title="copy address">
-                    <Button icon={<CopyOutlined />} />
-                  </Tooltip>
-                </Input.Group>
+                <Input
+                  placeholder="address" 
+                />
               </Form.Item>
               <Form.Item
                 name="amount"                   
-                rules={[
-                  {
-                    required: true,
-                    message: 'please input amount in ETH unit',
-                  },
-                ]}
+                rules={amountTypeRules}
               >
                 <Input placeholder="amount (ETH Unit)" />
               </Form.Item>
@@ -444,32 +441,16 @@ export function FlexUSD({ flexUSD, initialData, conn, config }) {
               <Form.Item
                 label="burn" 
                 name="address"                   
-                rules={[
-                  {
-                    required: true,
-                    message: 'please input address',
-                  },
-                ]}
+                rules={addressTypeRules}
                 {...addressInputStyle}
               >
-                <Input.Group compact>
-                  <Input
-                    style={{ width: 'calc(100% - 35px)' }} 
-                    placeholder="address" 
-                  />
-                  <Tooltip title="copy address">
-                    <Button icon={<CopyOutlined />} />
-                  </Tooltip>
-                </Input.Group>
+                <Input
+                  placeholder="address" 
+                />
               </Form.Item>
               <Form.Item
                 name="amount"                   
-                rules={[
-                  {
-                    required: true,
-                    message: 'please input amount in ETH unit',
-                  },
-                ]}
+                rules={amountTypeRules}
               >
                 <Input placeholder="amount (ETH Unit)" />
               </Form.Item>
@@ -480,119 +461,84 @@ export function FlexUSD({ flexUSD, initialData, conn, config }) {
           </li>
         </ul>
       </div>
-      <div className="box">
-        <Divider orientation="left">
-          API calls to contracts thru Fireblocks MPC
-        </Divider>
-        <ul>
-          <li>
-            <Form
-              layout="inline"
-              onFinish={onFireblocksSetTotalSupply}
-            >
-              <Form.Item
-                label="setTotalSupply" 
-                name="amount"                   
-                rules={[
-                  {
-                    required: true,
-                    message: 'please input total supply',
-                  },
-                ]}
+      { config.fireblocks && 
+        <div className="box">
+          <Divider orientation="left">
+            API calls to contracts thru Fireblocks MPC
+          </Divider>
+          <ul>
+            <li>
+              <Form
+                layout="inline"
+                onFinish={onFireblocksSetTotalSupply}
               >
-                <Input placeholder="amount (ETH Unit)" />
-              </Form.Item>
-              <Form.Item>
-                <Button type="primary" htmlType="submit">Send</Button>
-              </Form.Item>
-            </Form>
-          </li>
-          <li>
-            <Form
-              layout="inline"
-              onFinish={onFireblocksMint}
-            >
-              <Form.Item
-                label="mint" 
-                name="address"
-                rules={[
-                  {
-                    required: true,
-                    message: 'please input address',
-                  },
-                ]}
-                {...addressInputStyle}
+                <Form.Item
+                  label="setTotalSupply" 
+                  name="amount"                   
+                  rules={amountTypeRules}
+                >
+                  <Input placeholder="amount (ETH Unit)" />
+                </Form.Item>
+                <Form.Item>
+                  <Button type="primary" htmlType="submit">Send</Button>
+                </Form.Item>
+              </Form>
+            </li>
+            <li>
+              <Form
+                layout="inline"
+                onFinish={onFireblocksMint}
               >
-                <Input.Group compact>
-                  <Input
-                    style={{ width: 'calc(100% - 35px)' }} 
-                    placeholder="address" 
-                  />
-                  <Tooltip title="copy address">
-                    <Button icon={<CopyOutlined />} />
-                  </Tooltip>
-                </Input.Group>
-              </Form.Item>
-              <Form.Item 
-                name="amount"
-                rules={[
-                  {
-                    required: true,
-                    message: 'please input amount',
-                  },
-                ]}
+                <Form.Item
+                  label="mint" 
+                  name="address"
+                  rules={addressTypeRules}
+                  {...addressInputStyle}
+                >
+                <Input
+                  placeholder="address" 
+                />
+                </Form.Item>
+                <Form.Item 
+                  name="amount"
+                  rules={amountTypeRules}
+                >
+                  <Input placeholder="amount (ETH Unit)" />
+                </Form.Item>
+                <Form.Item>
+                  <Button type="primary" htmlType="submit">Send</Button>
+                </Form.Item>
+              </Form>
+            </li>
+            <li>
+              <Form
+                layout="inline"
+                onFinish={onFireblocksBurn}
               >
-                <Input placeholder="amount (ETH Unit)" />
-              </Form.Item>
-              <Form.Item>
-                <Button type="primary" htmlType="submit">Send</Button>
-              </Form.Item>
-            </Form>
-          </li>
-          <li>
-            <Form
-              layout="inline"
-              onFinish={onFireblocksBurn}
-            >
-              <Form.Item 
-                label="burn" 
-                name="address"
-                rules={[
-                  {
-                    required: true,
-                    message: 'please input address',
-                  },
-                ]}
-                {...addressInputStyle}
-              >
-                <Input.Group compact>
-                  <Input
-                    style={{ width: 'calc(100% - 35px)' }} 
-                    placeholder="address" 
-                  />
-                  <Tooltip title="copy address">
-                    <Button icon={<CopyOutlined />} />
-                  </Tooltip>
-                </Input.Group>
-              </Form.Item>
-              <Form.Item 
-                name="amount"
-                rules={[
-                  {
-                    required: true,
-                    message: 'please input amount',
-                  },
-                ]}
-              >
-                <Input placeholder="amount (ETH Unit)" />
-              </Form.Item>
-              <Form.Item>
-                <Button type="primary" htmlType="submit">Send</Button>
-              </Form.Item>
-            </Form>
-          </li>
-        </ul>
-      </div>
+                <Form.Item 
+                  label="burn" 
+                  name="address"
+                  rules={addressTypeRules}
+                  {...addressInputStyle}
+                >
+                <Input
+                  placeholder="address" 
+                />
+                </Form.Item>
+                <Form.Item 
+                  name="amount"
+                  rules={amountTypeRules}
+                >
+                  <Input placeholder="amount (ETH Unit)" />
+                </Form.Item>
+                <Form.Item>
+                  <Button type="primary" htmlType="submit">Send</Button>
+                </Form.Item>
+              </Form>
+            </li>
+          </ul>
+        </div>
+      }
       <Modal
         title="Result"
         visible={visible}

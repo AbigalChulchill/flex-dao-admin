@@ -127,7 +127,11 @@
         "chain_id": "3",
         "explorer": "https://ropsten.etherscan.io/address/",
         "flexusd": "0x1Df206C108D0284618b2b8497638d933F571Bb0F",
-        "multi_call": "0x53C43764255c17BD724F74c4eF150724AC50a3ed"
+        "multi_call": "0x53C43764255c17BD724F74c4eF150724AC50a3ed",
+        "fireblocks": {
+          "base_url": "https://api.fireblocks.io",
+          "chain": "ropsten"
+        }
       },
       "stg": {
         "name": "FlexUSD Ethereum Stg",
@@ -135,7 +139,11 @@
         "chain_id": "1",
         "explorer": "https://etherscan.io/address/",
         "flexusd": "0x8b6327a3050798b7a2843a6edd0b310e97bee113",
-        "multi_call": "0x5BA1e12693Dc8F9c48aAD8770482f4739bEeD696"
+        "multi_call": "0x5BA1e12693Dc8F9c48aAD8770482f4739bEeD696",
+        "fireblocks": {
+          "base_url": "https://api.fireblocks.io",
+          "chain": "mainnet"
+        }
       },
       "prod": {
         "name": "FlexUSD Ethereum Prod",
@@ -143,7 +151,11 @@
         "chain_id": "1",
         "explorer": "https://etherscan.io/address/",
         "flexusd": "0xa774FFB4AF6B0A91331C084E1aebAE6Ad535e6F3",
-        "multi_call": "0x5BA1e12693Dc8F9c48aAD8770482f4739bEeD696"
+        "multi_call": "0x5BA1e12693Dc8F9c48aAD8770482f4739bEeD696",
+        "fireblocks": {
+          "base_url": "https://api.fireblocks.io",
+          "chain": "mainnet"
+        }
       }
     },
     "smartbch": {

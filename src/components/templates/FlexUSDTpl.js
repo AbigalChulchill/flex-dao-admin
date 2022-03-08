@@ -1,6 +1,8 @@
 import { useEffect, useState, useContext } from "react";
 import { Contract } from 'ethers';
 import { Provider as MultiCallProvider, Contract as MultiCallContract, setMulticallAddress } from 'ethers-multicall';
+import { FireblocksSDK } from "fireblocks-sdk";
+import { EthersBridge } from "fireblocks-defi-sdk";
 
 import { GlobalContext} from '../../App';
 
@@ -47,6 +49,17 @@ const initialDataForPage = async (multiCall, multiCallFlexUSD, config) => {
   }
 }
 
+const getFireblocksBridge = (apiKey, apiSecret, apiAccountId, apiWalletId, config) => {
+  const fireblocksApiClient = new FireblocksSDK(apiSecret, apiKey, config.fireblocks.base_url);
+  const bridge = new EthersBridge({ 
+      fireblocksApiClient,
+      vaultAccountId: apiAccountId || "0",
+      externalWalletId: apiWalletId,
+      chain: config.fireblocks.chain
+  });
+  return bridge
+}
+
 const getFlexUSD = (config, conn) => {
   if (config.chain_id === "1") {
     return new Contract(config.flexusd, FlexUSDEthABI.abi, conn.getSigner());
@@ -70,9 +83,10 @@ const getMultiCallFlexUSD = (config) => {
 }
 
 export const FlexUSDTpl = ( {config} ) => {
-  const { conn } = useContext(GlobalContext);
+  const { conn, apiSecret, apiKey, apiAccountId, apiWalletId} = useContext(GlobalContext);
 
   const [flexUSD, setFlexUSD] = useState();
+  const [bridge, setBridge] = useState();
   const [initialData, setInitialData] = useState();
 
   useEffect(() => {
@@ -85,7 +99,7 @@ export const FlexUSDTpl = ( {config} ) => {
             params: [{ chainId: "0x" + Number(config.chain_id).toString(16) }],
           });
         }
-        if (conn) {
+        if (conn && config) {
           const _flexUSD = getFlexUSD(config, conn);
           if (_flexUSD) setFlexUSD(_flexUSD);
 
@@ -94,6 +108,10 @@ export const FlexUSDTpl = ( {config} ) => {
           if (_multiCall && _multiCallFlexUSD && config) {
             const _initialData = await initialDataForPage(_multiCall, _multiCallFlexUSD, config);
             if (_initialData) setInitialData(_initialData);
+          }
+          if (config.fireblocks && apiKey && apiSecret && apiAccountId && apiWalletId) {
+            const _bridge = getFireblocksBridge(apiKey, apiSecret, apiAccountId, apiWalletId, config);
+            if (_bridge) setBridge(_bridge);
           }
         }
       } catch (err) {
@@ -104,13 +122,13 @@ export const FlexUSDTpl = ( {config} ) => {
     return () => {
       setFlexUSD();
     }
-  }, [config, conn]);
+  }, [config, conn, apiKey, apiSecret, apiAccountId, apiWalletId]);
 
   return (
     <>
       <div className="container">
         <h1>{config.name} @ {config.network_name}</h1>
-        <FlexUSD flexUSD={flexUSD} initialData={initialData} conn={conn} config={config}></FlexUSD>
+        <FlexUSD flexUSD={flexUSD} initialData={initialData} conn={conn} config={config} bridge={bridge}></FlexUSD>
       </div>
     </>
   )

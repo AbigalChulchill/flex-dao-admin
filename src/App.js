@@ -259,7 +259,7 @@ function App() {
                 <Route exact path='/flexusd/ethereum/prod'>
                   <FlexUSDETHProd />
                 </Route>
-                <Route path='/'>
+                <Route exact path='/'>
                   <GlobalConfig />
                 </Route>
               </Switch>

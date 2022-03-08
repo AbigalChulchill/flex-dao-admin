@@ -1,6 +1,6 @@
 import { useEffect, useState, useContext } from "react";
 import { utils } from 'ethers';
-import { Form, Input, Button, Modal, List, Divider} from "antd";
+import { Form, Input, Button, Modal, List, Divider, message} from "antd";
 import { errorHandle } from "../../utils";
 
 import { GlobalContext} from '../../App';
@@ -228,32 +228,21 @@ export function FlexUSD({ flexUSD, initialData, conn, config }) {
     }
   }
 
-  const showNoCredentialError = () => {
-    Modal.error({
-      title: "Error",
-      content: (
-        <>
-          <p>Fireblocks Credentials are not provided!</p>
-        </>
-      )
-    });
-  }
-
   const onFireblocksSetTotalSupply = () => {
     if (!apiSecret || !apiKey || !apiAccountId || !apiWalletId) {
-      return showNoCredentialError();
+      return message.error('Fireblocks Credentials are not provided!');
     }
     
   }
   
   const onFireblocksMint = () => {
     if (!apiSecret || !apiKey || !apiAccountId || !apiWalletId) {
-      return showNoCredentialError();
+      return message.error('Fireblocks Credentials are not provided!');
     }
   }
   const onFireblocksBurn = () => {
     if (!apiSecret || !apiKey || !apiAccountId || !apiWalletId) {
-      return showNoCredentialError();
+      return message.error('Fireblocks Credentials are not provided!');
     }
   }
 

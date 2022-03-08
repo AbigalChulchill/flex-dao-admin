@@ -1,8 +1,10 @@
 import { useEffect, useContext } from "react";
-import { Form, Input, Button, Space } from "antd";
+import { Form, Input, Button, Space, Divider, Typography } from "antd";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import { errorHandle } from "../utils";
 import { GlobalContext} from '../App';
+
+const { Text } = Typography;
 
 export function GlobalConfig() {
   const [form] = Form.useForm();
@@ -45,94 +47,94 @@ export function GlobalConfig() {
   return (
     <>
       <div className="box">
-        <div className="bulletin">
-          <h3>Fireblocks MPC Service</h3>
+        <Divider orientation="left">
+          Fireblocks MPC Service
+        </Divider>
+        <div className="warningMsg">
+          <Text type="warning">        
+            Credentials will be loaded from local storage of explorer if exist, otherwise please provide it!
+          </Text>
         </div>
-        <div className="query">
-          <div className="words">
-            <p>Credentials will be loaded from local storage of explorer if exist, otherwise please provide it!</p>
-          </div>
-          <Form
-            form={form}
-            onFinish={onInputCredential}
-            wrapperCol={{ span: 8 }}
-            labelCol={{ span: 4 }}
-            initialValues={{
-              size: "small"
-            }}
+        <Form
+          form={form}
+          onFinish={onInputCredential}
+          wrapperCol={{ span: 8 }}
+          labelCol={{ span: 4 }}
+          initialValues={{
+            size: "small"
+          }}
+        >
+          <Form.Item
+            label="API Secret"
+            name="api_secret"
+            rules={[
+              {
+                required: true,
+                message: 'please input api secret',
+              },
+            ]}
           >
-            <Form.Item
-              label="API Secret"
-              name="api_secret"
-              rules={[
-                {
-                  required: true,
-                  message: 'please input api secret',
-                },
-              ]}
-            >
-              <Input.Password
-                iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
-              />
-            </Form.Item>
-            <Form.Item
-              label="API Key"
-              name="api_key"
-              rules={[
-                {
-                  required: true,
-                  message: 'please input api key',
-                },
-              ]}
-            >
-              <Input.Password
-                iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
-              />
-            </Form.Item>
-            <Form.Item
-              label="Vault Account Id"
-              name="api_account_id"
-              rules={[
-                {
-                  required: true,
-                  message: 'please input vault account id',
-                },
-              ]}
-              wrapperCol={{ span: 4}}
-            >
-              <Input.Password
-                iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
-              />
-            </Form.Item>
-            <Form.Item
-              label="External Wallet Id"
-              name="api_wallet_id"
-              rules={[
-                {
-                  required: true,
-                  message: 'please input external wallet id',
-                },
-              ]}
-              wrapperCol={{ span: 4}}
-            >
-              <Input.Password
-                iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
-              />
-            </Form.Item>
-            <Form.Item
-              wrapperCol={{ offset: 4}}
-            >
-              <Space size={120}>
-                <Button type="primary" htmlType="submit">
-                  Apply
-                </Button>
-                <Button type="primary" danger htmlType="button" onClick={()=>{ onResetCredential(form) }}>
-                  Clear
-                </Button>
-              </Space>
-            </Form.Item>
-          </Form>
-        </div>
+            <Input.Password
+              iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
+            />
+          </Form.Item>
+          <Form.Item
+            label="API Key"
+            name="api_key"
+            rules={[
+              {
+                required: true,
+                message: 'please input api key',
+              },
+            ]}
+          >
+            <Input.Password
+              iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
+            />
+          </Form.Item>
+          <Form.Item
+            label="Vault Account Id"
+            name="api_account_id"
+            rules={[
+              {
+                required: true,
+                message: 'please input vault account id',
+              },
+            ]}
+            wrapperCol={{ span: 4}}
+          >
+            <Input.Password
+              iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
+            />
+          </Form.Item>
+          <Form.Item
+            label="External Wallet Id"
+            name="api_wallet_id"
+            rules={[
+              {
+                required: true,
+                message: 'please input external wallet id',
+              },
+            ]}
+            wrapperCol={{ span: 4}}
+          >
+            <Input.Password
+              iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
+            />
+          </Form.Item>
+          <Form.Item
+            wrapperCol={{ offset: 2}}
+          >
+            <Space size={150}>
+              <Button type="primary" htmlType="submit">
+                Apply
+              </Button>
+              <Button type="primary" danger htmlType="button" onClick={()=>{ onResetCredential(form) }}>
+                Clear
+              </Button>
+            </Space>
+          </Form.Item>
+        </Form>
       </div>
     </>
   );

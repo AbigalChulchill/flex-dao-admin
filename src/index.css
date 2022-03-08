@@ -8,6 +8,10 @@
   border-radius: 5px;
 }
 
+.warningMsg {
+  margin: 20px;
+}
+
 .events {
   margin: 5px;
   padding-top: 10px;

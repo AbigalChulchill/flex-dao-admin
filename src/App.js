@@ -1,4 +1,4 @@
-import { Layout, Menu, Modal } from 'antd';
+import { Layout, Menu, message } from 'antd';
 import { Route, Switch, Link } from 'react-router-dom';
 import { useEffect, useState, createContext } from 'react';
 
@@ -56,14 +56,7 @@ function App() {
           setApiWalletId(api_wallet_id);
         }
       } catch (err) {
-        Modal.error({
-          title: "Error",
-          content: (
-            <>
-              <p>{err}</p>
-            </>
-          )
-        });
+        message.error(err);
         errorHandle('initializing the site', err);
       }
     }
@@ -87,16 +80,7 @@ function App() {
       localStorage.setItem('api_account_id', value.api_account_id);
       localStorage.setItem('api_wallet_id', value.api_wallet_id);
 
-      Modal.info({
-        title: "INFO",
-        content: (
-          <>
-            <p>The credential has been applied and saved on browser local storage</p>
-            <p>If you want to remove it from local storage, click Clear button</p>
-          </>
-        ),
-        onOk() {},
-      });
+      message.info('The credential has been applied and saved on browser local storage, if you want to remove it from local storage, click Clear button');
     }
   }
 
@@ -118,15 +102,7 @@ function App() {
     localStorage.removeItem('api_account_id');
     localStorage.removeItem('api_wallet_id');
 
-    Modal.info({
-      title: "INFO",
-      content: (
-        <>
-          <p>The credential has been removed from browser local storage</p>
-        </>
-      ),
-      onOk() {},
-    });
+    message.info('The credential has been removed from browser local storage');
   }
 
   return (

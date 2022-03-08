@@ -14,14 +14,6 @@
   border-top: dotted 1px;
 }
 
-.status-on {
-  color: red;
-}
-
-.status-off {
-  color: grey;
-}
-
 input {
   margin-left: 5px;
   margin-right: 5px;
@@ -33,9 +25,4 @@ li {
 
 button {
   margin-right: 5px;
-}
-
-a {
-  text-decoration: none;
-  color: rosybrown;  
 }

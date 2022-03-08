@@ -39,19 +39,11 @@ function App() {
 
   useEffect(() => {
     async function fetchData() {
-      try {
-        window.ethereum.on('chainChanged', () => {
-          window.location.reload();
-        });
-        window.ethereum.on('accountsChanged', () => {
-          window.location.reload();
-        });
-
+      try { 
         const _conn = await getConn();
         if (_conn) {
           setConn(_conn);
         }
-        
         const localStorage = window.localStorage;
         const api_secret = localStorage.getItem('api_secret');
         const api_key = localStorage.getItem('api_key');
@@ -64,6 +56,14 @@ function App() {
           setApiWalletId(api_wallet_id);
         }
       } catch (err) {
+        Modal.error({
+          title: "Error",
+          content: (
+            <>
+              <p>{err}</p>
+            </>
+          )
+        });
         errorHandle('initializing the site', err);
       }
     }

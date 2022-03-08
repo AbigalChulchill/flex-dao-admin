@@ -1,9 +1,12 @@
 import { useEffect, useState, useContext } from "react";
 import { utils } from 'ethers';
-import { Form, Input, Button, Modal, List, Divider, message} from "antd";
-import { errorHandle } from "../../utils";
+import { Form, Input, Button, Modal, List, Divider, message, Typography, Tooltip} from "antd";
+import { CopyOutlined } from '@ant-design/icons';
 
+import { errorHandle } from "../../utils";
 import { GlobalContext} from '../../App';
+
+const { Paragraph } = Typography;
 
 async function getBalanceOf(flexUSD, value) {
   try {
@@ -295,7 +298,7 @@ export function FlexUSD({ flexUSD, initialData, conn, config }) {
             <List.Item>
               <List.Item.Meta 
                 title={item.title}
-                description={item.value}
+                description={<Paragraph copyable>{item.value}</Paragraph>}
               />
             </List.Item>
           }
@@ -320,7 +323,15 @@ export function FlexUSD({ flexUSD, initialData, conn, config }) {
                 ]}
                 {...addressInputStyle}
               >
-                <Input placeholder="address" />
+                <Input.Group compact>
+                  <Input
+                    style={{ width: 'calc(100% - 35px)' }} 
+                    placeholder="address" 
+                  />
+                  <Tooltip title="copy address">
+                    <Button icon={<CopyOutlined />} />
+                  </Tooltip>
+                </Input.Group>
               </Form.Item>
               <Form.Item>
                 <Button type="primary" htmlType="submit">Read</Button>
@@ -333,7 +344,9 @@ export function FlexUSD({ flexUSD, initialData, conn, config }) {
         </Divider>
         <ul>
           <li>
-            <p>Connected wallet: {walletAddress}</p>
+            <p>Connected wallet: 
+              <Paragraph copyable>{walletAddress}</Paragraph>
+            </p>
           </li>
           <li>
             <Form
@@ -397,7 +410,15 @@ export function FlexUSD({ flexUSD, initialData, conn, config }) {
                 ]}
                 {...addressInputStyle}
               >
-                <Input placeholder="address" />
+                <Input.Group compact>
+                  <Input
+                    style={{ width: 'calc(100% - 35px)' }} 
+                    placeholder="address" 
+                  />
+                  <Tooltip title="copy address">
+                    <Button icon={<CopyOutlined />} />
+                  </Tooltip>
+                </Input.Group>
               </Form.Item>
               <Form.Item
                 name="amount"                   
@@ -431,7 +452,15 @@ export function FlexUSD({ flexUSD, initialData, conn, config }) {
                 ]}
                 {...addressInputStyle}
               >
-                <Input placeholder="address" />
+                <Input.Group compact>
+                  <Input
+                    style={{ width: 'calc(100% - 35px)' }} 
+                    placeholder="address" 
+                  />
+                  <Tooltip title="copy address">
+                    <Button icon={<CopyOutlined />} />
+                  </Tooltip>
+                </Input.Group>
               </Form.Item>
               <Form.Item
                 name="amount"                   
@@ -494,7 +523,15 @@ export function FlexUSD({ flexUSD, initialData, conn, config }) {
                 ]}
                 {...addressInputStyle}
               >
-                <Input placeholder="address" />
+                <Input.Group compact>
+                  <Input
+                    style={{ width: 'calc(100% - 35px)' }} 
+                    placeholder="address" 
+                  />
+                  <Tooltip title="copy address">
+                    <Button icon={<CopyOutlined />} />
+                  </Tooltip>
+                </Input.Group>
               </Form.Item>
               <Form.Item 
                 name="amount"
@@ -528,7 +565,15 @@ export function FlexUSD({ flexUSD, initialData, conn, config }) {
                 ]}
                 {...addressInputStyle}
               >
-                <Input placeholder="address" />
+                <Input.Group compact>
+                  <Input
+                    style={{ width: 'calc(100% - 35px)' }} 
+                    placeholder="address" 
+                  />
+                  <Tooltip title="copy address">
+                    <Button icon={<CopyOutlined />} />
+                  </Tooltip>
+                </Input.Group>
               </Form.Item>
               <Form.Item 
                 name="amount"

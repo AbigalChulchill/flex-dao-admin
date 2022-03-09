@@ -1,4 +1,4 @@
-import { Layout, Menu, message } from 'antd';
+import { Layout, Menu, message, PageHeader } from 'antd';
 import { Route, Switch, Link } from 'react-router-dom';
 import { useEffect, useState, createContext } from 'react';
 
@@ -24,7 +24,7 @@ import { FlexUSDSmartBCHProd } from './pages/FlexUSDSmartBCHProd';
 import { GlobalConfig } from './pages/GlobalConfig';
 import './App.css';
 
-const { Header, Content, Footer, Sider } = Layout;
+const { Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
 
 export const GlobalContext = createContext(null);
@@ -37,8 +37,6 @@ function App() {
   const [apiKey, setApiKey] = useState();
   const [apiAccountId, setApiAccountId] = useState();
   const [apiWalletId, setApiWalletId] = useState();
-
-  const [collapsed, setCollapsed] = useState();
 
   useEffect(() => {
     async function fetchData() {
@@ -65,10 +63,6 @@ function App() {
     }
     fetchData();
   }, [conn]);
-
-  const onCollapse = (collapsed) => {
-    setCollapsed(collapsed);
-  }
 
   const onInputCredential = (value) => {
     if (value) {
@@ -119,8 +113,10 @@ function App() {
       onResetCredential
     }}> 
         <Layout style={{ minHeight: '100vh' }}>
-          <Sider collapsible collapsed={collapsed} onCollapse={onCollapse}>
-            <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
+          <Sider>
+            <Menu theme="dark" mode="inline" defaultOpenKeys={
+              ["sub1","sub2","sub3","sub4","sub5","sub6","sub7","sub8","sub9","sub10","sub11"]
+            } >
               <SubMenu key="sub1" title="Flex">
                 <SubMenu key="sub2" title="SmartBCH">
                   <Menu.Item key="1">
@@ -218,9 +214,16 @@ function App() {
             </Menu>
           </Sider>
           <Layout className="site-layout">
-            <Header className="header">
-              <h1><Link to="/">CoinFLEX Contracts Tools</Link></h1>
-            </Header>
+            <PageHeader
+              ghost={false}
+              title={<Link to="/">CoinFLEX DeFi Lab</Link>}
+              subTitle="A number of tools to interact with CoinFLEX contracts"
+              extra={
+                [<Link key="1" to="/settings">Settings</Link>]
+              }
+            >
+
+            </PageHeader>
             <Content style={{ margin: '0 16px' }}>
               <Switch>
                 <Route exact path='/flex/smartbch/pp'>
@@ -271,12 +274,14 @@ function App() {
                 <Route exact path='/flexusd/smartbch/prod'>
                   <FlexUSDSmartBCHProd />
                 </Route>
-                <Route exact path='/'>
+                <Route exact path='/settings'>
                   <GlobalConfig />
+                </Route>
+                <Route exact path='/'>
                 </Route>
               </Switch>
             </Content>
-            <Footer style={{ textAlign: 'center' }}>CoinFLEX contracts tools ©2022 Created by Team De-Fi</Footer>
+            <Footer style={{ textAlign: 'center' }}>CoinFLEX DeFi Lab ©2022</Footer>
           </Layout>
         </Layout>
     </GlobalContext.Provider>

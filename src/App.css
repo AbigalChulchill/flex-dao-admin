@@ -8,7 +8,7 @@
   text-align: center;
 }
 
-.ant-layout-sider-children {
+.ant-layout-sider {
   max-height: 100vh;
   overflow: auto;
 }

@@ -22,6 +22,7 @@ import { FlexUSDSmartBCHPP } from './pages/FlexUSDSmartBCHPP';
 import { FlexUSDSmartBCHStg } from './pages/FlexUSDSmartBCHStg';
 import { FlexUSDSmartBCHProd } from './pages/FlexUSDSmartBCHProd';
 import { GlobalConfig } from './pages/GlobalConfig';
+import { Summary } from './pages/Summary';
 import './App.css';
 
 const { Content, Footer, Sider } = Layout;
@@ -277,6 +278,7 @@ function App() {
                   <GlobalConfig />
                 </Route>
                 <Route exact path='/'>
+                  <Summary />
                 </Route>
               </Switch>
             </Content>

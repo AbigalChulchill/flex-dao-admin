@@ -1,4 +1,56 @@
 {
+  "flex": {
+    "smartbch": {
+      "pp": {
+        "name": "Flex SmartBCH PP",
+        "network_name": "Smartbch Amber Testnet",
+        "chain_id": "10001",
+        "explorer": "https://www.smartscan.cash/address/",
+        "flex": "0x66274647b6e59C13746877e7DFe61d4b47aEE045",
+        "transfer_token": "0xA3Fa16C6dE7Fc0B8694a6f47D173D17F12f4e19d",
+        "multi_call": "0x3064Be21ed159d7415E177f4d2fd214d709F0449",
+        "summary": {
+          "key": "1",
+          "product": "FLEX",
+          "address": "0x66274647b6e59C13746877e7DFe61d4b47aEE045",
+          "tags": ["SmartBCH", "PP"],
+          "url": "/flex/smartbch/pp"
+        }
+      },
+      "stg": {
+        "name": "Flex SmartBCH Stage",
+        "network_name": "Smartbch MainNet",
+        "chain_id": "10000",
+        "explorer": "https://www.smartscan.cash/address/",
+        "flex": "0x67c4729aD44201972E8Bf5Ad2addaBE9DFea4e37",
+        "transfer_token": "0x0014faBDde2116e0B20C8BA5B6De02C4b8e3de88",
+        "multi_call": "0x1b38EBAd553f218e2962Cb1C0539Abb5d6A37774",
+        "summary": {
+          "key": "2",
+          "product": "FLEX",
+          "address": "0x67c4729aD44201972E8Bf5Ad2addaBE9DFea4e37",
+          "tags": ["SmartBCH", "Stg"],
+          "url": "/flex/smartbch/stg"
+        }
+      },
+      "prod": {
+        "name": "Flex SmartBCH Prod",
+        "network_name": "Smartbch MainNet",
+        "chain_id": "10000",
+        "explorer": "https://www.smartscan.cash/address/",
+        "flex": "0x98Dd7eC28FB43b3C4c770AE532417015fa939Dd3",
+        "transfer_token": "0x0014faBDde2116e0B20C8BA5B6De02C4b8e3de88",
+        "multi_call": "0x1b38EBAd553f218e2962Cb1C0539Abb5d6A37774",
+        "summary": {
+          "key": "3",
+          "product": "FLEX",
+          "address": "0x98Dd7eC28FB43b3C4c770AE532417015fa939Dd3",
+          "tags": ["SmartBCH", "Prod"],
+          "url": "/flex/smartbch/prod"
+        }
+      }
+    }
+  },
   "flexdao": {
     "smartbch": {
       "pp": {
@@ -14,7 +66,14 @@
         "multi_call": "0x3064Be21ed159d7415E177f4d2fd214d709F0449",
         "qurterly_payout": "",
         "qurterly_mini_payout": "",
-        "payout_start_ts": ""
+        "payout_start_ts": "",
+        "summary": {
+          "key": "4",
+          "product": "FLEXDAO",
+          "address": "0x160CfF26D25a806B276BA85D32a76AD5B5B43b09",
+          "tags": ["SmartBCH", "PP"],
+          "url": "/flexdao/smartbch/pp"
+        }
       },
       "stg": {
         "name": "FlexDAO SmartBCH Stage",
@@ -29,7 +88,14 @@
         "multi_call": "0x1b38EBAd553f218e2962Cb1C0539Abb5d6A37774",
         "qurterly_payout": "",
         "qurterly_mini_payout": "",
-        "payout_start_ts": "1638316800"
+        "payout_start_ts": "1638316800",
+        "summary": {
+          "key": "5",
+          "product": "FLEXDAO",
+          "address": "0x52aDbbB04572f61a9b48DD649719592C80750958",
+          "tags": ["SmartBCH", "Stg"],
+          "url": "/flexdao/smartbch/stg"
+        }
       },
       "prod": {
         "name": "FlexDAO SmartBCH Prod",
@@ -44,82 +110,18 @@
         "multi_call": "0x1b38EBAd553f218e2962Cb1C0539Abb5d6A37774",
         "qurterly_payout": "",
         "qurterly_mini_payout": "",
-        "payout_start_ts": "1639641600"
-      }
-    }
-  },
-  "flex": {
-    "smartbch": {
-      "pp": {
-        "name": "Flex SmartBCH PP",
-        "network_name": "Smartbch Amber Testnet",
-        "chain_id": "10001",
-        "explorer": "https://www.smartscan.cash/address/",
-        "flex": "0x66274647b6e59C13746877e7DFe61d4b47aEE045",
-        "transfer_token": "0xA3Fa16C6dE7Fc0B8694a6f47D173D17F12f4e19d",
-        "multi_call": "0x3064Be21ed159d7415E177f4d2fd214d709F0449"
-      },
-      "stg": {
-        "name": "Flex SmartBCH Stage",
-        "network_name": "Smartbch MainNet",
-        "chain_id": "10000",
-        "explorer": "https://www.smartscan.cash/address/",
-        "flex": "0x67c4729aD44201972E8Bf5Ad2addaBE9DFea4e37",
-        "transfer_token": "0x0014faBDde2116e0B20C8BA5B6De02C4b8e3de88",
-        "multi_call": "0x1b38EBAd553f218e2962Cb1C0539Abb5d6A37774"
-      },
-      "prod": {
-        "name": "Flex SmartBCH Prod",
-        "network_name": "Smartbch MainNet",
-        "chain_id": "10000",
-        "explorer": "https://www.smartscan.cash/address/",
-        "flex": "0x98Dd7eC28FB43b3C4c770AE532417015fa939Dd3",
-        "transfer_token": "0x0014faBDde2116e0B20C8BA5B6De02C4b8e3de88",
-        "multi_call": "0x1b38EBAd553f218e2962Cb1C0539Abb5d6A37774"
+        "payout_start_ts": "1639641600",
+        "summary": {
+          "key": "6",
+          "product": "FLEXDAO",
+          "address": "0xA9bB3b5334347F9a56bebb3f590E8dF97fC091f9",
+          "tags": ["SmartBCH", "Prod"],
+          "url": "/flexdao/smartbch/prod"
+        }
       }
     }
   },
   "flexusd": {
-    "avax": {
-      "pp": {
-        "name": "FlexUSD Avalanche PP",
-        "network_name": "Avalanche testNet - FUJI C-Chain",
-        "chain_id": "43113",
-        "explorer": "https://testnet.snowtrace.io/address/",
-        "flexusd": "0xA9bB3b5334347F9a56bebb3f590E8dF97fC091f9",
-        "multi_call": "0xc787b7D1c74Bc70b35b50303bd02Bd51909c1Fc9"
-      }
-    },
-    "polygon": {
-      "pp": {
-        "name": "FlexUSD Polygon PP",
-        "network_name": "Polygon Mumbai TestNet",
-        "chain_id": "80001",
-        "explorer": "https://mumbai.polygonscan.com/address/",
-        "flexusd": "0x97d63ae20feb2d4f7f20e9e4b8aba53eab0c83d1",
-        "multi_call": "0xDd652658B0Bb9EF5B6dB12F0984F8F1527c8f10d"
-      }
-    },
-    "ftm": {
-      "pp": {
-        "name": "FlexUSD Fantom Opera PP",
-        "network_name": "FTM TestNet",
-        "chain_id": "4002",
-        "explorer": "https://explorer.testnet.fantom.network/address/",
-        "flexusd": "0xA9bB3b5334347F9a56bebb3f590E8dF97fC091f9",
-        "multi_call": "0xaB098183D5F01E5EFae699bFa0fb2A51c16CC945"
-      }
-    },
-    "bsc": {
-      "pp": {
-        "name": "FlexUSD Binance Smart Chain PP",
-        "network_name": "BSC TestNet",
-        "chain_id": "97",
-        "explorer": "https://testnet.bscscan.com/address/",
-        "flexusd": "0xB226C60886e81920d3d913858678d8C9e71eC17E",
-        "multi_call": "0xaB098183D5F01E5EFae699bFa0fb2A51c16CC945"
-      }
-    },
     "eth": {
       "pp": {
         "name": "FlexUSD Ethereum PP",
@@ -131,6 +133,13 @@
         "fireblocks": {
           "base_url": "https://api.fireblocks.io",
           "chain": "ropsten"
+        },
+        "summary": {
+          "key": "7",
+          "product": "FLEXUSD",
+          "address": "0x1Df206C108D0284618b2b8497638d933F571Bb0F",
+          "tags": ["Ethereum", "PP"],
+          "url": "/flexusd/ethereum/pp"
         }
       },
       "stg": {
@@ -143,6 +152,13 @@
         "fireblocks": {
           "base_url": "https://api.fireblocks.io",
           "chain": "mainnet"
+        },
+        "summary": {
+          "key": "8",
+          "product": "FLEXUSD",
+          "address": "0x8b6327a3050798b7a2843a6edd0b310e97bee113",
+          "tags": ["Ethereum", "Stg"],
+          "url": "/flexusd/ethereum/stg"
         }
       },
       "prod": {
@@ -155,6 +171,13 @@
         "fireblocks": {
           "base_url": "https://api.fireblocks.io",
           "chain": "mainnet"
+        },
+        "summary": {
+          "key": "9",
+          "product": "FLEXUSD",
+          "address": "0xa774FFB4AF6B0A91331C084E1aebAE6Ad535e6F3",
+          "tags": ["Ethereum", "Prod"],
+          "url": "/flexusd/ethereum/prod"
         }
       }
     },
@@ -165,7 +188,14 @@
         "chain_id": "10001",
         "explorer": "https://www.smartscan.cash/address/",
         "flexusd": "0xFed990d491D8c563ce3d636D7536d7F9a3E2De12",
-        "multi_call": "0x3064Be21ed159d7415E177f4d2fd214d709F0449"
+        "multi_call": "0x3064Be21ed159d7415E177f4d2fd214d709F0449",
+        "summary": {
+          "key": "10",
+          "product": "FLEXUSD",
+          "address": "0xFed990d491D8c563ce3d636D7536d7F9a3E2De12",
+          "tags": ["SmartBCH", "PP"],
+          "url": "/flexusd/smartbch/pp"
+        }
       },
       "stg": {
         "name": "FlexUSD SmartBCH Stg",
@@ -173,7 +203,14 @@
         "chain_id": "10000",
         "explorer": "https://www.smartscan.cash/address/",
         "flexusd": "0x7A4B43dE058073F49774eA527Fc24Abd29e2738D",
-        "multi_call": "0x1b38EBAd553f218e2962Cb1C0539Abb5d6A37774"
+        "multi_call": "0x1b38EBAd553f218e2962Cb1C0539Abb5d6A37774",
+        "summary": {
+          "key": "11",
+          "product": "FLEXUSD",
+          "address": "0x7A4B43dE058073F49774eA527Fc24Abd29e2738D",
+          "tags": ["SmartBCH", "Stg"],
+          "url": "/flexusd/smartbch/stg"
+        }
       },
       "prod": {
         "name": "FlexUSD SmartBCH Prod",
@@ -181,7 +218,82 @@
         "chain_id": "10000",
         "explorer": "https://www.smartscan.cash/address/",
         "flexusd": "0x7b2B3C5308ab5b2a1d9a94d20D35CCDf61e05b72",
-        "multi_call": "0x1b38EBAd553f218e2962Cb1C0539Abb5d6A37774"
+        "multi_call": "0x1b38EBAd553f218e2962Cb1C0539Abb5d6A37774",
+        "summary": {
+          "key": "12",
+          "product": "FLEXUSD",
+          "address": "0x7b2B3C5308ab5b2a1d9a94d20D35CCDf61e05b72",
+          "tags": ["SmartBCH", "Prod"],
+          "url": "/flexusd/smartbch/prod"
+        }
+      }
+    },
+    "avax": {
+      "pp": {
+        "name": "FlexUSD Avalanche PP",
+        "network_name": "Avalanche testNet - FUJI C-Chain",
+        "chain_id": "43113",
+        "explorer": "https://testnet.snowtrace.io/address/",
+        "flexusd": "0xA9bB3b5334347F9a56bebb3f590E8dF97fC091f9",
+        "multi_call": "0xc787b7D1c74Bc70b35b50303bd02Bd51909c1Fc9",
+        "summary": {
+          "key": "13",
+          "product": "FLEXUSD",
+          "address": "0xA9bB3b5334347F9a56bebb3f590E8dF97fC091f9",
+          "tags": ["Avax", "PP"],
+          "url": "/flexusd/avax/pp"
+        }
+      }
+    },
+    "polygon": {
+      "pp": {
+        "name": "FlexUSD Polygon PP",
+        "network_name": "Polygon Mumbai TestNet",
+        "chain_id": "80001",
+        "explorer": "https://mumbai.polygonscan.com/address/",
+        "flexusd": "0x97d63ae20feb2d4f7f20e9e4b8aba53eab0c83d1",
+        "multi_call": "0xDd652658B0Bb9EF5B6dB12F0984F8F1527c8f10d",
+        "summary": {
+          "key": "14",
+          "product": "FLEXUSD",
+          "address": "0x97d63ae20feb2d4f7f20e9e4b8aba53eab0c83d1",
+          "tags": ["Polygon", "PP"],
+          "url": "/flexusd/polygon/pp"
+        }
+      }
+    },
+    "ftm": {
+      "pp": {
+        "name": "FlexUSD Fantom Opera PP",
+        "network_name": "FTM TestNet",
+        "chain_id": "4002",
+        "explorer": "https://explorer.testnet.fantom.network/address/",
+        "flexusd": "0xA9bB3b5334347F9a56bebb3f590E8dF97fC091f9",
+        "multi_call": "0xaB098183D5F01E5EFae699bFa0fb2A51c16CC945",
+        "summary": {
+          "key": "15",
+          "product": "FLEXUSD",
+          "address": "0xA9bB3b5334347F9a56bebb3f590E8dF97fC091f9",
+          "tags": ["Fantom", "PP"],
+          "url": "/flexusd/ftm/pp"
+        }
+      }
+    },
+    "bsc": {
+      "pp": {
+        "name": "FlexUSD Binance Smart Chain PP",
+        "network_name": "BSC TestNet",
+        "chain_id": "97",
+        "explorer": "https://testnet.bscscan.com/address/",
+        "flexusd": "0xB226C60886e81920d3d913858678d8C9e71eC17E",
+        "multi_call": "0xaB098183D5F01E5EFae699bFa0fb2A51c16CC945",
+        "summary": {
+          "key": "16",
+          "product": "FLEXUSD",
+          "address": "0xB226C60886e81920d3d913858678d8C9e71eC17E",
+          "tags": ["BSC", "PP"],
+          "url": "/flexusd/bsc/pp"
+        }
       }
     }
   }

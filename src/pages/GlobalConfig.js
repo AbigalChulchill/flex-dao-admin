@@ -45,7 +45,7 @@ export function GlobalConfig() {
   });
 
   return (
-    <>
+    <div className="container">
       <div className="box">
         <Divider orientation="left">
           Fireblocks MPC Service
@@ -136,6 +136,6 @@ export function GlobalConfig() {
           </Form.Item>
         </Form>
       </div>
-    </>
+    </div>
   );
 }

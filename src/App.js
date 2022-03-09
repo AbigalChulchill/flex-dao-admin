@@ -113,117 +113,116 @@ function App() {
       onResetCredential
     }}> 
         <Layout style={{ minHeight: '100vh' }}>
-          <Sider>
-            <Menu theme="dark" mode="inline" defaultOpenKeys={
-              ["sub1","sub2","sub3","sub4","sub5","sub6","sub7","sub8","sub9","sub10","sub11"]
-            } >
-              <SubMenu key="sub1" title="Flex">
-                <SubMenu key="sub2" title="SmartBCH">
-                  <Menu.Item key="1">
-                    <Link to="/flex/smartbch/pp">PP</Link>
-                  </Menu.Item>
-                  <Menu.Item key="2">
-                    <Link to="/flex/smartbch/stg">Stage</Link>
-                  </Menu.Item>
-                  <Menu.Item key="3">
-                    <Link to="/flex/smartbch/prod">Prod</Link>
-                  </Menu.Item>
-                </SubMenu>
-              </SubMenu>
-              <SubMenu key="sub3" title="FlexDAO">
-                <SubMenu key="sub4" title="SmartBCH">
-                  <Menu.Item key="4">
-                    <Link to="/flexdao/smartbch/pp">PP</Link>
-                  </Menu.Item>
-                  <Menu.Item key="5">
-                    <Link to="/flexdao/smartbch/stg">Stage</Link>
-                  </Menu.Item>
-                  <Menu.Item key="6">
-                    <Link to="/flexdao/smartbch/prod">Prod</Link >  
-                  </Menu.Item>
-                </SubMenu>
-              </SubMenu>
-              <SubMenu key="sub5" title="FlexUSD">
-                <SubMenu key="sub6" title="Ethereum">
-                  <Menu.Item key="7">
-                    <Link to="/flexusd/ethereum/pp">PP</Link>
-                  </Menu.Item>
-                  <Menu.Item key="8">
-                    <Link to="/flexusd/ethereum/stg">Stage</Link>
-                  </Menu.Item>
-                  <Menu.Item key="9">
-                    <Link to="/flexusd/ethereum/prod">Prod</Link>
-                  </Menu.Item>
-                </SubMenu>
-                <SubMenu key="sub7" title="SmartBCH">
-                  <Menu.Item key="10">
-                    <Link to="/flexusd/smartbch/pp">PP</Link>
-                  </Menu.Item>
-                  <Menu.Item key="11">
-                    <Link to="/flexusd/smartbch/stg">Stage</Link>
-                  </Menu.Item>
-                  <Menu.Item key="12">
-                    <Link to="/flexusd/smartbch/prod">Prod</Link>
-                  </Menu.Item>
-                </SubMenu>
-                <SubMenu key="sub8" title="Avalanche">
-                  <Menu.Item key="13">
-                    <Link to="/flexusd/avax/pp">PP</Link>  
-                  </Menu.Item>
-                  <Menu.Item key="14">
-                    <Link to="/flexusd/avax/stg">Stage</Link>
-                  </Menu.Item>
-                  <Menu.Item key="15">
-                    <Link to="/flexusd/avax/prod">Prod</Link>
-                  </Menu.Item>
-                </SubMenu>
-                <SubMenu key="sub9" title="Polygon">
-                  <Menu.Item key="16">
-                    <Link to="/flexusd/polygon/pp">PP</Link>
-                  </Menu.Item>
-                  <Menu.Item key="17">
-                    <Link to="/flexusd/polygon/stg">Stage</Link>
-                  </Menu.Item>
-                  <Menu.Item key="18">
-                    <Link to="/flexusd/polygon/prod">Prod</Link>
-                  </Menu.Item>
-                </SubMenu>
-                <SubMenu key="sub10" title="Fantom Opera (FTM)">
-                  <Menu.Item key="19">
-                    <Link to="/flexusd/ftm/pp">PP</Link>
-                  </Menu.Item>
-                  <Menu.Item key="20">
-                    <Link to="/flexusd/ftm/stg">Stage</Link>
-                  </Menu.Item>
-                  <Menu.Item key="21">
-                    <Link to="/flexusd/ftm/prod">Prod</Link>
-                  </Menu.Item>
-                </SubMenu>
-                <SubMenu key="sub11" title="Binance Smart Chain">
-                  <Menu.Item key="22">
-                    <Link to="/flexusd/bsc/pp">PP</Link>
-                  </Menu.Item>
-                  <Menu.Item key="23">
-                    <Link to="/flexusd/bsc/stg">Stage</Link>
-                  </Menu.Item>
-                  <Menu.Item key="24">
-                    <Link to="/flexusd/bsc/prod">Prod</Link>
-                  </Menu.Item>
-                </SubMenu>
-              </SubMenu>
-            </Menu>
-          </Sider>
-          <Layout className="site-layout">
-            <PageHeader
-              ghost={false}
+          <PageHeader
+              ghost={true}
               title={<Link to="/">CoinFLEX DeFi Lab</Link>}
               subTitle="A number of tools to interact with CoinFLEX contracts"
               extra={
                 [<Link key="1" to="/settings">Settings</Link>]
               }
             >
-
-            </PageHeader>
+          </PageHeader>
+          <Layout className="site-layout">
+            <Sider>
+              <Menu theme="dark" mode="inline" defaultOpenKeys={
+                ["sub1","sub2","sub3","sub4","sub5","sub6","sub7","sub8","sub9","sub10","sub11"]
+              } >
+                <SubMenu key="sub1" title="Flex">
+                  <SubMenu key="sub2" title="SmartBCH">
+                    <Menu.Item key="1">
+                      <Link to="/flex/smartbch/pp">PP</Link>
+                    </Menu.Item>
+                    <Menu.Item key="2">
+                      <Link to="/flex/smartbch/stg">Stage</Link>
+                    </Menu.Item>
+                    <Menu.Item key="3">
+                      <Link to="/flex/smartbch/prod">Prod</Link>
+                    </Menu.Item>
+                  </SubMenu>
+                </SubMenu>
+                <SubMenu key="sub3" title="FlexDAO">
+                  <SubMenu key="sub4" title="SmartBCH">
+                    <Menu.Item key="4">
+                      <Link to="/flexdao/smartbch/pp">PP</Link>
+                    </Menu.Item>
+                    <Menu.Item key="5">
+                      <Link to="/flexdao/smartbch/stg">Stage</Link>
+                    </Menu.Item>
+                    <Menu.Item key="6">
+                      <Link to="/flexdao/smartbch/prod">Prod</Link >  
+                    </Menu.Item>
+                  </SubMenu>
+                </SubMenu>
+                <SubMenu key="sub5" title="FlexUSD">
+                  <SubMenu key="sub6" title="Ethereum">
+                    <Menu.Item key="7">
+                      <Link to="/flexusd/ethereum/pp">PP</Link>
+                    </Menu.Item>
+                    <Menu.Item key="8">
+                      <Link to="/flexusd/ethereum/stg">Stage</Link>
+                    </Menu.Item>
+                    <Menu.Item key="9">
+                      <Link to="/flexusd/ethereum/prod">Prod</Link>
+                    </Menu.Item>
+                  </SubMenu>
+                  <SubMenu key="sub7" title="SmartBCH">
+                    <Menu.Item key="10">
+                      <Link to="/flexusd/smartbch/pp">PP</Link>
+                    </Menu.Item>
+                    <Menu.Item key="11">
+                      <Link to="/flexusd/smartbch/stg">Stage</Link>
+                    </Menu.Item>
+                    <Menu.Item key="12">
+                      <Link to="/flexusd/smartbch/prod">Prod</Link>
+                    </Menu.Item>
+                  </SubMenu>
+                  <SubMenu key="sub8" title="Avalanche">
+                    <Menu.Item key="13">
+                      <Link to="/flexusd/avax/pp">PP</Link>  
+                    </Menu.Item>
+                    <Menu.Item key="14">
+                      <Link to="/flexusd/avax/stg">Stage</Link>
+                    </Menu.Item>
+                    <Menu.Item key="15">
+                      <Link to="/flexusd/avax/prod">Prod</Link>
+                    </Menu.Item>
+                  </SubMenu>
+                  <SubMenu key="sub9" title="Polygon">
+                    <Menu.Item key="16">
+                      <Link to="/flexusd/polygon/pp">PP</Link>
+                    </Menu.Item>
+                    <Menu.Item key="17">
+                      <Link to="/flexusd/polygon/stg">Stage</Link>
+                    </Menu.Item>
+                    <Menu.Item key="18">
+                      <Link to="/flexusd/polygon/prod">Prod</Link>
+                    </Menu.Item>
+                  </SubMenu>
+                  <SubMenu key="sub10" title="Fantom Opera (FTM)">
+                    <Menu.Item key="19">
+                      <Link to="/flexusd/ftm/pp">PP</Link>
+                    </Menu.Item>
+                    <Menu.Item key="20">
+                      <Link to="/flexusd/ftm/stg">Stage</Link>
+                    </Menu.Item>
+                    <Menu.Item key="21">
+                      <Link to="/flexusd/ftm/prod">Prod</Link>
+                    </Menu.Item>
+                  </SubMenu>
+                  <SubMenu key="sub11" title="Binance Smart Chain">
+                    <Menu.Item key="22">
+                      <Link to="/flexusd/bsc/pp">PP</Link>
+                    </Menu.Item>
+                    <Menu.Item key="23">
+                      <Link to="/flexusd/bsc/stg">Stage</Link>
+                    </Menu.Item>
+                    <Menu.Item key="24">
+                      <Link to="/flexusd/bsc/prod">Prod</Link>
+                    </Menu.Item>
+                  </SubMenu>
+                </SubMenu>
+              </Menu>
+            </Sider>
             <Content style={{ margin: '0 16px' }}>
               <Switch>
                 <Route exact path='/flex/smartbch/pp'>
@@ -281,8 +280,8 @@ function App() {
                 </Route>
               </Switch>
             </Content>
-            <Footer style={{ textAlign: 'center' }}>CoinFLEX DeFi Lab ©2022</Footer>
           </Layout>
+          <Footer style={{ textAlign: 'center' }}>CoinFLEX DeFi Lab ©2022</Footer>
         </Layout>
     </GlobalContext.Provider>
   );

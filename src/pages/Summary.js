@@ -33,12 +33,6 @@ export function Summary() {
       key: 'product',
     },
     {
-      title: 'Contracts Address',
-      dataIndex: 'address',
-      key: 'address',
-      render: address => (<Paragraph copyable>{address}</Paragraph>)
-    },
-    {
       title: 'Tags',
       key: 'tags',
       dataIndex: 'tags',
@@ -87,6 +81,13 @@ export function Summary() {
       ),
     },
     {
+      title: 'Contracts Address',
+      dataIndex: 'address',
+      key: 'address',
+      render: address => (<Paragraph copyable>{address}</Paragraph>)
+    },
+
+    {
       title: 'Action',
       key: 'action',
       render: (record) => (
@@ -114,8 +115,8 @@ export function Summary() {
 
   return (
     <div className="container">
-      <div className="box">
-        <Table columns={columns} dataSource={data} pagination={{ defaultPageSize: 10}} />
+      <div className="box" data-noborder>
+        <Table bordered={false} columns={columns} dataSource={data} pagination={{ defaultPageSize: 9}} />
       </div>
     </div>
   );

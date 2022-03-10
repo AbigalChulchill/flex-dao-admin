@@ -113,9 +113,9 @@ function App() {
       onInputCredential,
       onResetCredential
     }}> 
-        <Layout style={{ minHeight: '100vh' }}>
+        <Layout>
           <PageHeader
-              ghost={true}
+              ghost={false}
               title={<Link to="/">CoinFLEX DeFi Lab</Link>}
               subTitle="A number of tools to interact with CoinFLEX contracts"
               extra={
@@ -281,9 +281,10 @@ function App() {
                   <Summary />
                 </Route>
               </Switch>
+              <Footer style={{ textAlign: 'center' }}>CoinFLEX DeFi Lab ©2022</Footer>
             </Content>
           </Layout>
-          <Footer style={{ textAlign: 'center' }}>CoinFLEX DeFi Lab ©2022</Footer>
+
         </Layout>
     </GlobalContext.Provider>
   );

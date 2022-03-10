@@ -8,7 +8,15 @@
   text-align: center;
 }
 
-.ant-layout-sider {
+.ant-layout{
   max-height: 100vh;
+}
+
+.ant-layout-has-sider {
+  flex: 1;
+  overflow: hidden;
+}
+
+.ant-layout-sider,.ant-layout-content{
   overflow: auto;
 }

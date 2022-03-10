@@ -7,14 +7,15 @@ const { Paragraph } = Typography;
 const getItems = (config) => {
   let items = [];
   const iterate = (obj) => {
-    Object.keys(obj).forEach(key => {
+    for (let key in obj) {
       if (key === "summary") {
-        items.push(obj[key])
+        console.log(obj[key]);
+        items.push(obj[key]);
       }
-    if (typeof obj[key] === 'object' && obj[key] !== null) {
-            iterate(obj[key])
-        }
-    })
+      if (typeof obj[key] === 'object' && obj[key] !== null) {
+        iterate(obj[key])
+      }
+    }
   }
   iterate(config);
   return items;

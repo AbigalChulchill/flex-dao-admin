@@ -6,14 +6,6 @@ import { errorHandle } from "../../utils";
 
 const { Paragraph } = Typography;
 
-async function getBalanceOf(flexUSD, value) {
-  try {
-    return await flexUSD.balanceOf(value);
-  } catch (err) {
-    errorHandle('getBalanceOf', err);
-  }
-}
-
 export function FlexUSD({ flexUSD, initialData, conn, config, bridge }) {
   const [contractName, setContractName] = useState();
   const [addr, setAddr] = useState();
@@ -73,8 +65,8 @@ export function FlexUSD({ flexUSD, initialData, conn, config, bridge }) {
       }
       setModalText('Querying ...');
       setConfirmLoading(true);
-      const _balanceOf = await getBalanceOf(flexUSD, address);
-      setModalText(`${address}: ${utils.formatEther(_balanceOf)} FlexUSD`)
+      const _balanceOf = await flexUSD.balanceOf(address);
+      setModalText(`${address} balance: ${utils.formatEther(_balanceOf)} FlexUSD`)
       setConfirmLoading(false);
     } catch (err) {
       setConfirmLoading(false);
@@ -89,6 +81,36 @@ export function FlexUSD({ flexUSD, initialData, conn, config, bridge }) {
         }
       }
       errorHandle('onInitialize', err);
+    }
+  }
+
+  const onAllowance = async (values) => {
+    try {
+      const ownerAddr = values.ownerAddr.trim();
+      const spenderAddr = values.spenderAddr.trim();
+      setVisible(true);
+      if (!flexUSD || !ownerAddr || !spenderAddr) {
+        setModalText('chain is not ready');
+        return;
+      }
+      setModalText('Querying ...');
+      setConfirmLoading(true);
+      const _allowance = await flexUSD.allowance(ownerAddr, spenderAddr);
+      setModalText(`${ownerAddr} has given allowance: ${utils.formatEther(_allowance)} FlexUSD to ${spenderAddr}`)
+      setConfirmLoading(false);
+    } catch (err) {
+      setConfirmLoading(false);
+      if (typeof(err) === 'string') {
+        setModalText(err);
+      } else {
+        if (err.data && err.data.message) {
+          setModalText(err.data.message);
+        }
+        else if (err.message) {
+          setModalText(err.message);
+        }
+      }
+      errorHandle('onAllowance', err);
     }
   }
 
@@ -232,7 +254,7 @@ export function FlexUSD({ flexUSD, initialData, conn, config, bridge }) {
 
   const addressInputStyle = {
     style: {
-      width: "600px"
+      width: "500px"
     }
   }
 
@@ -367,13 +389,42 @@ export function FlexUSD({ flexUSD, initialData, conn, config, bridge }) {
               onFinish={onBalanceOf}
             >
               <Form.Item
-                label="FlexUSD Balance" 
+                label="balanceOf" 
                 name="address"                   
                 rules={addressTypeRules}
                 {...addressInputStyle}
               >
                 <Input
                   placeholder="address" 
+                />
+              </Form.Item>
+              <Form.Item>
+                <Button type="primary" htmlType="submit">Read</Button>
+              </Form.Item>
+            </Form>
+          </li>
+          <li>
+            <Form
+              layout="inline"
+              onFinish={onAllowance}
+            >
+              <Form.Item
+                label="allowance" 
+                name="ownerAddr"           
+                rules={addressTypeRules}
+                {...addressInputStyle}
+              >
+                <Input
+                  placeholder="owner address" 
+                />
+              </Form.Item>
+              <Form.Item
+                name="spenderAddr"                   
+                rules={addressTypeRules}
+                {...addressInputStyle}
+              >
+                <Input
+                  placeholder="spender address" 
                 />
               </Form.Item>
               <Form.Item>

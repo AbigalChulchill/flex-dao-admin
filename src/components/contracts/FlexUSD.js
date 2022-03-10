@@ -275,11 +275,13 @@ export function FlexUSD({ flexUSD, initialData, conn, config, bridge }) {
   const listData = [
     {
       title: 'Address',
-      value: addr
+      value: addr,
+      copy: true
     },
     {
       title: 'Admin',
-      value: admin
+      value: admin,
+      copy: true
     },
     {
       title: 'Name',
@@ -296,7 +298,19 @@ export function FlexUSD({ flexUSD, initialData, conn, config, bridge }) {
     {
       title: 'Total Supply',
       value: `${totalSupply} FlexUSD`
-    }
+    },
+    {
+      title: 'Check more details on',
+      value: (<a href={config.explorer + config.flexusd} target="_blank" rel="noreferrer" >explorer</a>)
+    },
+    {
+      title: 'Get Contract Logic ABI',
+      value: (<a href={config.chain_id === "1"? "/ABI/FlexUSDEth.json" : "/ABI/FlexUSDImplV2.json"} target="_blank" rel="noreferrer" >here</a>)
+    },
+    {
+      title: 'Get Contract Proxy ABI',
+      value: (<a href={config.chain_id === "1"? "/ABI/FlexUSDEthProx.json" : "/ABI/FlexUSD.json"} target="_blank" rel="noreferrer" >here</a>)
+    },
   ]
 
   const addressTypeRules = [
@@ -322,20 +336,26 @@ export function FlexUSD({ flexUSD, initialData, conn, config, bridge }) {
     <>
       <div className="box">
         <Divider orientation="left">
-          {contractName} - <a href={config.explorer + config.flexusd} target="_blank" rel="noreferrer" >Check on Explorer </a> - <a href={config.chain_id === "1"? "/ABI/FlexUSDEth.json" : "/ABI/FlexUSDImplV2.json"} target="_blank" rel="noreferrer" >Logic ABI</a> - <a href={config.chain_id === "1"? "/ABI/FlexUSDEthProx.json" : "/ABI/FlexUSD.json"} target="_blank" rel="noreferrer" >Proxy ABI</a>
+          Basic
         </Divider>
         <List
           dataSource={listData}
           bordered
           grid={{ column: 2 }}
           renderItem={item => 
-            <List.Item>
-              <List.Item.Meta 
+            (<List.Item key={item.title}>
+              { item.copy &&               
+                <List.Item.Meta 
+                  title={item.title}
+                  description={<Paragraph copyable>{item.value}</Paragraph>}
+                />}
+              { !item.copy &&
+                < List.Item.Meta 
                 title={item.title}
-                description={<Paragraph copyable>{item.value}</Paragraph>}
-              />
-            </List.Item>
-          }
+                description={item.value}
+                />}
+
+            </List.Item>)}
         />
         <Divider orientation="left">
           Read From Contract

@@ -9,8 +9,10 @@ const getItems = (config) => {
   const iterate = (obj) => {
     for (let key in obj) {
       if (key === "summary") {
-        console.log(obj[key]);
-        items.push(obj[key]);
+        if (!items.find(e => e["key"] === obj[key]["key"])) {
+          console.log(obj[key]);
+          items.push(obj[key]);
+        }
       }
       if (typeof obj[key] === 'object' && obj[key] !== null) {
         iterate(obj[key])

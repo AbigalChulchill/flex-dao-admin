@@ -251,6 +251,112 @@ export function FlexUSD({ flexUSD, initialData, conn, config, bridge }) {
       errorHandle('onBurn', err);
     }
   }
+  
+  const onTransfer = async (values) => {
+    try {
+      setVisible(true);
+      const address = values.address.trim();
+      const amountBn = utils.parseEther(values.amount);
+      if (!flexUSD || !amountBn || !address) {
+        setModalText('chain is not ready');
+        return;
+      }
+      setModalText("Sign and start to send on extension wallet ...");
+      setConfirmLoading(true);
+      const gasLimitBn = await flexUSD.estimateGas.transfer(address, amountBn);
+      const tx = await flexUSD.transfer(address, amountBn, {
+        gasLimit: gasLimitBn,
+      })
+      setModalText(`Sending Tx ... : ${tx.hash}`);
+      const receipt = await tx.wait(2);
+      setConfirmLoading(false);
+      setModalText(`Confirmed - ${receipt.transactionHash} - ${receipt.confirmations} blocks`);
+    } catch (err) {
+      setConfirmLoading(false);
+      if (typeof(err) === 'string') {
+        setModalText(err);
+      } else {
+        if (err.data && err.data.message) {
+          setModalText(err.data.message);
+        }
+        else if (err.message) {
+          setModalText(err.message);
+        }
+      }
+      errorHandle('onTransfer', err);
+    }
+  }
+
+  const onApprove = async (values) => {
+    try {
+      setVisible(true);
+      const address = values.address.trim();
+      const amountBn = utils.parseEther(values.amount);
+      if (!flexUSD || !amountBn || !address) {
+        setModalText('chain is not ready');
+        return;
+      }
+      setModalText("Sign and start to send on extension wallet ...");
+      setConfirmLoading(true);
+      const gasLimitBn = await flexUSD.estimateGas.approve(address, amountBn);
+      const tx = await flexUSD.approve(address, amountBn, {
+        gasLimit: gasLimitBn,
+      })
+      setModalText(`Sending Tx ... : ${tx.hash}`);
+      const receipt = await tx.wait(2);
+      setConfirmLoading(false);
+      setModalText(`Confirmed - ${receipt.transactionHash} - ${receipt.confirmations} blocks`);
+    } catch (err) {
+      setConfirmLoading(false);
+      if (typeof(err) === 'string') {
+        setModalText(err);
+      } else {
+        if (err.data && err.data.message) {
+          setModalText(err.data.message);
+        }
+        else if (err.message) {
+          setModalText(err.message);
+        }
+      }
+      errorHandle('onApprove', err);
+    }
+  }
+
+  const onTransferFrom = async (values) => {
+    try {
+      setVisible(true);
+      const senderAddr = values.senderAddr.trim();
+      const recipientAddr = values.recipientAddr.trim();
+      const amountBn = utils.parseEther(values.amount);
+      if (!flexUSD || !amountBn || !senderAddr || !recipientAddr) {
+        setModalText('chain is not ready');
+        return;
+      }
+      setModalText("Sign and start to send on extension wallet ...");
+      setConfirmLoading(true);
+      const gasLimitBn = await flexUSD.estimateGas.transferFrom(senderAddr, recipientAddr, amountBn);
+      const tx = await flexUSD.transferFrom(senderAddr, recipientAddr, amountBn, {
+        gasLimit: gasLimitBn,
+      })
+      setModalText(`Sending Tx ... : ${tx.hash}`);
+      const receipt = await tx.wait(2);
+      setConfirmLoading(false);
+      setModalText(`Confirmed - ${receipt.transactionHash} - ${receipt.confirmations} blocks`);
+    } catch (err) {
+      setConfirmLoading(false);
+      if (typeof(err) === 'string') {
+        setModalText(err);
+      } else {
+        if (err.data && err.data.message) {
+          setModalText(err.data.message);
+        }
+        else if (err.message) {
+          setModalText(err.message);
+        }
+      }
+      errorHandle('onTransferFrom', err);
+    }
+  }
 
   const addressInputStyle = {
     style: {
@@ -517,6 +623,93 @@ export function FlexUSD({ flexUSD, initialData, conn, config, bridge }) {
               >
                 <Input
                   placeholder="address" 
+                />
+              </Form.Item>
+              <Form.Item
+                name="amount"                   
+                rules={amountTypeRules}
+              >
+                <Input placeholder="amount (ETH Unit)" />
+              </Form.Item>
+              <Form.Item>
+                <Button type="primary" htmlType="submit">Write</Button>
+              </Form.Item>
+            </Form>
+          </li>
+          <li>
+            <Form
+              layout="inline"
+              onFinish={onTransfer}
+            >
+              <Form.Item
+                label="transfer" 
+                name="address"                   
+                rules={addressTypeRules}
+                {...addressInputStyle}
+              >
+                <Input
+                  placeholder="address" 
+                />
+              </Form.Item>
+              <Form.Item
+                name="amount"                   
+                rules={amountTypeRules}
+              >
+                <Input placeholder="amount (ETH Unit)" />
+              </Form.Item>
+              <Form.Item>
+                <Button type="primary" htmlType="submit">Write</Button>
+              </Form.Item>
+            </Form>
+          </li>
+          <li>
+            <Form
+              layout="inline"
+              onFinish={onApprove}
+            >
+              <Form.Item
+                label="approve" 
+                name="address"                   
+                rules={addressTypeRules}
+                {...addressInputStyle}
+              >
+                <Input
+                  placeholder="address" 
+                />
+              </Form.Item>
+              <Form.Item
+                name="amount"                   
+                rules={amountTypeRules}
+              >
+                <Input placeholder="amount (ETH Unit)" />
+              </Form.Item>
+              <Form.Item>
+                <Button type="primary" htmlType="submit">Write</Button>
+              </Form.Item>
+            </Form>
+          </li>
+          <li>
+            <Form
+              layout="inline"
+              onFinish={onTransferFrom}
+            >
+              <Form.Item
+                label="transferFrom" 
+                name="senderAddr"                   
+                rules={addressTypeRules}
+                {...addressInputStyle}
+              >
+                <Input
+                  placeholder="sender address" 
+                />
+              </Form.Item>
+              <Form.Item
+                name="recipientAddr"                   
+                rules={addressTypeRules}
+                {...addressInputStyle}
+              >
+                <Input
+                  placeholder="recipient address" 
                 />
               </Form.Item>
               <Form.Item

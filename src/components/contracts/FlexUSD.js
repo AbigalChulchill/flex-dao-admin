@@ -7,7 +7,6 @@ import { errorHandle } from "../../utils";
 const { Paragraph } = Typography;
 
 export function FlexUSD({ flexUSD, initialData, conn, config, bridge }) {
-  const [contractName, setContractName] = useState();
   const [addr, setAddr] = useState();
 
   const [admin, setAdmin] = useState();
@@ -29,7 +28,6 @@ export function FlexUSD({ flexUSD, initialData, conn, config, bridge }) {
       try {
         if (flexUSD && initialData) {
           
-          setContractName('FLEXUSD');
           setAddr(flexUSD.address);
           
           const {flexUSDAdmin,flexUSDName, flexUSDSymbol, flexUSDMultiplier, flexUSDTotalSupply} = initialData;
@@ -810,6 +808,7 @@ export function FlexUSD({ flexUSD, initialData, conn, config, bridge }) {
         onCancel={handleCancel}
         confirmLoading={confirmLoading}
         maskClosable={false}
+        closable={false}
       >
         <p>{modalText}</p>
       </Modal>

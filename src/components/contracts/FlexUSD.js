@@ -427,15 +427,18 @@ export function FlexUSD({ flexUSD, initialData, conn, config, bridge }) {
     },
     {
       title: 'Check more details on',
-      value: (<a href={config.explorer + config.flexusd} target="_blank" rel="noreferrer" >explorer</a>)
+      value: (<a href={config.explorer + config.flexusd} target="_blank" rel="noreferrer" >explorer</a>),
+      link: true
     },
     {
       title: 'Get Contract Logic ABI',
-      value: (<a href={config.chain_id === "1"? "/ABI/FlexUSDEth.json" : "/ABI/FlexUSDImplV2.json"} target="_blank" rel="noreferrer" >here</a>)
+      value: (<a href={config.chain_id === "1"? "/ABI/FlexUSDEth.json" : "/ABI/FlexUSDImplV2.json"} target="_blank" rel="noreferrer" >here</a>),
+      link: true
     },
     {
       title: 'Get Contract Proxy ABI',
-      value: (<a href={config.chain_id === "1"? "/ABI/FlexUSDEthProx.json" : "/ABI/FlexUSD.json"} target="_blank" rel="noreferrer" >here</a>)
+      value: (<a href={config.chain_id === "1"? "/ABI/FlexUSDEthProx.json" : "/ABI/FlexUSD.json"} target="_blank" rel="noreferrer" >here</a>),
+      link: true
     },
   ]
 
@@ -471,16 +474,14 @@ export function FlexUSD({ flexUSD, initialData, conn, config, bridge }) {
           renderItem={item => 
             (<List.Item key={item.title}>
               { item.copy &&               
-                <List.Item.Meta 
-                  title={item.title}
-                  description={<Paragraph copyable>{item.value}</Paragraph>}
-                />}
-              { !item.copy &&
-                < List.Item.Meta 
-                title={item.title}
-                description={item.value}
-                />}
-
+                <p>{item.title}: <Paragraph copyable>{item.value}</Paragraph></p>
+              }
+              { !item.copy && !item.link &&
+                <p>{item.title}: {item.value}</p> 
+              }
+              { item.link &&
+                <p>{item.title} {item.value}</p> 
+              }
             </List.Item>)}
         />
         <Divider orientation="left">

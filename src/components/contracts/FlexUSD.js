@@ -474,7 +474,7 @@ export function FlexUSD({ flexUSD, initialData, conn, config, bridge }) {
           renderItem={item => 
             (<List.Item key={item.title}>
               { item.copy &&               
-                <p>{item.title}: <Paragraph copyable>{item.value}</Paragraph></p>
+                <Paragraph copyable={{ text: item.value}}>{item.title}: {item.value}</Paragraph>
               }
               { !item.copy && !item.link &&
                 <p>{item.title}: {item.value}</p> 
@@ -543,9 +543,7 @@ export function FlexUSD({ flexUSD, initialData, conn, config, bridge }) {
         </Divider>
         <ul>
           <li>
-            <div>Connected wallet: 
-              <Paragraph copyable>{walletAddress}</Paragraph>
-            </div>
+            <Paragraph copyable={{text: walletAddress}}>Connected wallet: {walletAddress}</Paragraph>
           </li>
           <li>
             <Form

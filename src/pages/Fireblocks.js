@@ -6,7 +6,7 @@ import { GlobalContext} from '../App';
 
 const { Text } = Typography;
 
-export function GlobalConfig() {
+export function Fireblocks() {
   const [form] = Form.useForm();
 
   const {

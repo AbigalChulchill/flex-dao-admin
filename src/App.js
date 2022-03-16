@@ -1,4 +1,4 @@
-import { Layout, Menu, message, PageHeader } from 'antd';
+import { Layout, Menu, message, PageHeader, Dropdown, Button } from 'antd';
 import { Route, Switch, Link } from 'react-router-dom';
 import { useEffect, useState, createContext } from 'react';
 
@@ -21,7 +21,7 @@ import { FlexUSDETHProd } from './pages/FlexUSDETHProd';
 import { FlexUSDSmartBCHPP } from './pages/FlexUSDSmartBCHPP';
 import { FlexUSDSmartBCHStg } from './pages/FlexUSDSmartBCHStg';
 import { FlexUSDSmartBCHProd } from './pages/FlexUSDSmartBCHProd';
-import { GlobalConfig } from './pages/GlobalConfig';
+import { Fireblocks } from './pages/Fireblocks';
 import { Summary } from './pages/Summary';
 import './App.css';
 
@@ -114,6 +114,20 @@ function App() {
     }, 3000);
   }
 
+  const settingMenu = () => (
+    <Menu>
+      <Menu.Item key="1">
+        <Link to="/settings/fireblocks">Fireblocks</Link>
+      </Menu.Item>
+    </Menu>
+  );
+
+  const SettingDropdown = () => (
+    <Dropdown overlay={settingMenu} placement="topRight" arrow>
+      <Button>setting</Button>
+    </Dropdown>
+  )
+
   return (
     <GlobalContext.Provider value={{
       conn,
@@ -129,9 +143,9 @@ function App() {
               ghost={false}
               title={<Link to="/">CoinFLEX DeFi Lab</Link>}
               subTitle="A number of tools to interact with CoinFLEX contracts"
-              extra={
-                [<Link key="1" to="/settings">Settings</Link>]
-              }
+              extra={[
+                <SettingDropdown key="1" />,
+              ]}
             >
           </PageHeader>
           <Layout className="site-layout">
@@ -285,8 +299,8 @@ function App() {
                 <Route exact path='/flexusd/smartbch/prod'>
                   <FlexUSDSmartBCHProd />
                 </Route>
-                <Route exact path='/settings'>
-                  <GlobalConfig />
+                <Route exact path='/settings/fireblocks'>
+                  <Fireblocks />
                 </Route>
                 <Route exact path='/'>
                   <Summary />

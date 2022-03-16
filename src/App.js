@@ -51,12 +51,10 @@ function App() {
         const api_key = localStorage.getItem('api_key');
         const api_account_id = localStorage.getItem('api_account_id');
         const api_wallet_id = localStorage.getItem('api_wallet_id');
-        if (api_secret && api_key && api_account_id && api_wallet_id) {
-          setApiSecret(api_secret);
-          setApiKey(api_key);
-          setApiAccountId(api_account_id);
-          setApiWalletId(api_wallet_id);
-        }
+        setApiSecret(api_secret);
+        setApiKey(api_key);
+        setApiAccountId(api_account_id);
+        setApiWalletId(api_wallet_id);
       } catch (err) {
         message.error(err);
         errorHandle('initializing the site', err);
@@ -65,53 +63,77 @@ function App() {
     fetchData();
   }, [conn]);
 
-  const onInputCredential = (value) => {
+  const onInputAPI = (value) => {
     if (value) {
       setApiKey(value.api_key);
-      setApiAccountId(value.api_account_id);
-      setApiWalletId(value.api_wallet_id);
-      
+
       let reader = new FileReader();
       reader.readAsBinaryString(value.api_secret.file);
       
       const localStorage = window.localStorage;
       localStorage.setItem('api_key', value.api_key);
-      localStorage.setItem('api_account_id', value.api_account_id);
-      localStorage.setItem('api_wallet_id', value.api_wallet_id);
+
       
       reader.onload = (e) => {
         setApiSecret(e.target.result);
         localStorage.setItem('api_secret', e.target.result);
       }
 
-      message.info('The credential has been applied and saved on browser local storage, if you want to remove it from local storage, click Clear button');
+      message.info('The API key and secret has been applied and saved on browser local storage, if you want to remove it from local storage, click Clear button');
     }
   }
 
-  const onResetCredential = (form) => {
+  const onInputID = (value) => {
+    if (value) {
+      setApiAccountId(value.api_account_id);
+      setApiWalletId(value.api_wallet_id);
+
+      const localStorage = window.localStorage;
+
+      localStorage.setItem('api_account_id', value.api_account_id);
+      localStorage.setItem('api_wallet_id', value.api_wallet_id);
+
+      message.info('The account id and wallet id has been applied and saved on browser local storage, if you want to remove it from local storage, click Clear button');
+    }
+  }
+
+  const onResetAPI = (form) => {
     
     form.setFieldsValue({
       api_secret: '',
       api_key: '',
-      api_account_id: '',
-      api_wallet_id: '',
     })
 
     setApiSecret();
     setApiKey();
-    setApiAccountId();
-    setApiWalletId();
+
+    const localStorage = window.localStorage;
 
     localStorage.removeItem('api_secret');
     localStorage.removeItem('api_key');
-    localStorage.removeItem('api_account_id');
-    localStorage.removeItem('api_wallet_id');
 
-    message.info('The credential has been removed from browser local storage');
+    message.info('The api key and secret has been removed from browser local storage');
 
     setTimeout(() => {
       window.location.reload();
     }, 3000);
+  }
+
+  const onResetID = (form) => {
+    form.setFieldsValue({
+      api_account_id: '',
+      api_wallet_id: '',
+    })
+
+    setApiAccountId();
+    setApiWalletId();
+
+    const localStorage = window.localStorage;
+
+    localStorage.removeItem('api_account_id');
+    localStorage.removeItem('api_wallet_id');
+
+    message.info('The account id and wallet id has been removed from browser local storage');
   }
 
   const settingMenu = () => (
@@ -135,8 +157,10 @@ function App() {
       apiKey,
       apiAccountId,
       apiWalletId,
-      onInputCredential,
-      onResetCredential
+      onInputAPI,
+      onResetAPI,
+      onInputID,
+      onResetID
     }}> 
         <Layout>
           <PageHeader

@@ -1,40 +1,47 @@
-import { useEffect, useContext } from "react";
-import { Form, Input, Button, Space, Divider, Typography, Upload } from "antd";
+import { useEffect, useState, useContext } from "react";
+import { Form, Input, Button, Space, Divider, Typography, Upload, message, Modal } from "antd";
 import { EyeInvisibleOutlined, EyeTwoTone, UploadOutlined } from "@ant-design/icons";
+import { FireblocksSDK } from "fireblocks-sdk";
+
 import { errorHandle } from "../utils";
 import { GlobalContext} from '../App';
 
 const { Text } = Typography;
 
 export function Fireblocks() {
-  const [form] = Form.useForm();
+  const [formAPI] = Form.useForm();
+  const [formID] = Form.useForm();
+
+  const [visible, setVisible] = useState();
+  const [confirmLoading, setConfirmLoading] = useState();
+  const [modalText, setModalText] = useState();
 
   const {
     apiSecret,
     apiKey,
     apiAccountId,
     apiWalletId,
-    onInputCredential,
-    onResetCredential 
+    onInputAPI,
+    onResetAPI,
+    onInputID,
+    onResetID
   } = useContext(GlobalContext);
   
   useEffect(() => {
     async function fetchData() {
       try {
-        if (apiSecret && apiKey && apiAccountId && apiWalletId) {
-          form.setFieldsValue({
-            api_secret: apiSecret
-          });
-          form.setFieldsValue({
-            api_key: apiKey
-          });
-          form.setFieldsValue({
-            api_account_id: apiAccountId
-          });
-          form.setFieldsValue({
-            api_wallet_id: apiWalletId
-          });
-        }
+        formAPI.setFieldsValue({
+          api_secret: apiSecret
+        });
+        formAPI.setFieldsValue({
+          api_key: apiKey
+        });
+        formID.setFieldsValue({
+          api_account_id: apiAccountId
+        });
+        formID.setFieldsValue({
+          api_wallet_id: apiWalletId
+        });
       } catch (err) {
         errorHandle('global config initial', err);
       }
@@ -44,22 +51,82 @@ export function Fireblocks() {
     }
   });
 
+  const handleOk = () => {
+    setVisible(false);
+  };
+
+  const handleCancel = () => {
+    setVisible(false);
+  };
+
+  const getFireblocks = () => {
+    if (apiKey && apiSecret) {
+      return new FireblocksSDK(apiSecret, apiKey);
+    } else {
+      message.error("api key or secret is missing!");
+      return undefined;
+    }
+  }
+
+  const onVaultIdByName = async (values) => {
+    try {
+      const fireblocks = getFireblocks();
+      if (!fireblocks) return;
+      setVisible(true);
+      const name = values.vaultName.trim();
+      if (!name) {
+        setModalText('params are not ready');
+        return;
+      }
+      setModalText("Querying to Fireblocks ...");
+      setConfirmLoading(true);
+      const rs = await fireblocks.getVaultAccounts({namePrefix: name});
+      setConfirmLoading(false);
+      setModalText(`ID is ${rs}`);
+    } catch (err) {
+      setConfirmLoading(false);
+      if (typeof(err) === 'string') {
+        setModalText(err);
+      } else {
+        if (err.data && err.data.message) {
+          setModalText(err.data.message);
+        }
+        else if (err.message) {
+          setModalText(err.message);
+        }
+      }
+      errorHandle('onVaultIdByName', err);
+    }
+
+  }
+
+  const onWalletIdByName = (values) => {
+
+  }
+
+  const nameInputStyle = {
+    style: {
+      width: "400px"
+    }
+  }
+
   return (
     <div className="container">
+      <h1>Fireblocks Settings</h1>
+      <Text type="warning">        
+        API info will be cached in local storage of explorer, you can remove them by click Clear button
+      </Text>
       <div className="box">
         <Divider orientation="left">
-          Fireblocks MPC Service
+          Fireblocks API Settings
         </Divider>
         <div className="warningMsg">
-          <Text type="warning">        
-            Credentials will be loaded from local storage of explorer if exist, otherwise please provide it!
-          </Text>
         </div>
         <Form
-          form={form}
-          onFinish={onInputCredential}
-          wrapperCol={{ span: 8 }}
-          labelCol={{ span: 4 }}
+          form={formAPI}
+          onFinish={onInputAPI}
+          wrapperCol={{ span: 6 }}
+          labelCol={{ span: 3 }}
           initialValues={{
             size: "small"
           }}
@@ -96,6 +163,86 @@ export function Fireblocks() {
             </Upload>
           </Form.Item>
           <Form.Item
+            wrapperCol={{ offset: 3}}
+          >
+            <Space size={50}>
+              <Button type="primary" htmlType="submit">
+                Apply
+              </Button>
+              <Button type="primary" danger htmlType="button" onClick={()=>{ onResetAPI(formAPI) }}>
+                Clear
+              </Button>
+            </Space>
+          </Form.Item>
+        </Form>
+        <Divider orientation="left">
+          Fireblocks SDK Query
+        </Divider>
+        <ul>
+          <li>
+            <Form
+              layout="inline"
+              onFinish={onVaultIdByName}
+            >
+              <Form.Item
+                label="Get Vault ID by Name" 
+                name="vaultName"                   
+                rules={[
+                  {
+                    required: true,
+                    message: 'please input vault name',
+                  }
+                ]}
+                {...nameInputStyle}
+              >
+                <Input
+                  placeholder="vault name" 
+                />
+              </Form.Item>
+              <Form.Item>
+                <Button type="primary" htmlType="submit">Query</Button>
+              </Form.Item>
+            </Form>
+          </li>
+          <li>
+            <Form
+              layout="inline"
+              onFinish={onWalletIdByName}
+            >
+              <Form.Item
+                label="Get External Wallet ID by Name" 
+                name="walletName"                   
+                rules={[
+                  {
+                    required: true,
+                    message: 'please input wallet name',
+                  }
+                ]}
+                {...nameInputStyle}
+              >
+                <Input
+                  placeholder="wallet name" 
+                />
+              </Form.Item>
+              <Form.Item>
+                <Button type="primary" htmlType="submit">Query</Button>
+              </Form.Item>
+            </Form>
+          </li>
+        </ul>
+        <Divider orientation="left">
+          Fireblocks DeFi SDK Settings
+        </Divider>
+        <Form
+          form={formID}
+          onFinish={onInputID}
+          wrapperCol={{ span: 2 }}
+          labelCol={{ span: 3 }}
+          initialValues={{
+            size: "small"
+          }}
+        >
+          <Form.Item
             label="Vault Account Id"
             name="api_account_id"
             rules={[
@@ -104,7 +251,6 @@ export function Fireblocks() {
                 message: 'please input vault account id',
               },
             ]}
-            wrapperCol={{ span: 4}}
           >
             <Input.Password
               iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
@@ -119,26 +265,36 @@ export function Fireblocks() {
                 message: 'please input external wallet id',
               },
             ]}
-            wrapperCol={{ span: 4}}
           >
             <Input.Password
               iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
             />
           </Form.Item>
           <Form.Item
-            wrapperCol={{ offset: 4}}
+            wrapperCol={{ offset: 3}}
           >
-            <Space size={150}>
+            <Space size={50}>
               <Button type="primary" htmlType="submit">
                 Apply
               </Button>
-              <Button type="primary" danger htmlType="button" onClick={()=>{ onResetCredential(form) }}>
+              <Button type="primary" danger htmlType="button" onClick={()=>{ onResetID(formID) }}>
                 Clear
               </Button>
             </Space>
           </Form.Item>
         </Form>
       </div>
+      <Modal
+        title="Result"
+        visible={visible}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        confirmLoading={confirmLoading}
+        maskClosable={false}
+        closable={false}
+      >
+        <p>{modalText}</p>
+      </Modal>
     </div>
   );
 }

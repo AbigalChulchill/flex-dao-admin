@@ -67,22 +67,29 @@ function App() {
 
   const onInputCredential = (value) => {
     if (value) {
-      setApiSecret(value.api_secret);
       setApiKey(value.api_key);
       setApiAccountId(value.api_account_id);
       setApiWalletId(value.api_wallet_id);
-
+      
+      let reader = new FileReader();
+      reader.readAsBinaryString(value.api_secret.file);
+      
       const localStorage = window.localStorage;
-      localStorage.setItem('api_secret', value.api_secret);
       localStorage.setItem('api_key', value.api_key);
       localStorage.setItem('api_account_id', value.api_account_id);
       localStorage.setItem('api_wallet_id', value.api_wallet_id);
+      
+      reader.onload = (e) => {
+        setApiSecret(e.target.result);
+        localStorage.setItem('api_secret', e.target.result);
+      }
 
       message.info('The credential has been applied and saved on browser local storage, if you want to remove it from local storage, click Clear button');
     }
   }
 
   const onResetCredential = (form) => {
+    
     form.setFieldsValue({
       api_secret: '',
       api_key: '',
@@ -101,6 +108,10 @@ function App() {
     localStorage.removeItem('api_wallet_id');
 
     message.info('The credential has been removed from browser local storage');
+
+    setTimeout(() => {
+      window.location.reload();
+    }, 3000);
   }
 
   return (

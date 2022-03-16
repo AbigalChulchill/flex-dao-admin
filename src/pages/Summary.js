@@ -10,7 +10,6 @@ const getItems = (config) => {
     for (let key in obj) {
       if (key === "summary") {
         if (!items.find(e => e["key"] === obj[key]["key"])) {
-          console.log(obj[key]);
           items.push(obj[key]);
         }
       }

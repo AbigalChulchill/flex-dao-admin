@@ -368,26 +368,55 @@ export function FlexUSD({ flexUSD, initialData, conn, config, bridge }) {
     }
   }
 
-  const onFireblocksSetTotalSupply = () => {
+  async function processTransaction(bridge, tx) {
+    const res = await bridge.sendTransaction(tx);
+    console.log("Waiting for the transaction to be signed and mined");
+    const txHash = await bridge.waitForTxHash(res.id);
+    console.log(`Transaction ${res.id} has been broadcast. TX Hash is ${txHash}`);
+}
+
+  const onFireblocksSetTotalSupply = async (values) => {
     if (!bridge) {
       return message.error('Fireblocks Credentials are not provided!');
     }
-    console.log(bridge);
-    
+    const amountBn = utils.parseEther(values.amount);
+    if (!flexUSD || !amountBn) {
+      return message.error('Chain is not ready');
+    }
+    const tx = await flexUSD.populateTransaction.setTotalSupply(amountBn);
+    console.log("Sending setTotalSupply trasnaction for signing");
+    console.log(tx);
+    await processTransaction(bridge, tx);
   }
   
-  const onFireblocksMint = () => {
+  const onFireblocksMint = async (values) => {
     if (!bridge) {
       return message.error('Fireblocks Credentials are not provided!');
     }
-    console.log(bridge);
+    const address = values.address.trim();
+    const amountBn = utils.parseEther(values.amount);
+    if (!flexUSD || !amountBn || !address) {
+      return message.error('Chain is not ready');
+    }
+    const tx = await flexUSD.populateTransaction.mint(address, amountBn);
+    console.log("Sending mint trasnaction for signing");
+    console.log(tx);
+    await processTransaction(bridge, tx);
   }
 
-  const onFireblocksBurn = () => {
+  const onFireblocksBurn = async (values) => {
     if (!bridge) {
       return message.error('Fireblocks Credentials are not provided!');
     }
-    console.log(bridge);
+    const address = values.address.trim();
+    const amountBn = utils.parseEther(values.amount);
+    if (!flexUSD || !amountBn || !address) {
+      return message.error('Chain is not ready');
+    }
+    const tx = await flexUSD.populateTransaction.burn(address, amountBn);
+    console.log("Sending burn trasnaction for signing");
+    console.log(tx);
+    await processTransaction(bridge, tx);
   }
 
   const handleOk = () => {

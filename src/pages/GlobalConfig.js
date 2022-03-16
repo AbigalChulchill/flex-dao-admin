@@ -1,6 +1,6 @@
 import { useEffect, useContext } from "react";
-import { Form, Input, Button, Space, Divider, Typography } from "antd";
-import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
+import { Form, Input, Button, Space, Divider, Typography, Upload } from "antd";
+import { EyeInvisibleOutlined, EyeTwoTone, UploadOutlined } from "@ant-design/icons";
 import { errorHandle } from "../utils";
 import { GlobalContext} from '../App';
 
@@ -65,20 +65,6 @@ export function GlobalConfig() {
           }}
         >
           <Form.Item
-            label="API Secret"
-            name="api_secret"
-            rules={[
-              {
-                required: true,
-                message: 'please input api secret',
-              },
-            ]}
-          >
-            <Input.Password
-              iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
-            />
-          </Form.Item>
-          <Form.Item
             label="API Key"
             name="api_key"
             rules={[
@@ -91,6 +77,23 @@ export function GlobalConfig() {
             <Input.Password
               iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
             />
+          </Form.Item>
+          <Form.Item
+            label="API Secret"
+            name="api_secret"
+            valuePropName="file"
+            rules={[
+              {
+                required: true,
+                message: 'please upload api secret',
+              },
+            ]}
+          >
+            <Upload beforeUpload={()=> {
+              return false;
+            }} maxCount={1}>
+              <Button icon={<UploadOutlined />}>Click to upload</Button>
+            </Upload>
           </Form.Item>
           <Form.Item
             label="Vault Account Id"
